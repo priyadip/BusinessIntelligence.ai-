@@ -89,7 +89,8 @@ ranked list of the experiments that would resolve it.
 Measured over <!--NUMBERS:n-->300<!--/NUMBERS:n--> seeded incidents with injected ground truth, where roughly a third are
 unidentifiable *by construction*:
 
-<!--NUMBERS:table-->| | Contribution-ranking baseline | CaseFile |
+<!--NUMBERS:table-->
+| Measure | Contribution-ranking baseline | CaseFile |
 |---|---|---|
 | Top-1 cause accuracy, identifiable | 99.5% | **100.0%** |
 | Answer rate, identifiable | 100% | 66.7% |
@@ -265,9 +266,9 @@ worth reading:
   the semantic gateway, so no code path can quietly bypass contract-defined access policy.
 
 The invariance claim is checked empirically as well as structurally. Running the same
-incident with the model off and on produces identical values across
-<!--NUMBERS:fields-->258<!--/NUMBERS:fields--> computed fields, to a relative tolerance of 1e-12, worst observed difference
-<!--NUMBERS:worst-->9.5e-14<!--/NUMBERS:worst-->. Only the prose changes. See [`results/llm_invariance.json`](results/llm_invariance.json).
+incident with the model off and on produces identical values across <!--NUMBERS:fields-->258<!--/NUMBERS:fields--> computed
+fields, to a relative tolerance of 1e-12, with a worst observed difference of <!--NUMBERS:worst-->9.5e-14<!--/NUMBERS:worst-->.
+Only the prose changes. See [`results/llm_invariance.json`](results/llm_invariance.json).
 
 ## Continuous integration
 

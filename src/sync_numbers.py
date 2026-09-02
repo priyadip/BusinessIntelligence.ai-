@@ -8,12 +8,18 @@ from casefile.paths import out as OUT, ROOT
 
 BEGIN, END = "<!--NUMBERS:{k}-->", "<!--/NUMBERS:{k}-->"
 
+# A line starting with "<!--" opens an HTML block that runs to the "-->", so anything after
+# the marker on that same line is swallowed as raw HTML. For a table that eats the header row
+# and the table stops being a table. These keys carry block content and are written with the
+# markers on their own lines.
+BLOCK = {"table", "calibration", "cost"}
+
 
 def blocks(s: dict) -> dict[str, str]:
     i, u, w = s["identifiable"], s["unidentifiable"], s["wrong_lever_rate_unidentifiable"]
     c, k = s.get("calibration", {}), s.get("cost_of_being_wrong", {})
     head = (
-        "| | Contribution-ranking baseline | CaseFile |\n|---|---|---|\n"
+        "| Measure | Contribution-ranking baseline | CaseFile |\n|---|---|---|\n"
         f"| Top-1 cause accuracy, identifiable | {100*i['naive_top1_accuracy']:.1f}% | "
         f"**{100*(i['casefile_top1_accuracy'] or 0):.1f}%** |\n"
         f"| Answer rate, identifiable | 100% | {100*i['casefile_answer_rate']:.1f}% |\n"
@@ -64,7 +70,8 @@ def apply(path: Path, b: dict[str, str]) -> int:
     t = path.read_text(); n = 0
     for k, v in b.items():
         pat = re.compile(re.escape(BEGIN.format(k=k)) + r".*?" + re.escape(END.format(k=k)), re.S)
-        new, cnt = pat.subn(BEGIN.format(k=k) + v + END.format(k=k), t)
+        body = f"\n{v.strip(chr(10))}\n" if k in BLOCK else v
+        new, cnt = pat.subn(lambda _m: BEGIN.format(k=k) + body + END.format(k=k), t)
         t, n = new, n + cnt
     path.write_text(t); return n
 

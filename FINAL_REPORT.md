@@ -76,7 +76,8 @@ and a written justification; six are `backend: none` and the gateway raises if t
 
 ### Batch evaluation, <!--NUMBERS:n-->300<!--/NUMBERS:n--> seeded incidents
 
-<!--NUMBERS:table-->| | Contribution-ranking baseline | CaseFile |
+<!--NUMBERS:table-->
+| Measure | Contribution-ranking baseline | CaseFile |
 |---|---|---|
 | Top-1 cause accuracy, identifiable | 99.5% | **100.0%** |
 | Answer rate, identifiable | 100% | 66.7% |
@@ -137,12 +138,14 @@ These are listed because each was a real defect that would have been fatal on st
 
 ## Confidence calibration
 
-<!--NUMBERS:calibration-->| Stated confidence | Observed accuracy | n |
+<!--NUMBERS:calibration-->
+| Stated confidence | Observed accuracy | n |
 |---|---|---|
 | 75.5% | 56.8% | 37 |
 | 92.7% | 75.8% | 95 |
 
-Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.<!--/NUMBERS:calibration-->
+Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.
+<!--/NUMBERS:calibration-->
 
 The system is overconfident. At a stated 92.7% it is right 75.8% of the time, and at a stated
 75.5% it is right 56.8%, so both bins are off by roughly seventeen points in the same
@@ -155,7 +158,9 @@ Likelihood ratios are <!--NUMBERS:likelihood-->CALIBRATED from 500 simulated inc
 
 ## What being wrong costs
 
-<!--NUMBERS:cost-->The baseline commits to a lever on every incident, including the 102 where the data cannot identify a cause. It pulled the wrong one 39 times, at a contract-priced cost of **6,492,000**. CaseFile pulled it 0 times, so **6,492,000** of wasted intervention spend was avoided, about 63,647 per unidentifiable incident.<!--/NUMBERS:cost-->
+<!--NUMBERS:cost-->
+The baseline commits to a lever on every incident, including the 102 where the data cannot identify a cause. It pulled the wrong one 39 times, at a contract-priced cost of **6,492,000**. CaseFile pulled it 0 times, so **6,492,000** of wasted intervention spend was avoided, about 63,647 per unidentifiable incident.
+<!--/NUMBERS:cost-->
 
 ## Limitations
 

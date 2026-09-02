@@ -109,18 +109,22 @@ verify_rubric.py                       mechanical scoring against the brief
 
 ## Confidence calibration
 
-<!--NUMBERS:calibration-->| Stated confidence | Observed accuracy | n |
+<!--NUMBERS:calibration-->
+| Stated confidence | Observed accuracy | n |
 |---|---|---|
 | 75.5% | 56.8% | 37 |
 | 92.7% | 75.8% | 95 |
 
-Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.<!--/NUMBERS:calibration-->
+Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.
+<!--/NUMBERS:calibration-->
 
 Likelihood ratios are <!--NUMBERS:likelihood-->CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed<!--/NUMBERS:likelihood-->.
 
 ## What being wrong costs
 
-<!--NUMBERS:cost-->The baseline commits to a lever on every incident, including the 102 where the data cannot identify a cause. It pulled the wrong one 39 times, at a contract-priced cost of **6,492,000**. CaseFile pulled it 0 times, so **6,492,000** of wasted intervention spend was avoided, about 63,647 per unidentifiable incident.<!--/NUMBERS:cost-->
+<!--NUMBERS:cost-->
+The baseline commits to a lever on every incident, including the 102 where the data cannot identify a cause. It pulled the wrong one 39 times, at a contract-priced cost of **6,492,000**. CaseFile pulled it 0 times, so **6,492,000** of wasted intervention spend was avoided, about 63,647 per unidentifiable incident.
+<!--/NUMBERS:cost-->
 
 ## Known limitations
 
