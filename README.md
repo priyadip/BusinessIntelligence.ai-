@@ -166,6 +166,7 @@ python3 run_seeded.py 4271                   # a world drawn from a seed you pic
 python3 -m pytest ../tests -q                # 25 tests
 python3 verify_rubric.py                     # score against the Round 2 brief
 python3 eval/run_batch.py -n 300 --workers 8 # held-out evaluation
+python3 eval/tier2_real.py                   # the same statistics on real public data
 python3 sync_numbers.py                      # regenerate every figure quoted in the docs
 ```
 
@@ -238,12 +239,37 @@ tests/                    25 tests, including the two architectural invariants
 docs/                     architecture, capability provenance
 ```
 
+## Tier-2: the engine against real data
+
+Every other number in this repository is measured on a world the author simulated. The
+Tier-2 pass runs the same machinery over 1,067,371 real UK transactions:
+
+```bash
+python3 scripts/fetch_public_data.py     # once, needs the internet
+cd src && python3 eval/tier2_real.py     # about 8 seconds
+```
+
+Two of its four tests are negative controls that were free to fail, and one did:
+
+| Test | Result |
+|---|---|
+| Exact decomposition on real segments | residual `2.8e-13`, **closes** |
+| Synthetic control on dates with no intervention | **6.1%** spurious R3 against a 10% threshold, conservative |
+| Detector fire rate on windows where nothing happened | **27.9%** at a nominal 1%, a 28-fold overshoot |
+| The same, February to August only | **0.83%** at a nominal 1%, calibrated |
+
+The detector failure is entirely seasonal and has an exact cause: the annual cycle needs
+two full periods and this source has 2.02 years of trading days, so Christmas is never
+modelled. Full write-up, including the recovery-of-a-known-shock results, in
+[`docs/TIER2_REAL_DATA.md`](docs/TIER2_REAL_DATA.md).
+
 ## Documentation
 
 | Document | Contents |
 |---|---|
 | [`RUNBOOK.md`](RUNBOOK.md) | every command, a ten-minute demo script, troubleshooting |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | the thirteen layers, and why each exists |
+| [`docs/TIER2_REAL_DATA.md`](docs/TIER2_REAL_DATA.md) | the engine measured on real public data, including two negative controls |
 | [`docs/CAPABILITY_PROVENANCE.md`](docs/CAPABILITY_PROVENANCE.md) | what is native, configured, custom or externally integrated |
 | [`FINAL_REPORT.md`](FINAL_REPORT.md) | what was built, what was measured, the twelve bugs found, and the limitations |
 | [`config/kpi_contract.yaml`](config/kpi_contract.yaml) | the contract that drives every query, access decision and threshold |
@@ -287,7 +313,9 @@ deterministic, the shipped verdicts would not match.
   numbers and addresses at the reserved `mail.example` domain. They are not real people, and
   the PII shield redacts them before anything reaches a model or a narrative.
 - **Third-party data is fetched, not redistributed.** `scripts/fetch_public_data.py`
-  downloads UCI Online Retail II on demand for the Tier-2 pass, under its own terms.
+  downloads UCI Online Retail II on demand, under its own terms. It is used by the Tier-2
+  pass described below, which runs the engine's statistics against data nobody here
+  generated.
 
 ## Limitations
 

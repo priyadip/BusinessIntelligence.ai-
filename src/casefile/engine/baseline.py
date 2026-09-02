@@ -176,8 +176,13 @@ def fit(kpi: str, s: pd.Series, contract: dict, test_start, cohort: pd.DataFrame
     if n_tr >= max(2 * 7, min_h):
         try:
             seas_cfg = kcfg.get("seasonality", {}) or {}
-            periods = tuple(p for p, on in ((7, seas_cfg.get("weekly", True)),
-                                            (365, seas_cfg.get("yearly", True))) if on)
+            # A trading calendar need not have a 7-day week. The UCI retail source is closed
+            # on Saturdays, so its cycle is 6. The contract may declare the cycle lengths;
+            # absent a declaration the defaults are the ordinary 7 and 365.
+            wk = int(seas_cfg.get("weekly_period_days", 7))
+            yr = int(seas_cfg.get("yearly_period_days", 365))
+            periods = tuple(p for p, on in ((wk, seas_cfg.get("weekly", True)),
+                                            (yr, seas_cfg.get("yearly", True))) if on)
             fitted, fut, note, projector, seasonal_at = _project(z[:n_tr], n_te, periods or (7,))
             note = f"{note}; contract declares weekly={seas_cfg.get('weekly')} yearly={seas_cfg.get('yearly')}"
             exp_t = np.concatenate([fitted, fut])

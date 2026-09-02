@@ -59,7 +59,7 @@ and a written justification; six are `backend: none` and the gateway raises if t
 | Test | Result |
 |---|---|
 | Unit and invariant suite (`pytest tests`) | **25 passed** |
-| Semantic-gateway choke point (AST walk over every module) | **pass** — nothing bypasses it |
+| Semantic-gateway choke point (AST walk over every module) | **pass**, nothing bypasses it |
 | LLM boundary (no model on the quantitative path, in emitted telemetry) | **pass** |
 | LLM invariance: same incident, model off vs local, <!--NUMBERS:fields-->258<!--/NUMBERS:fields--> computed fields | **identical** to 1e-12 relative; worst observed <!--NUMBERS:worst-->9.5e-14<!--/NUMBERS:worst--> |
 | LMDI decomposition residual | 5.6e-09 |
@@ -73,6 +73,10 @@ and a written justification; six are `backend: none` and the gateway raises if t
 | PII shield on 475 extracted claims, ops_manager view | **0 leaks** |
 | Prompt-injection quarantine | planted payload caught, quarantined not stripped |
 | Rubric coverage against the Round 2 brief | see `results/rubric.json` |
+| **Tier-2, real data:** decomposition on UCI Online Retail II | residual **2.8e-13**, identity closes |
+| **Tier-2, real data:** synthetic control with no intervention present | **6.1%** spurious R3 against a 10% threshold |
+| **Tier-2, real data:** detector fire rate on null windows | **27.9%** at a nominal 1%; **0.83%** outside the Christmas ramp |
+| **Tier-2, real data:** recovery of an injected -20% shock | detected in 27% of windows, median estimate -13.9% |
 
 ### Batch evaluation, <!--NUMBERS:n-->300<!--/NUMBERS:n--> seeded incidents
 
@@ -161,6 +165,36 @@ Likelihood ratios are <!--NUMBERS:likelihood-->CALIBRATED from 500 simulated inc
 <!--NUMBERS:cost-->
 The baseline commits to a lever on every incident, including the 102 where the data cannot identify a cause. It pulled the wrong one 39 times, at a contract-priced cost of **6,492,000**. CaseFile pulled it 0 times, so **6,492,000** of wasted intervention spend was avoided, about 63,647 per unidentifiable incident.
 <!--/NUMBERS:cost-->
+
+## What the real-data pass changed
+
+The engine had never been run on data it did not generate. `eval/tier2_real.py` does that,
+using 1,067,371 real UK transactions, and two of its four tests were negative controls free
+to fail.
+
+The causal layer passed cleanly. On 131 random dates with no intervention of any kind,
+synthetic control reported a causal effect 6.1% of the time against its own 10% threshold,
+with placebo p-values sitting slightly high of uniform. That is the behaviour of a
+conservative test, and it is the first evidence here that does not depend on the simulator.
+
+The detector failed, and the failure is precise. Over 240 null windows it fired on 27.9% at
+a nominal 1%. Broken down by month, the rate is zero from March to August and 81% in
+December, 100% in January. The cause is that `baseline.py` requires two complete seasonal
+cycles before it will use a period, the annual cycle is 313 trading days in this source, and
+the series is 634 days long, so the training block never contains two full years. Christmas
+is therefore never in the expectation. Restricted to February through August the detector is
+calibrated: 0.83% at a nominal 1%.
+
+The honest statement is that detection is trustworthy given two full seasonal cycles and
+degrades silently without them. The engine refuses outright when history is too short to fit
+at all; it has no equivalent refusal for history that is long enough to fit but too short
+for its dominant cycle. That is a gap worth closing.
+
+Adapting to the real source needed one engine change: the seasonal cycle length became
+contract-declarable, because the source is closed on Saturdays and its week is six days
+rather than seven. The default is unchanged, so the synthetic world behaves exactly as
+before. Nothing else in the mathematical core required modification, which is the strongest
+portability evidence the repository holds.
 
 ## Limitations
 

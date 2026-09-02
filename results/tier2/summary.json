@@ -1,0 +1,192 @@
+{
+  "pass": "Tier-2, real public data",
+  "source": {
+    "name": "UCI Online Retail II",
+    "url": "https://archive.ics.uci.edu/dataset/502/online+retail+ii",
+    "rows": 1067371,
+    "span": "2009-12-01 to 2011-12-09",
+    "series_used": "United Kingdom daily net revenue, trading calendar",
+    "series_length": 634
+  },
+  "T2A_data_quality": {
+    "source": "UCI Online Retail II",
+    "rows_raw": 1067371,
+    "rows_kept": 1041670,
+    "cancellations_dropped": 19494,
+    "non_positive_quantity_dropped": 3457,
+    "non_positive_price_dropped": 2750,
+    "missing_customer_id_kept": 236121,
+    "calendar_days_spanned": 739,
+    "trading_days_expected": 634,
+    "trading_days_present": 603,
+    "trading_days_imputed": 31,
+    "saturdays_observed": 1,
+    "decisions": [
+      "Invoices prefixed 'C' are cancellations. A cancellation is a reversal of an earlier sale, not a sale, so it is removed rather than netted: netting would attribute a return to the day it was processed instead of the day it was sold.",
+      "Non-positive quantity outside a cancellation is an adjustment or a data error. Removed; it cannot represent demand.",
+      "Non-positive price rows are samples, write-offs and manual corrections. Removed from revenue, since a zero-priced line is not a sale at any value.",
+      "Rows without a customer id are retained. They are guest checkouts and dropping them would bias revenue downward by roughly a fifth.",
+      "31 trading days are absent (public holidays inside a trading week). Linearly interpolated so the seasonal decomposition has a regular index; they are a 4.9% share of the series."
+    ],
+    "rows_dropped": 25701,
+    "rows_kept_pct": 97.59
+  },
+  "T2B_decomposition": {
+    "segments": 31,
+    "total_move": 265.114980205487,
+    "residual": 2.8421709430404007e-13,
+    "residual_relative": 1.0720521868803767e-15,
+    "identity_closes": true,
+    "drilled_segments": 4,
+    "all_drilled_carry_rank": true,
+    "top3": [
+      {
+        "segment": "United Kingdom",
+        "share_of_move": 1.3615,
+        "rank": 1
+      },
+      {
+        "segment": "EIRE",
+        "share_of_move": -0.1352,
+        "rank": 2
+      },
+      {
+        "segment": "Netherlands",
+        "share_of_move": -0.1158,
+        "rank": 3
+      }
+    ],
+    "note": "Countries as segments, on the real invoice ledger. The identity is algebraic, so a failure here would mean the adapter, not the method, is wrong."
+  },
+  "T2C_null_calibration": {
+    "windows_tested": 240,
+    "window_days": 14,
+    "nominal_vs_empirical": {
+      "0.01": {
+        "nominal": 0.01,
+        "empirical_studentised": 0.2792,
+        "empirical_conformal": 0.1792
+      },
+      "0.05": {
+        "nominal": 0.05,
+        "empirical_studentised": 0.3875,
+        "empirical_conformal": 0.375
+      },
+      "0.1": {
+        "nominal": 0.1,
+        "empirical_studentised": 0.4625,
+        "empirical_conformal": 0.4583
+      }
+    },
+    "p_studentised_quartiles": [
+      0.0075,
+      0.1188,
+      0.3255
+    ],
+    "p_conformal_quartiles": [
+      0.0267,
+      0.1172,
+      0.2542
+    ],
+    "mean_conformal_floor": 0.0033,
+    "caveat": "Real windows are not a true null: genuine shocks occur in this data and are not labelled. The empirical rate is therefore an upper bound on the false-positive rate, not an unbiased estimate of it.",
+    "by_month_fire_rate_at_0.01": {
+      "1": 1.0,
+      "2": 0.083,
+      "3": 0.0,
+      "4": 0.0,
+      "5": 0.0,
+      "6": 0.0,
+      "7": 0.0,
+      "8": 0.0,
+      "9": 0.344,
+      "10": 0.31,
+      "11": 0.615,
+      "12": 0.812
+    },
+    "seasonally_stable_subset": {
+      "months": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "windows": 120,
+      "empirical_at_0.01": 0.0083,
+      "empirical_at_0.05": 0.0333,
+      "empirical_at_0.10": 0.075,
+      "why": "February to August contains no Christmas ramp. If the aggregate failure is caused by an unavailable annual cycle, this subset should be calibrated."
+    }
+  },
+  "T2D_causal_negative_control": {
+    "trials": 150,
+    "units_per_trial": 40,
+    "mean_donors": 29.2,
+    "mean_placebo_floor": 0.1523,
+    "spurious_R3_rate_all_trials": 0.0533,
+    "expected_R3_rate": 0.1,
+    "rung_counts": {
+      "R1": 19,
+      "R2": 123,
+      "R3": 8
+    },
+    "placebo_p_quartiles": [
+      0.2994,
+      0.5844,
+      0.8675
+    ],
+    "note": "No intervention exists at these dates. Every R3 here is a false positive. The threshold is p <= 0.10, so a calibrated test yields about 10%.",
+    "trials_where_R3_was_reachable": 131,
+    "trials_blocked_by_placebo_floor": 19,
+    "spurious_R3_rate_reachable_only": 0.0611,
+    "placebo_p_quartiles_reachable": [
+      0.2639,
+      0.5128,
+      0.7771
+    ],
+    "verdict": "PASS, conservative"
+  },
+  "T2E_injected_recovery": {
+    "by_injected_delta": {
+      "0.02": {
+        "windows": 45,
+        "detected_at_0.05": 0.067,
+        "detected_at_0.01": 0.022,
+        "median_estimated_delta": 0.0548,
+        "injected_delta": -0.02,
+        "median_bias": 0.0748
+      },
+      "0.05": {
+        "windows": 45,
+        "detected_at_0.05": 0.067,
+        "detected_at_0.01": 0.044,
+        "median_estimated_delta": 0.0225,
+        "injected_delta": -0.05,
+        "median_bias": 0.0725
+      },
+      "0.10": {
+        "windows": 45,
+        "detected_at_0.05": 0.067,
+        "detected_at_0.01": 0.067,
+        "median_estimated_delta": -0.0313,
+        "injected_delta": -0.1,
+        "median_bias": 0.0687
+      },
+      "0.20": {
+        "windows": 45,
+        "detected_at_0.05": 0.267,
+        "detected_at_0.01": 0.089,
+        "median_estimated_delta": -0.1389,
+        "injected_delta": -0.2,
+        "median_bias": 0.0611
+      }
+    },
+    "windows_drawn_from": "months [2, 3, 4, 5, 6, 7, 8] only",
+    "why_restricted": "A power measurement taken across the Christmas ramp measures baseline bias, not power. The windows are drawn from the months where T2-C shows the baseline is sound.",
+    "note": "The shock is synthetic but the noise, seasonality and calendar are real. Bias is the median estimate minus the injected size."
+  },
+  "wall_seconds": 8.1
+}
