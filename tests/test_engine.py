@@ -205,3 +205,63 @@ def test_sparse_history_refuses_rather_than_guessing():
     bl = B.fit("net_revenue", s, CONTRACT, test_start=pd.Timestamp("2026-08-09"))
     assert bl.method == "INSUFFICIENT_HISTORY"
     assert not bl.causal_claims_allowed
+
+
+def test_an_uncoverable_declared_cycle_is_refused_not_guessed():
+    """The failure this catches is silence, not error.
+
+    A declared seasonal cycle the training block cannot cover is dropped by MSTL and the
+    baseline still returns a number. On real retail data that number is confident and
+    wrong through the seasonal peak. The engine must notice and abstain.
+    """
+    import numpy as np, pandas as pd
+    from casefile.engine import baseline as B, verdict as VD
+    rng = np.random.default_rng(3)
+    n = 300
+    idx = pd.date_range("2024-01-01", periods=n, freq="D")
+    s = pd.Series(1000 * (1 + 0.05 * np.sin(2 * np.pi * np.arange(n) / 7))
+                  * rng.lognormal(0, 0.02, n), index=idx)
+    C = {"kpis": {"net_revenue": {"min_history_days": 120,
+                                  "seasonality": {"weekly": True, "yearly": True}}},
+         "decision_policy": {**CONTRACT["decision_policy"]}}
+
+    bl = B.fit("net_revenue", s, C, test_start=idx[280])
+    assert bl.method == "MSTL_PROJECTED", "the baseline still fits, which is the danger"
+    assert 365 in bl.dropped_periods, "the uncoverable annual cycle was not recorded"
+    assert not bl.seasonal_coverage_ok
+
+    h = [VD.Hypothesis("H_A", "a", 0.9), VD.Hypothesis("H_NULL", "none", 0.1)]
+    v = VD.decide("T", "net_revenue", h, C, 1e5,
+                  incomplete_seasonal_cycle=not bl.seasonal_coverage_ok,
+                  unmodelled_periods=bl.dropped_periods)
+    assert v.decision == "ABSTAIN"
+    assert v.abstain_type == "incomplete_seasonal_cycle"
+    assert "730" in v.reason, "the refusal must say how much history it would need"
+
+
+def test_a_covered_cycle_still_answers():
+    """The gate must not fire when the history is long enough. Otherwise it is not a gate."""
+    import numpy as np, pandas as pd
+    from casefile.engine import baseline as B
+    rng = np.random.default_rng(4)
+    n = 900
+    idx = pd.date_range("2023-01-01", periods=n, freq="D")
+    s = pd.Series(1000 * (1 + 0.05 * np.sin(2 * np.pi * np.arange(n) / 7))
+                  * rng.lognormal(0, 0.02, n), index=idx)
+    C = {"kpis": {"net_revenue": {"min_history_days": 180,
+                                  "seasonality": {"weekly": True, "yearly": True}}},
+         "decision_policy": {**CONTRACT["decision_policy"]}}
+    bl = B.fit("net_revenue", s, C, test_start=idx[880])
+    assert bl.seasonal_coverage_ok, bl.note
+    assert bl.dropped_periods == ()
+
+
+def test_every_abstain_type_in_code_is_declared_in_the_contract():
+    """The taxonomy is governed. Code that can emit a type the contract does not list is a
+    governance hole, and this test previously would have failed."""
+    from casefile.engine import verdict as VD
+    declared = set(CONTRACT["decision_policy"]["abstain_types"])
+    emitted = {t for t in VD.ABSTAIN_TYPES
+               if t not in ("budget_exceeded_latency", "entitlement_limited")}
+    missing = emitted - declared
+    assert not missing, f"code can emit {sorted(missing)} but the contract does not declare it"

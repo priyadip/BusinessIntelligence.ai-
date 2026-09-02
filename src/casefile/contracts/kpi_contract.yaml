@@ -982,6 +982,7 @@ decision_policy:
   - out_of_library
   - stale_source
   - sparse_history
+  - incomplete_seasonal_cycle
   sparse_history:
     below_min_history: pool_hierarchical_prior
     pooled_from: comparable launches in same category family

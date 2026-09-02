@@ -12,7 +12,8 @@ from datetime import date, timedelta
 
 ABSTAIN_TYPES = ["collinear_causes", "underpowered", "missing_evidence",
                  "contradictory_evidence", "out_of_library", "stale_source",
-                 "sparse_history", "budget_exceeded_latency", "entitlement_limited"]
+                 "sparse_history", "incomplete_seasonal_cycle",
+                 "budget_exceeded_latency", "entitlement_limited"]
 RUNG_ORDER = {"R0": 0, "R1": 1, "R2": 2, "R3": 3, "R4": 4}
 
 
@@ -163,7 +164,9 @@ def build_posterior(hyps: list[Hypothesis], evidence_lrs: list[dict],
 def decide(incident_id: str, kpi: str, hyps: list[Hypothesis], contract: dict,
            daily_exposure: float, entitlement_capped: bool = False,
            sparse: bool = False, stale: bool = False,
-           contradiction: bool = False) -> Verdict:
+           contradiction: bool = False,
+           incomplete_seasonal_cycle: bool = False,
+           unmodelled_periods: tuple = ()) -> Verdict:
     dp = contract["decision_policy"]
     tau = float(dp["act_threshold_posterior"])
     need_rung = dp["min_rung_to_claim_cause"]
@@ -189,6 +192,15 @@ def decide(incident_id: str, kpi: str, hyps: list[Hypothesis], contract: dict,
         return V("ABSTAIN", "sparse_history",
                  "This KPI has less history than its contract floor. A pooled cohort baseline "
                  "is used for detection, and causal claims are disabled by policy.")
+    if incomplete_seasonal_cycle:
+        need = 2 * max(unmodelled_periods) if unmodelled_periods else "two full cycles of"
+        return V("ABSTAIN", "incomplete_seasonal_cycle",
+                 f"The contract declares a seasonal cycle of {list(unmodelled_periods)} days "
+                 f"that this history cannot cover: fitting it needs {need} days of training "
+                 f"data. The baseline can still be computed, and that is the danger. It would "
+                 f"be confident and wrong wherever that cycle matters, so no verdict is "
+                 f"offered on this window. Detection resumes once the history is long enough, "
+                 f"or once the contract stops declaring a cycle the data cannot support.")
     if contradiction:
         return V("ABSTAIN", "contradictory_evidence",
                  "Two sources of comparable trust make incompatible claims. Both are retained "

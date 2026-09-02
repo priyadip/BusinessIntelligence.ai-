@@ -74,11 +74,48 @@ The series is 634 days long and the training block always ends before the tested
 smoother cannot follow the Christmas ramp, so every window from September to January is
 compared against an expectation that ignores Christmas.
 
-This is a real limitation of the method as configured, not a coding error. It says: *the
-detector requires two full years of history before it can be trusted through a seasonal
-peak, and it degrades silently rather than refusing.* The engine has an
-`INSUFFICIENT_HISTORY` path for a series that is too short outright; it has no equivalent
-for a series long enough to fit but too short for its dominant cycle.
+The engine had an `INSUFFICIENT_HISTORY` path for a series too short to fit at all, and no
+equivalent for a series long enough to fit but too short for its dominant cycle. It
+produced a confident answer instead of refusing. For a system whose entire argument is that
+it should know when not to answer, that was the worst possible failure mode.
+
+### The fix
+
+Three changes, on this branch:
+
+1. `baseline.py` records which declared cycles it could not cover
+   (`declared_periods`, `usable_periods`, `dropped_periods`, `seasonal_coverage_ok`)
+   instead of silently dropping them.
+2. `verdict.py` gains a tenth abstention type, **`incomplete_seasonal_cycle`**, declared in
+   the contract alongside the others. It states which cycle is missing and how much history
+   would be needed.
+3. The adapter's contract overlay now declares `yearly: true` with a period of 313 trading
+   days.
+
+That third change matters more than it looks. The overlay originally declared
+`yearly: false`, because the data was too short to fit one. **That is the bug, written into
+a config file.** Turning off a cycle the business genuinely has, in order to make the fit
+succeed, is precisely how a detector ends up confident and wrong at Christmas. A contract
+describes the business, not the convenience of the extract. Declared honestly, the engine
+notices it cannot cover the cycle and refuses.
+
+### What the fix buys, and what it costs
+
+| | Before | After |
+|---|---|---|
+| Windows the engine answers | 240 of 240 | **0 of 240** |
+| False positives at a nominal 1% | 27.9% | **0%, by refusal** |
+| What a user sees | a confident wrong number | `ABSTAIN: incomplete_seasonal_cycle`, naming the missing cycle |
+
+The cost is real and is not hidden: **every window is refused, including the February to
+August windows where the raw statistic was well calibrated at 0.83%.** The gate asks
+whether the declared cycle can be covered, not whether it matters for the particular window
+being tested. A sharper rule would estimate the seasonal materiality of each window and
+refuse only where it is high. That refinement is not implemented and is not claimed here.
+
+The trade is the one the system already makes everywhere else: it answers less in order to
+be wrong less. On this source that means answering nothing until a third year of history
+arrives, which is the honest position rather than a comfortable one.
 
 ## T2-D  Does synthetic control invent causal effects?  **PASSES, conservatively**
 
@@ -134,7 +171,8 @@ this real series is not.
 |---|---|
 | Exact decompositions, residual under 1e-9 | **Confirmed on real data** |
 | Synthetic control does not over-claim | **Confirmed on real data**, 6.1% against a 10% threshold |
-| The engine detects material KPI movements | **Qualified.** True given two full seasonal cycles. Without them the detector fires on 28% of null windows and has 27% power against a 20% shock |
+| The engine detects material KPI movements | **Qualified, and now enforced.** True given two full seasonal cycles. Without them the raw statistic fires on 28% of null windows, and the engine now refuses rather than reporting it |
+| The engine knows when not to answer | **Now true of this failure too.** It was not before: it answered confidently with an unmodelled annual cycle |
 | The system is portable to another schema | **Partly demonstrated.** The adapter is 180 lines and the entire mathematical core needed no change. One engine change was required: the seasonal cycle length had to become contract-declarable |
 
 ## The honest caveat on T2-C

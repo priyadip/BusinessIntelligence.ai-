@@ -104,6 +104,15 @@
       "11": 0.615,
       "12": 0.812
     },
+    "seasonal_gate": {
+      "windows_refused": 240,
+      "windows_answered": 0,
+      "refusal_rate": 1.0,
+      "false_positives_after_the_gate_at_0.01": 0.0,
+      "abstain_type": "incomplete_seasonal_cycle",
+      "cost": "Every window is refused on this source, including the February to August windows where the raw statistic was well calibrated. The gate is a blunt instrument: it asks whether the declared cycle can be covered, not whether the cycle matters for this particular window. That refinement is not implemented and should not be claimed.",
+      "benefit": "The 27.9% false-positive rate below is what the engine produced BEFORE the gate. After it, the engine issues no verdict at all on this source, so the rate is zero by refusal rather than by accuracy."
+    },
     "seasonally_stable_subset": {
       "months": [
         2,
@@ -188,5 +197,5 @@
     "why_restricted": "A power measurement taken across the Christmas ramp measures baseline bias, not power. The windows are drawn from the months where T2-C shows the baseline is sound.",
     "note": "The shock is synthetic but the noise, seasonality and calendar are real. Bias is the median estimate minus the injected size."
   },
-  "wall_seconds": 8.1
+  "wall_seconds": 8.0
 }

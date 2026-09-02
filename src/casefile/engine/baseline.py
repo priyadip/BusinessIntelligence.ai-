@@ -40,6 +40,10 @@ class Baseline:
     last_p_param: float = 1.0
     last_p_floor: float = 1.0
     last_effect_sd: float = 0.0
+    declared_periods: tuple = ()
+    usable_periods: tuple = ()
+    dropped_periods: tuple = ()
+    seasonal_coverage_ok: bool = True
 
     def rank_p(self, idx) -> np.ndarray:
         """Split-conformal rank p-value per point. Exactly valid under exchangeability."""
@@ -100,6 +104,7 @@ def _project(train_z: np.ndarray, n_ahead: int, periods=(7, 365)):
     never see the test window."""
     from statsmodels.tsa.seasonal import MSTL
     per = tuple(p for p in periods if len(train_z) >= 2 * p)
+    dropped = tuple(p for p in periods if p not in per)
     if not per:
         raise ValueError("insufficient history for any seasonal period")
     stl_kw = {"trend": 181, "robust": True, "seasonal_deg": 0, "trend_deg": 1}
@@ -157,7 +162,7 @@ def _project(train_z: np.ndarray, n_ahead: int, periods=(7, 365)):
         return float(sum(seas[len(seas) - pr + ((i - len(seas)) % pr), c]
                          for c, pr in enumerate(per)))
     return (fitted, fut, f"MSTL periods={per}, {level_note}, damped drift {drift:+.2e}/day",
-            project_from, seasonal_at)
+            project_from, seasonal_at, per, dropped)
 
 
 def fit(kpi: str, s: pd.Series, contract: dict, test_start, cohort: pd.DataFrame | None = None,
@@ -183,17 +188,27 @@ def fit(kpi: str, s: pd.Series, contract: dict, test_start, cohort: pd.DataFrame
             yr = int(seas_cfg.get("yearly_period_days", 365))
             periods = tuple(p for p, on in ((wk, seas_cfg.get("weekly", True)),
                                             (yr, seas_cfg.get("yearly", True))) if on)
-            fitted, fut, note, projector, seasonal_at = _project(z[:n_tr], n_te, periods or (7,))
+            fitted, fut, note, projector, seasonal_at, used_per, dropped_per = _project(
+                z[:n_tr], n_te, periods or (7,))
             note = f"{note}; contract declares weekly={seas_cfg.get('weekly')} yearly={seas_cfg.get('yearly')}"
             exp_t = np.concatenate([fitted, fut])
             method, widen, allow = "MSTL_PROJECTED", 1.0, True
             note = f"{note}; trained on {n_tr} days, projected {n_te}"
+            declared_per, usable_per, dropped_per_out = periods or (7,), used_per, dropped_per
+            if dropped_per:
+                # A declared cycle the training block cannot cover is not a small loss. The
+                # expectation simply does not know that part of the year exists, and the
+                # error surfaces as confident, badly calibrated answers at the peak. Record
+                # it so the decision layer can refuse rather than guess.
+                note = (f"{note}; DECLARED CYCLE UNAVAILABLE: {list(dropped_per)} needs "
+                        f"{2 * max(dropped_per)} training days, has {n_tr}")
         except Exception as e:
             base = float(np.median(z[max(0, n_tr - 28):n_tr]))
             exp_t = np.concatenate([pd.Series(z[:n_tr]).rolling(28, min_periods=7, center=True)
                                     .median().bfill().ffill().to_numpy(), np.full(n_te, base)])
             method, widen, allow, projector, seasonal_at = "ROLLING_MEDIAN", 1.25, True, None, None
             note = f"MSTL unavailable ({type(e).__name__}); rolling median on {n_tr} days"
+            declared_per, usable_per, dropped_per_out = periods or (7,), (), periods or (7,)
     elif cohort is not None and len(cohort) > 0 and n_tr >= 8:
         cz = _fwd(cohort.to_numpy(dtype=float).ravel(), kpi); cz = cz[np.isfinite(cz)]
         shape = np.resize(cz - cz.mean(), n)
@@ -202,6 +217,7 @@ def fit(kpi: str, s: pd.Series, contract: dict, test_start, cohort: pd.DataFrame
         w = tau2 / (tau2 + own_var / max(n_tr, 1))
         exp_t = w * (own_level + shape) + (1 - w) * (float(cz.mean()) + shape)
         method, widen, projector, seasonal_at = "POOLED_COHORT", float(sp["widen_interval_factor"]), None, None
+        declared_per, usable_per, dropped_per_out = (), (), ()
         allow = bool(sp["causal_claims_allowed"])
         note = (f"n={n_tr} days of own history < min_history {min_h}. Level from own data, "
                 f"seasonal shape pooled from {len(cz)} sibling observations, shrinkage w={w:.2f}. "
@@ -230,6 +246,10 @@ def fit(kpi: str, s: pd.Series, contract: dict, test_start, cohort: pd.DataFrame
     calib = np.sort(calib[np.isfinite(calib)])
     b = Baseline(kpi, method, s.index, y, _inv(exp_t, kpi), rz, calib, len(calib),
                  widen, note, allow)
+    b.declared_periods = tuple(declared_per)
+    b.usable_periods = tuple(usable_per)
+    b.dropped_periods = tuple(dropped_per_out)
+    b.seasonal_coverage_ok = not bool(dropped_per_out)
     b.oos_window_stats = np.sort(np.array(oos_stats)) if oos_stats else np.array([])
     des = (z - np.array([seasonal_at(i) for i in range(n)])
            if seasonal_at is not None else z.copy())

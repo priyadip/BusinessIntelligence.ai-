@@ -75,7 +75,8 @@ and a written justification; six are `backend: none` and the gateway raises if t
 | Rubric coverage against the Round 2 brief | see `results/rubric.json` |
 | **Tier-2, real data:** decomposition on UCI Online Retail II | residual **2.8e-13**, identity closes |
 | **Tier-2, real data:** synthetic control with no intervention present | **6.1%** spurious R3 against a 10% threshold |
-| **Tier-2, real data:** detector fire rate on null windows | **27.9%** at a nominal 1%; **0.83%** outside the Christmas ramp |
+| **Tier-2, real data:** detector fire rate on null windows | raw statistic **27.9%** at a nominal 1%; **0.83%** outside the Christmas ramp |
+| **Tier-2, real data:** after the seasonal-coverage gate | **240 of 240 windows refused** with `incomplete_seasonal_cycle` |
 | **Tier-2, real data:** recovery of an injected -20% shock | detected in 27% of windows, median estimate -13.9% |
 
 ### Batch evaluation, <!--NUMBERS:n-->300<!--/NUMBERS:n--> seeded incidents
@@ -185,10 +186,19 @@ the series is 634 days long, so the training block never contains two full years
 is therefore never in the expectation. Restricted to February through August the detector is
 calibrated: 0.83% at a nominal 1%.
 
-The honest statement is that detection is trustworthy given two full seasonal cycles and
-degrades silently without them. The engine refuses outright when history is too short to fit
-at all; it has no equivalent refusal for history that is long enough to fit but too short
-for its dominant cycle. That is a gap worth closing.
+That gap is now closed. `baseline.py` records the cycles it could not cover, and
+`verdict.py` gains a tenth abstention type, `incomplete_seasonal_cycle`, declared in the
+contract like the rest. On this source the engine now refuses all 240 windows and names the
+missing cycle, where before it answered on all 240 and was wrong on 28% of them.
+
+The cost is stated rather than buried: the refusal also covers the February to August
+windows where detection was sound, because the gate asks whether the declared cycle can be
+covered and not whether it matters for a given window. The sharper rule is not implemented.
+
+The adapter's own configuration was part of the bug. It first declared `yearly: false`
+because the extract was too short to fit an annual cycle, which is exactly how a detector
+becomes confident and wrong at a seasonal peak. A contract describes the business, not the
+convenience of the data, so it now declares the cycle honestly and the engine refuses.
 
 Adapting to the real source needed one engine change: the seasonal cycle length became
 contract-declarable, because the source is closed on Saturdays and its week is six days

@@ -8,7 +8,8 @@ that nobody here generated, and asks four questions whose answers were not desig
 
   T2-B  Do the exact decompositions still close on real segments?
   T2-C  On windows where nothing is known to have happened, how often does the detector
-        fire? A calibrated procedure should fire at about its nominal rate.
+        fire? A calibrated procedure should fire at about its nominal rate. This also
+        reports what the seasonal-coverage gate does with the same windows.
   T2-D  On random dates with no intervention at all, how often does synthetic control
         report a causal effect? A calibrated placebo test should say R3 about 10% of the
         time, because 0.10 is the threshold.
@@ -65,7 +66,10 @@ def _fit_window(series, start_pos, contract):
     p_stud, eff_sd = bl.window_rank_p(idx)
     actual = float(np.nanmean(bl.actual[idx]))
     expected = float(np.nanmean(bl.expected[idx]))
-    return {"window_start": str(ts.date()), "p_studentised": float(p_stud),
+    return {"window_start": str(ts.date()),
+            "seasonal_coverage_ok": bool(bl.seasonal_coverage_ok),
+            "unmodelled_periods": str(list(bl.dropped_periods)),
+            "p_studentised": float(p_stud),
             "p_conformal_rank": float(bl.last_p_rank),
             "p_conformal_floor": float(bl.last_p_floor),
             "effect_sd": float(eff_sd), "actual": actual, "expected": expected,
@@ -195,6 +199,25 @@ def main(n_null=200, n_sc=120, n_power=40, workers=16, out_dir=None):
     t2c["by_month_fire_rate_at_0.01"] = {
         str(m): round(float(np.mean([p_ <= 0.01 for p_, mm in zip(ps_stud, months) if mm == m])), 3)
         for m in sorted(set(months))}
+    # What the engine ACTUALLY does now, as opposed to what the raw statistic says. A window
+    # whose declared seasonal cycle cannot be covered is refused before a p-value is used.
+    refused = [r for r in null_rows if not r["seasonal_coverage_ok"]]
+    answered = [r for r in null_rows if r["seasonal_coverage_ok"]]
+    t2c["seasonal_gate"] = {
+        "windows_refused": len(refused),
+        "windows_answered": len(answered),
+        "refusal_rate": round(len(refused) / max(len(null_rows), 1), 4),
+        "false_positives_after_the_gate_at_0.01": round(
+            _rate([r["p_studentised"] for r in answered], 0.01), 4) if answered else 0.0,
+        "abstain_type": "incomplete_seasonal_cycle",
+        "cost": "Every window is refused on this source, including the February to August "
+                "windows where the raw statistic was well calibrated. The gate is a blunt "
+                "instrument: it asks whether the declared cycle can be covered, not whether "
+                "the cycle matters for this particular window. That refinement is not "
+                "implemented and should not be claimed.",
+        "benefit": "The 27.9% false-positive rate below is what the engine produced BEFORE "
+                   "the gate. After it, the engine issues no verdict at all on this source, "
+                   "so the rate is zero by refusal rather than by accuracy."}
     stable = [(p_, pc) for p_, pc, m in zip(ps_stud, ps_conf, months) if m in STABLE_MONTHS]
     t2c["seasonally_stable_subset"] = {
         "months": list(STABLE_MONTHS),
@@ -205,8 +228,11 @@ def main(n_null=200, n_sc=120, n_power=40, workers=16, out_dir=None):
         "why": "February to August contains no Christmas ramp. If the aggregate failure is "
                "caused by an unavailable annual cycle, this subset should be calibrated."}
     for a, v in t2c["nominal_vs_empirical"].items():
-        print(f"      alpha={a}: studentised {v['empirical_studentised']:.3f}  "
+        print(f"      raw statistic, alpha={a}: studentised {v['empirical_studentised']:.3f}  "
               f"conformal {v['empirical_conformal']:.3f}")
+    g = t2c["seasonal_gate"]
+    print(f"      seasonal gate: {g['windows_refused']}/{len(null_rows)} windows refused "
+          f"({g['refusal_rate']:.0%}) with abstain_type={g['abstain_type']}")
 
     print(f"T2-D  synthetic-control negative control, {n_sc} trials ...")
     panel = U.sku_panel(clean, country="United Kingdom", min_days=SC_MIN_DAYS).copy()

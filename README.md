@@ -274,12 +274,15 @@ Two of its four tests are negative controls that were free to fail, and one did:
 |---|---|
 | Exact decomposition on real segments | residual `2.8e-13`, **closes** |
 | Synthetic control on dates with no intervention | **6.1%** spurious R3 against a 10% threshold, conservative |
-| Detector fire rate on windows where nothing happened | **27.9%** at a nominal 1%, a 28-fold overshoot |
+| Detector fire rate on windows where nothing happened | raw statistic **27.9%** at a nominal 1%, a 28-fold overshoot |
 | The same, February to August only | **0.83%** at a nominal 1%, calibrated |
+| After the fix, a tenth abstention type | **240 of 240 windows refused**, naming the missing cycle |
 
 The detector failure is entirely seasonal and has an exact cause: the annual cycle needs
 two full periods and this source has 2.02 years of trading days, so Christmas is never
-modelled. Full write-up, including the recovery-of-a-known-shock results, in
+modelled. The engine answered anyway, which for a system built to know when not to answer
+was the worst available failure. It now abstains with `incomplete_seasonal_cycle` and says
+which cycle it is missing. Full write-up, including what that fix costs, in
 [`docs/TIER2_REAL_DATA.md`](docs/TIER2_REAL_DATA.md).
 
 ## Documentation

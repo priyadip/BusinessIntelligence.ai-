@@ -190,6 +190,10 @@ def run_case(incident_id: str, contract: dict, gw: SemanticGateway, pol: PolicyE
         "p_studentised": p_win, "p_conformal_rank": bl.last_p_rank,
         "p_conformal_floor": bl.last_p_floor, "effect_sd": eff_sd,
         "sparse_history": sparse, "causal_claims_allowed": bl.causal_claims_allowed,
+        "seasonal_coverage_ok": bl.seasonal_coverage_ok,
+        "declared_periods": list(bl.declared_periods),
+        "usable_periods": list(bl.usable_periods),
+        "unmodelled_periods": list(bl.dropped_periods),
         "shortfall_currency": (actual - expected) * (len(idx) if kpi == "net_revenue" else spec["daily_exposure"] / max(expected, 1e-9) * len(idx)),
         "freshness": case["freshness"], "lineage": prov.source_columns,
         "plan_hash": prov.plan_hash, "sql": prov.sql}
@@ -384,7 +388,9 @@ def run_case(incident_id: str, contract: dict, gw: SemanticGateway, pol: PolicyE
         case["contradiction"] = contra_info
         v = VD.decide(incident_id, kpi, hyps, contract, spec["daily_exposure"],
                       sparse=sparse and not bl.causal_claims_allowed, stale=stale,
-                      contradiction=contradiction)
+                      contradiction=contradiction,
+                      incomplete_seasonal_cycle=not bl.seasonal_coverage_ok,
+                      unmodelled_periods=bl.dropped_periods)
         case["verdict"] = asdict(v)
         fired = {e.test_id for e in ev_items if e.fired}
         lib_by_id = {h["id"]: h for h in contract["hypothesis_library"]}

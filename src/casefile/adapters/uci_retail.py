@@ -166,8 +166,15 @@ def daily_series(clean_df: pd.DataFrame, q: QualityReport,
 def contract_overlay(base_contract: dict) -> dict:
     """The contract entries this source needs, declared rather than assumed.
 
-    The trading week is six days, not seven, so the weekly cycle is declared explicitly.
-    Two years of history is not enough for a yearly cycle at this cadence, so it is off.
+    The trading week is six days, not seven, so the weekly cycle is declared explicitly,
+    and the annual cycle is 313 trading days rather than 365 calendar days.
+
+    Both cycles are declared TRUE. UK retail has an annual cycle whether or not this
+    extract is long enough to fit one, and the contract describes the business, not the
+    convenience of the data. Declaring `yearly: false` here would make the fit succeed and
+    the detector wrong: it is the exact move that produces a confident answer at Christmas
+    from a model that has never seen a Christmas. Declared honestly, the engine notices it
+    cannot cover the cycle and abstains with `incomplete_seasonal_cycle`.
     """
     c = {k: v for k, v in base_contract.items()}
     kpis = dict(c["kpis"])
@@ -176,7 +183,8 @@ def contract_overlay(base_contract: dict) -> dict:
         "from": "uci_retail.online_retail_ii",
         "min_history_days": 180,
         "seasonality": {"weekly": True, "weekly_period_days": 6,
-                        "yearly": False, "holiday_set": "UK_RETAIL"},
+                        "yearly": True, "yearly_period_days": 313,
+                        "holiday_set": "UK_RETAIL"},
         "lineage": ["uci_retail.quantity", "uci_retail.price"],
     }
     kpis["avg_order_value"] = {
@@ -184,7 +192,8 @@ def contract_overlay(base_contract: dict) -> dict:
         "from": "uci_retail.online_retail_ii",
         "min_history_days": 180,
         "seasonality": {"weekly": True, "weekly_period_days": 6,
-                        "yearly": False, "holiday_set": "UK_RETAIL"},
+                        "yearly": True, "yearly_period_days": 313,
+                        "holiday_set": "UK_RETAIL"},
         "lineage": ["uci_retail.quantity", "uci_retail.price", "uci_retail.invoice"],
     }
     c["kpis"] = kpis
