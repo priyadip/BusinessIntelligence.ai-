@@ -23,6 +23,25 @@ Round 2 prototype for the Accenture Innovation Challenge, track *BusinessIntelli
 Vantage Retail Group is fictional. All data is synthetic or public. No proprietary data from
 any real organisation is used or implied.
 
+> ### You are looking at the real-data version
+>
+> This repository has two versions, kept deliberately separate.
+>
+> | Version | Branch | Tag | What it is |
+> |---|---|---|---|
+> | Original submission | `main` (default) | `v1.0-submission` | The prototype as submitted. Everything measured on the simulator's world |
+> | **Real-data version** | `tier2-real-data` | `v2.0-real-data` | **You are here.** Adds a pass that runs the same statistics over 1,067,371 real transactions |
+>
+> ```bash
+> git checkout main             # or: git checkout v1.0-submission
+> git checkout tier2-real-data  # or: git checkout v2.0-real-data
+> ```
+>
+> The two tags are permanent snapshots and will not move, so further work on either
+> branch leaves them intact. The only difference in the engine itself is four lines in
+> `baseline.py` making the seasonal cycle length declarable; the default is unchanged and
+> the synthetic results are byte-identical between versions.
+
 ## Table of contents
 
 - [Overview](#overview)
