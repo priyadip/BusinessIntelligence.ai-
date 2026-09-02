@@ -1,0 +1,5 @@
+# Optional. Only needed for `--llm-mode local`, which generates the prose.
+# Every computed number is identical without these installed; see results/llm_invariance.json.
+torch>=2.2
+transformers>=4.40
+accelerate>=0.30

@@ -1,0 +1,1006 @@
+{
+ "lr": {
+  "carrier_shift": {
+   "H_CARRIER_DEGRADE": 1.9594,
+   "H_PRICE_RISE": 0.8334,
+   "H_STOCKOUT": 1.1323,
+   "H_COMPETITOR": 0.8028,
+   "H_PROMO_WITHDRAWAL": 0.6683,
+   "H_MARKETING_CUT": 0.8724
+  },
+  "checkout_errors": {
+   "H_CARRIER_DEGRADE": 0.4244,
+   "H_PRICE_RISE": 0.5326,
+   "H_CHECKOUT_DEFECT": 50.0,
+   "H_STOCKOUT": 0.6668,
+   "H_COMPETITOR": 0.5933,
+   "H_PROMO_WITHDRAWAL": 0.5442,
+   "H_MARKETING_CUT": 0.5698
+  },
+  "doc_release_checkout": {
+   "H_CARRIER_DEGRADE": 0.4244,
+   "H_PRICE_RISE": 0.5326,
+   "H_CHECKOUT_DEFECT": 50.0,
+   "H_STOCKOUT": 0.6668,
+   "H_COMPETITOR": 0.5933,
+   "H_PROMO_WITHDRAWAL": 0.5442,
+   "H_MARKETING_CUT": 0.5698
+  },
+  "doc_release_price": {
+   "H_CARRIER_DEGRADE": 0.6999,
+   "H_PRICE_RISE": 50.0,
+   "H_CHECKOUT_DEFECT": 0.5305,
+   "H_STOCKOUT": 0.8348,
+   "H_COMPETITOR": 0.7204,
+   "H_PROMO_WITHDRAWAL": 0.7984,
+   "H_MARKETING_CUT": 0.4083
+  },
+  "doc_release_promo": {
+   "H_CARRIER_DEGRADE": 0.4877,
+   "H_PRICE_RISE": 0.7887,
+   "H_CHECKOUT_DEFECT": 0.549,
+   "H_STOCKOUT": 0.7183,
+   "H_COMPETITOR": 0.6627,
+   "H_PROMO_WITHDRAWAL": 50.0,
+   "H_MARKETING_CUT": 0.6508
+  },
+  "mix_shift": {
+   "H_CARRIER_DEGRADE": 0.5049,
+   "H_PRICE_RISE": 0.3764,
+   "H_CHECKOUT_DEFECT": 0.5716,
+   "H_STOCKOUT": 0.6753,
+   "H_COMPETITOR": 0.847,
+   "H_PROMO_WITHDRAWAL": 0.7261,
+   "H_MARKETING_CUT": 50.0
+  },
+  "ontime_drop": {
+   "H_CARRIER_DEGRADE": 1.9594,
+   "H_PRICE_RISE": 0.8334,
+   "H_STOCKOUT": 1.1323,
+   "H_COMPETITOR": 0.8028,
+   "H_PROMO_WITHDRAWAL": 0.6683,
+   "H_MARKETING_CUT": 0.8724
+  },
+  "price_move": {
+   "H_CARRIER_DEGRADE": 0.6999,
+   "H_PRICE_RISE": 50.0,
+   "H_CHECKOUT_DEFECT": 0.5305,
+   "H_STOCKOUT": 0.8348,
+   "H_COMPETITOR": 0.7204,
+   "H_PROMO_WITHDRAWAL": 0.7984,
+   "H_MARKETING_CUT": 0.4083
+  },
+  "promo_move": {
+   "H_CARRIER_DEGRADE": 0.4877,
+   "H_PRICE_RISE": 0.7887,
+   "H_CHECKOUT_DEFECT": 0.549,
+   "H_STOCKOUT": 0.7183,
+   "H_COMPETITOR": 0.6627,
+   "H_PROMO_WITHDRAWAL": 50.0,
+   "H_MARKETING_CUT": 0.6508
+  },
+  "stockout_rise": {
+   "H_CARRIER_DEGRADE": 0.65,
+   "H_PRICE_RISE": 0.8293,
+   "H_CHECKOUT_DEFECT": 0.6562,
+   "H_STOCKOUT": 50.0,
+   "H_COMPETITOR": 0.4267,
+   "H_PROMO_WITHDRAWAL": 0.7624,
+   "H_MARKETING_CUT": 0.6567
+  },
+  "txt_competitor": {
+   "H_CARRIER_DEGRADE": 0.5314,
+   "H_PRICE_RISE": 0.721,
+   "H_CHECKOUT_DEFECT": 0.5626,
+   "H_STOCKOUT": 0.4324,
+   "H_COMPETITOR": 50.0,
+   "H_PROMO_WITHDRAWAL": 0.6488,
+   "H_MARKETING_CUT": 0.8248
+  },
+  "txt_delivery_late": {
+   "H_CARRIER_DEGRADE": 1.9594,
+   "H_PRICE_RISE": 0.8334,
+   "H_STOCKOUT": 1.1323,
+   "H_COMPETITOR": 0.8028,
+   "H_PROMO_WITHDRAWAL": 0.6683,
+   "H_MARKETING_CUT": 0.8724
+  },
+  "txt_payment_fail": {
+   "H_CARRIER_DEGRADE": 0.4244,
+   "H_PRICE_RISE": 0.5326,
+   "H_CHECKOUT_DEFECT": 50.0,
+   "H_STOCKOUT": 0.6668,
+   "H_COMPETITOR": 0.5933,
+   "H_PROMO_WITHDRAWAL": 0.5442,
+   "H_MARKETING_CUT": 0.5698
+  },
+  "txt_price": {
+   "H_CARRIER_DEGRADE": 0.6765,
+   "H_PRICE_RISE": 3.8141,
+   "H_CHECKOUT_DEFECT": 0.5586,
+   "H_STOCKOUT": 0.8261,
+   "H_COMPETITOR": 0.7643,
+   "H_PROMO_WITHDRAWAL": 3.1302,
+   "H_MARKETING_CUT": 0.5649
+  },
+  "txt_stock": {
+   "H_CARRIER_DEGRADE": 0.65,
+   "H_PRICE_RISE": 0.8293,
+   "H_CHECKOUT_DEFECT": 0.6562,
+   "H_STOCKOUT": 50.0,
+   "H_COMPETITOR": 0.4267,
+   "H_PROMO_WITHDRAWAL": 0.7624,
+   "H_MARKETING_CUT": 0.6567
+  }
+ },
+ "support": {
+  "carrier_shift": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 68,
+    "p_fire_given_h": 0.4507,
+    "p_fire_given_not_h": 0.23,
+    "raw_ratio": 1.96,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 38,
+    "p_fire_given_h": 0.2601,
+    "p_fire_given_not_h": 0.3121,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 43,
+    "p_fire_given_h": 0.3246,
+    "p_fire_given_not_h": 0.2867,
+    "raw_ratio": 1.13,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2518,
+    "p_fire_given_not_h": 0.3137,
+    "raw_ratio": 0.8,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2165,
+    "p_fire_given_not_h": 0.324,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2669,
+    "p_fire_given_not_h": 0.306,
+    "raw_ratio": 0.87,
+    "clipped": false
+   }
+  },
+  "checkout_errors": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.1546,
+    "p_fire_given_not_h": 0.3643,
+    "raw_ratio": 0.42,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.1858,
+    "p_fire_given_not_h": 0.3489,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 150,
+    "p_fire_given_h": 0.9967,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 699.68,
+    "clipped": true
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.2201,
+    "p_fire_given_not_h": 0.3302,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2007,
+    "p_fire_given_not_h": 0.3384,
+    "raw_ratio": 0.59,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.185,
+    "p_fire_given_not_h": 0.34,
+    "raw_ratio": 0.54,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1907,
+    "p_fire_given_not_h": 0.3346,
+    "raw_ratio": 0.57,
+    "clipped": false
+   }
+  },
+  "doc_release_checkout": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.1546,
+    "p_fire_given_not_h": 0.3643,
+    "raw_ratio": 0.42,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.1858,
+    "p_fire_given_not_h": 0.3489,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 150,
+    "p_fire_given_h": 0.9967,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 699.68,
+    "clipped": true
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.2201,
+    "p_fire_given_not_h": 0.3302,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2007,
+    "p_fire_given_not_h": 0.3384,
+    "raw_ratio": 0.59,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.185,
+    "p_fire_given_not_h": 0.34,
+    "raw_ratio": 0.54,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1907,
+    "p_fire_given_not_h": 0.3346,
+    "raw_ratio": 0.57,
+    "clipped": false
+   }
+  },
+  "doc_release_price": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.227,
+    "p_fire_given_not_h": 0.3243,
+    "raw_ratio": 0.7,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 147,
+    "p_fire_given_h": 0.9966,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 705.61,
+    "clipped": true
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.1821,
+    "p_fire_given_not_h": 0.3433,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2575,
+    "p_fire_given_not_h": 0.3084,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2299,
+    "p_fire_given_not_h": 0.3192,
+    "raw_ratio": 0.72,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.248,
+    "p_fire_given_not_h": 0.3107,
+    "raw_ratio": 0.8,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 16,
+    "p_fire_given_h": 0.1398,
+    "p_fire_given_not_h": 0.3424,
+    "raw_ratio": 0.41,
+    "clipped": false
+   }
+  },
+  "doc_release_promo": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 21,
+    "p_fire_given_h": 0.1414,
+    "p_fire_given_not_h": 0.29,
+    "raw_ratio": 0.49,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 30,
+    "p_fire_given_h": 0.2061,
+    "p_fire_given_not_h": 0.2613,
+    "raw_ratio": 0.79,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.1556,
+    "p_fire_given_not_h": 0.2835,
+    "raw_ratio": 0.55,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 25,
+    "p_fire_given_h": 0.1903,
+    "p_fire_given_not_h": 0.2649,
+    "raw_ratio": 0.72,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 24,
+    "p_fire_given_h": 0.1788,
+    "p_fire_given_not_h": 0.2699,
+    "raw_ratio": 0.66,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 122,
+    "p_fire_given_h": 0.9646,
+    "p_fire_given_not_h": 0.0013,
+    "raw_ratio": 723.43,
+    "clipped": true
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 20,
+    "p_fire_given_h": 0.1737,
+    "p_fire_given_not_h": 0.2669,
+    "raw_ratio": 0.65,
+    "clipped": false
+   }
+  },
+  "mix_shift": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 20,
+    "p_fire_given_h": 0.1349,
+    "p_fire_given_not_h": 0.2671,
+    "raw_ratio": 0.5,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 15,
+    "p_fire_given_h": 0.1047,
+    "p_fire_given_not_h": 0.2782,
+    "raw_ratio": 0.38,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.149,
+    "p_fire_given_not_h": 0.2607,
+    "raw_ratio": 0.57,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1679,
+    "p_fire_given_not_h": 0.2486,
+    "raw_ratio": 0.68,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2007,
+    "p_fire_given_not_h": 0.237,
+    "raw_ratio": 0.85,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1772,
+    "p_fire_given_not_h": 0.244,
+    "raw_ratio": 0.73,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 113,
+    "p_fire_given_h": 0.9619,
+    "p_fire_given_not_h": 0.0013,
+    "raw_ratio": 738.71,
+    "clipped": true
+   }
+  },
+  "ontime_drop": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 68,
+    "p_fire_given_h": 0.4507,
+    "p_fire_given_not_h": 0.23,
+    "raw_ratio": 1.96,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 38,
+    "p_fire_given_h": 0.2601,
+    "p_fire_given_not_h": 0.3121,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 43,
+    "p_fire_given_h": 0.3246,
+    "p_fire_given_not_h": 0.2867,
+    "raw_ratio": 1.13,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2518,
+    "p_fire_given_not_h": 0.3137,
+    "raw_ratio": 0.8,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2165,
+    "p_fire_given_not_h": 0.324,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2669,
+    "p_fire_given_not_h": 0.306,
+    "raw_ratio": 0.87,
+    "clipped": false
+   }
+  },
+  "price_move": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.227,
+    "p_fire_given_not_h": 0.3243,
+    "raw_ratio": 0.7,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 147,
+    "p_fire_given_h": 0.9966,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 705.61,
+    "clipped": true
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.1821,
+    "p_fire_given_not_h": 0.3433,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2575,
+    "p_fire_given_not_h": 0.3084,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2299,
+    "p_fire_given_not_h": 0.3192,
+    "raw_ratio": 0.72,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.248,
+    "p_fire_given_not_h": 0.3107,
+    "raw_ratio": 0.8,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 16,
+    "p_fire_given_h": 0.1398,
+    "p_fire_given_not_h": 0.3424,
+    "raw_ratio": 0.41,
+    "clipped": false
+   }
+  },
+  "promo_move": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 21,
+    "p_fire_given_h": 0.1414,
+    "p_fire_given_not_h": 0.29,
+    "raw_ratio": 0.49,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 30,
+    "p_fire_given_h": 0.2061,
+    "p_fire_given_not_h": 0.2613,
+    "raw_ratio": 0.79,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.1556,
+    "p_fire_given_not_h": 0.2835,
+    "raw_ratio": 0.55,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 25,
+    "p_fire_given_h": 0.1903,
+    "p_fire_given_not_h": 0.2649,
+    "raw_ratio": 0.72,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 24,
+    "p_fire_given_h": 0.1788,
+    "p_fire_given_not_h": 0.2699,
+    "raw_ratio": 0.66,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 122,
+    "p_fire_given_h": 0.9646,
+    "p_fire_given_not_h": 0.0013,
+    "raw_ratio": 723.43,
+    "clipped": true
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 20,
+    "p_fire_given_h": 0.1737,
+    "p_fire_given_not_h": 0.2669,
+    "raw_ratio": 0.65,
+    "clipped": false
+   }
+  },
+  "stockout_rise": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.1941,
+    "p_fire_given_not_h": 0.2986,
+    "raw_ratio": 0.65,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2331,
+    "p_fire_given_not_h": 0.2811,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.1954,
+    "p_fire_given_not_h": 0.2977,
+    "raw_ratio": 0.66,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 133,
+    "p_fire_given_h": 0.9963,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 733.25,
+    "clipped": true
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 18,
+    "p_fire_given_h": 0.135,
+    "p_fire_given_not_h": 0.3164,
+    "raw_ratio": 0.43,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2165,
+    "p_fire_given_not_h": 0.284,
+    "raw_ratio": 0.76,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1907,
+    "p_fire_given_not_h": 0.2904,
+    "raw_ratio": 0.66,
+    "clipped": false
+   }
+  },
+  "txt_competitor": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 25,
+    "p_fire_given_h": 0.1678,
+    "p_fire_given_not_h": 0.3157,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2128,
+    "p_fire_given_not_h": 0.2952,
+    "raw_ratio": 0.72,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 26,
+    "p_fire_given_h": 0.1755,
+    "p_fire_given_not_h": 0.312,
+    "raw_ratio": 0.56,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 18,
+    "p_fire_given_h": 0.1381,
+    "p_fire_given_not_h": 0.3193,
+    "raw_ratio": 0.43,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 135,
+    "p_fire_given_h": 0.9891,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 722.01,
+    "clipped": true
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 24,
+    "p_fire_given_h": 0.1929,
+    "p_fire_given_not_h": 0.2973,
+    "raw_ratio": 0.65,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2331,
+    "p_fire_given_not_h": 0.2826,
+    "raw_ratio": 0.82,
+    "clipped": false
+   }
+  },
+  "txt_delivery_late": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 68,
+    "p_fire_given_h": 0.4507,
+    "p_fire_given_not_h": 0.23,
+    "raw_ratio": 1.96,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 38,
+    "p_fire_given_h": 0.2601,
+    "p_fire_given_not_h": 0.3121,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 43,
+    "p_fire_given_h": 0.3246,
+    "p_fire_given_not_h": 0.2867,
+    "raw_ratio": 1.13,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2518,
+    "p_fire_given_not_h": 0.3137,
+    "raw_ratio": 0.8,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2165,
+    "p_fire_given_not_h": 0.324,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 31,
+    "p_fire_given_h": 0.2669,
+    "p_fire_given_not_h": 0.306,
+    "raw_ratio": 0.87,
+    "clipped": false
+   }
+  },
+  "txt_payment_fail": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.1546,
+    "p_fire_given_not_h": 0.3643,
+    "raw_ratio": 0.42,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.1858,
+    "p_fire_given_not_h": 0.3489,
+    "raw_ratio": 0.53,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 150,
+    "p_fire_given_h": 0.9967,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 699.68,
+    "clipped": true
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.2201,
+    "p_fire_given_not_h": 0.3302,
+    "raw_ratio": 0.67,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2007,
+    "p_fire_given_not_h": 0.3384,
+    "raw_ratio": 0.59,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 23,
+    "p_fire_given_h": 0.185,
+    "p_fire_given_not_h": 0.34,
+    "raw_ratio": 0.54,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1907,
+    "p_fire_given_not_h": 0.3346,
+    "raw_ratio": 0.57,
+    "clipped": false
+   }
+  },
+  "txt_price": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 54,
+    "p_fire_given_h": 0.3586,
+    "p_fire_given_not_h": 0.53,
+    "raw_ratio": 0.68,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 147,
+    "p_fire_given_h": 0.9966,
+    "p_fire_given_not_h": 0.2613,
+    "raw_ratio": 3.81,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 46,
+    "p_fire_given_h": 0.3079,
+    "p_fire_given_not_h": 0.5513,
+    "raw_ratio": 0.56,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 55,
+    "p_fire_given_h": 0.4142,
+    "p_fire_given_not_h": 0.5014,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 53,
+    "p_fire_given_h": 0.3905,
+    "p_fire_given_not_h": 0.511,
+    "raw_ratio": 0.76,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 123,
+    "p_fire_given_h": 0.9724,
+    "p_fire_given_not_h": 0.3107,
+    "raw_ratio": 3.13,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 35,
+    "p_fire_given_h": 0.3008,
+    "p_fire_given_not_h": 0.5326,
+    "raw_ratio": 0.56,
+    "clipped": false
+   }
+  },
+  "txt_stock": {
+   "H_CARRIER_DEGRADE": {
+    "n_positive": 151,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.1941,
+    "p_fire_given_not_h": 0.2986,
+    "raw_ratio": 0.65,
+    "clipped": false
+   },
+   "H_PRICE_RISE": {
+    "n_positive": 147,
+    "fired_when_true": 34,
+    "p_fire_given_h": 0.2331,
+    "p_fire_given_not_h": 0.2811,
+    "raw_ratio": 0.83,
+    "clipped": false
+   },
+   "H_CHECKOUT_DEFECT": {
+    "n_positive": 150,
+    "fired_when_true": 29,
+    "p_fire_given_h": 0.1954,
+    "p_fire_given_not_h": 0.2977,
+    "raw_ratio": 0.66,
+    "clipped": false
+   },
+   "H_STOCKOUT": {
+    "n_positive": 133,
+    "fired_when_true": 133,
+    "p_fire_given_h": 0.9963,
+    "p_fire_given_not_h": 0.0014,
+    "raw_ratio": 733.25,
+    "clipped": true
+   },
+   "H_COMPETITOR": {
+    "n_positive": 136,
+    "fired_when_true": 18,
+    "p_fire_given_h": 0.135,
+    "p_fire_given_not_h": 0.3164,
+    "raw_ratio": 0.43,
+    "clipped": false
+   },
+   "H_PROMO_WITHDRAWAL": {
+    "n_positive": 126,
+    "fired_when_true": 27,
+    "p_fire_given_h": 0.2165,
+    "p_fire_given_not_h": 0.284,
+    "raw_ratio": 0.76,
+    "clipped": false
+   },
+   "H_MARKETING_CUT": {
+    "n_positive": 117,
+    "fired_when_true": 22,
+    "p_fire_given_h": 0.1907,
+    "p_fire_given_not_h": 0.2904,
+    "raw_ratio": 0.66,
+    "clipped": false
+   }
+  }
+ },
+ "n_incidents": 500,
+ "train_seeds": [
+  30000,
+  30499
+ ],
+ "test_seeds_held_out": [
+  9000,
+  9299
+ ],
+ "method": "Jeffreys-smoothed P(evidence|hypothesis) / P(evidence|not hypothesis) over simulated incidents; ratios clipped to [0.05, 50]",
+ "fire_threshold": 0.15,
+ "min_positive_examples": 8,
+ "clip_note": "In this synthetic world the mapping from cause to observable evidence is close to deterministic, so many raw ratios are very large and saturate the clip. The raw estimate is retained in `support` for audit. The clip is kept deliberately: real evidence is far noisier, and no single test should be able to manufacture certainty on its own.",
+ "correlated_tests_note": "Tests driven by the same observable (for example ontime_drop, carrier_shift and txt_delivery_late) fire together and therefore receive identical ratios here. Double counting is prevented at inference time by source-group collapsing in verdict.build_posterior.",
+ "dropped_uninformative": "ratios within 8% of 1.0 are omitted so uninformative evidence contributes exactly nothing",
+ "temperature": 2.0,
+ "temperature_fit": {
+  "n_calibration_points": 305,
+  "brier_before": 0.2849,
+  "brier_after": 0.2074,
+  "method": "single scalar temperature on the summed log-likelihood-ratio, grid searched to minimise Brier score on the calibration seeds only; locked before any evaluation seed is touched. Ranking is unaffected."
+ }
+}

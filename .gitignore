@@ -1,0 +1,35 @@
+# ---------------------------------------------------------------- generated world
+# The warehouse is 125 MB, which GitHub rejects outright (100 MB hard limit), and it is
+# fully regenerable from the simulator in about 40 seconds. Committing a build artifact
+# that large would also make every clone slow for no benefit.
+data/vantage.duckdb
+data/documents.jsonl
+data/ground_truth.json
+
+# Third-party data is fetched, not redistributed. See scripts/fetch_public_data.py.
+data/online_retail_ii*
+data/raw/
+
+# Local model weights (~33 GB). Fetched on demand by the LLM gateway.
+models/
+*.safetensors
+
+# ---------------------------------------------------------------- run output
+results/runs/
+results/_inv_*/
+results/cases/*.partial-*.json
+*.log
+nohup.out
+
+# ---------------------------------------------------------------- python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# ---------------------------------------------------------------- editors / os
+.DS_Store
+.idea/
+.vscode/

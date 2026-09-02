@@ -1,0 +1,13 @@
+CaseFile opens a case on a metric change and returns a verdict carrying an explicit standard of proof.
+
+Detection: an STL and covariate baseline, conformal prediction intervals, Benjamini-Hochberg correction across all concurrent monitors, and Bayesian online change-point detection. The dated regime break becomes an alibi test that eliminates any cause starting outside the window.
+
+Diagnosis: competing hypotheses are scored against one evidence ledger spanning structured tables and unstructured text, the latter parsed into typed claims keyed to the same dimensions. Each item is weighted by diagnosticity, the spread of its likelihood ratios across hypotheses, so evidence consistent with every explanation contributes nothing.
+
+Estimation: where a valid control exists, synthetic difference-in-differences or Bayesian structural time series estimate the effect, with placebo and sensitivity refutations. Claims are rung-labelled, and the word caused is unavailable below quasi-experimental evidence.
+
+Ambiguity: a none-of-the-above hypothesis carries prior mass, so the system can decline to answer. When the posterior stays flat, it ranks candidate experiments by expected value of sample information per unit cost and time, returning the cheapest decisive test plus a minimax-regret interim action.
+
+Learning: the measured outcome is written back as a causal prior.
+
+The language model proposes, extracts and writes. It never computes.

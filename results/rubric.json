@@ -1,0 +1,149 @@
+[
+  {
+    "id": "MPE-01",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "Three to five connected KPIs across two or three data sources with different grains or refresh cadences",
+    "status": "PASS",
+    "evidence": "5 KPIs / 3 sources / grains=['day', 'iso_week'] / cadences(min)=[15, 60, 10080] / 15 dependency edges"
+  },
+  {
+    "id": "MPE-02",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "Lightweight KPI or semantic contract: definitions, calculations, drivers, thresholds, lineage, access restrictions",
+    "status": "PASS",
+    "evidence": "all 5 KPIs carry definition/measure/thresholds/lineage/access; drivers=15; policies=['row_level', 'column_level', 'domain_level', 'audit']; enforced via semantic gateway"
+  },
+  {
+    "id": "MPE-03",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "At least two personas receiving different insight narratives or recommended actions",
+    "status": "PASS",
+    "evidence": "4 personas; distinct narratives=True; distinct actions=True"
+  },
+  {
+    "id": "MPE-04",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "One multi-factor KPI movement with known or simulated underlying drivers",
+    "status": "PASS",
+    "evidence": "['INC-001', 'INC-002'] multi-factor; INC-001 drivers=IV_CARRIER 53%, IV_CHECKOUT 24%, IV_WEATHER_TAIL 23% (exact Shapley over counterfactual re-simulation)"
+  },
+  {
+    "id": "MPE-05",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "One low-confidence scenario in which the engine requests clarification or abstains",
+    "status": "PASS",
+    "evidence": "3 abstained, types=['collinear_causes', 'sparse_history', 'stale_source']; decisive test recommended"
+  },
+  {
+    "id": "MPE-06",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "One sparse-history or newly launched KPI scenario",
+    "status": "PASS",
+    "evidence": "SMART_HOME has 22 days history vs min_history_days=180; engine abstained with sparse_history"
+  },
+  {
+    "id": "MPE-07",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "One role-based security or entitlement scenario",
+    "status": "PASS",
+    "evidence": "2 cases withhold evidence by policy; entitlement changes the achievable proof rung"
+  },
+  {
+    "id": "MPE-08",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "Evidence showing source freshness, analytical method, contribution, confidence and lineage",
+    "status": "PASS",
+    "evidence": "63 evidence items across 4 cases; missing fields: none"
+  },
+  {
+    "id": "MPE-09",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "A clear breakdown of LLM versus non-LLM processing",
+    "status": "PASS",
+    "evidence": "method classes used: ['LLM', 'SQL', 'business rules', 'causal inference', 'deterministic logic', 'retrieval', 'statistics']; 1 LLM calls, 0 of them on the quantitative path (must be 0)"
+  },
+  {
+    "id": "MPE-10",
+    "section": "Minimum Prototype Expectations",
+    "requirement": "Runtime telemetry covering latency, model calls, token usage and estimated cost",
+    "status": "PASS",
+    "evidence": "192 telemetry spans; missing=none; token provenance labelled=True"
+  },
+  {
+    "id": "OBJ-1",
+    "section": "Round 2 Objectives",
+    "requirement": "Detects and prioritises material KPI movements",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/signal_gate.py']; key concept 'priority_score' present"
+  },
+  {
+    "id": "OBJ-2",
+    "section": "Round 2 Objectives",
+    "requirement": "Reconciles data and business context across heterogeneous sources",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/reconcile.py']; key concept 'reconciliation' present"
+  },
+  {
+    "id": "OBJ-3",
+    "section": "Round 2 Objectives",
+    "requirement": "Identifies and ranks explanatory drivers using appropriate analytical methods",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/contribution.py', 'casefile/engine/causal.py']; key concept 'rank' present"
+  },
+  {
+    "id": "OBJ-4",
+    "section": "Round 2 Objectives",
+    "requirement": "Generates persona-specific narratives supported by traceable evidence",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/narrative.py']; key concept 'persona' present"
+  },
+  {
+    "id": "OBJ-5",
+    "section": "Round 2 Objectives",
+    "requirement": "Communicates uncertainty and abstains when evidence is insufficient or contradictory",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/verdict.py']; key concept 'ABSTAIN' present"
+  },
+  {
+    "id": "OBJ-6",
+    "section": "Round 2 Objectives",
+    "requirement": "Recommends practical actions grounded in business levers, constraints and decision rights",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/actions.py']; key concept 'decision_rights' present"
+  },
+  {
+    "id": "OBJ-7",
+    "section": "Round 2 Objectives",
+    "requirement": "Mechanism to learn from analyst and business-user feedback",
+    "status": "PASS",
+    "evidence": "built ['casefile/engine/feedback.py']; key concept 'feedback' present"
+  },
+  {
+    "id": "OBJ-8",
+    "section": "Round 2 Objectives",
+    "requirement": "Operates within realistic security, cost, latency and scalability constraints",
+    "status": "PASS",
+    "evidence": "built ['casefile/security/policy.py', 'casefile/telemetry/spans.py']; key concept 'budget' present"
+  },
+  {
+    "id": "X-01",
+    "section": "Explicit brief requirements",
+    "requirement": "LLM is not the source of quantitative truth (numbers identical with LLM off)",
+    "status": "PASS",
+    "evidence": "compared 258 computed fields across llm-mode off vs on: identical=True"
+  },
+  {
+    "id": "X-02",
+    "section": "Explicit brief requirements",
+    "requirement": "Distinguish native / configured / custom / externally integrated capabilities",
+    "status": "PASS",
+    "evidence": "classifies: ['native', 'configured', 'custom', 'integrated']"
+  },
+  {
+    "id": "X-03",
+    "section": "Explicit brief requirements",
+    "requirement": "Sparse history for new products handled without fabricating confidence",
+    "status": "PASS",
+    "evidence": "no explicit selector"
+  }
+]

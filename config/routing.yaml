@@ -1,0 +1,18 @@
+# Model routing policy. Enforced in code by llm/gateway.py, not asserted in a slide.
+# Every stage declares its backend and WHY. A stage marked backend:none may not call a
+# model; the telemetry layer flags any violation as violates_llm_boundary.
+policy_version: "1.0"
+default_backend: local
+stages:
+  L2_reconciliation:   {backend: none,  why: "arithmetic over two ledgers; an LLM here would be the source of quantitative truth"}
+  L3_signal_gate:      {backend: none,  why: "conformal + FDR are exact procedures with guarantees an LLM cannot provide"}
+  L4_contribution:     {backend: none,  why: "closed-form identities; verified residual < 1e-9"}
+  L5_claim_extraction: {backend: local, model: "Qwen/Qwen2.5-1.5B-Instruct", why: "high volume, schema-constrained text to typed claims", max_new_tokens: 220, latency_budget_ms: 4000}
+  L6_causal:           {backend: none,  why: "synthetic control and placebo inference are deterministic"}
+  L7_verdict:          {backend: none,  why: "posterior, thresholds and EVSI are arithmetic; adjudication must be auditable"}
+  L8_actions:          {backend: none,  why: "levers, costs and decision rights come from the contract"}
+  L9_narrative:        {backend: local, model: "Qwen/Qwen2.5-14B-Instruct", why: "prose only; every numeral is slot-bound and re-checked", max_new_tokens: 420, latency_budget_ms: 60000}
+  L9_hypothesis_gen:   {backend: local, model: "Qwen/Qwen2.5-1.5B-Instruct", why: "propose candidates from the governed library; ids are validated against the contract", max_new_tokens: 180, latency_budget_ms: 4000}
+fallbacks:
+  local_unavailable: template
+  template_always_available: true

@@ -1,0 +1,452 @@
+{
+ "incident_id": "INC-004",
+ "kpi": "gross_margin_pct",
+ "label": "Gross margin, all regions",
+ "window": [
+  "2026-08-10",
+  "2026-08-31"
+ ],
+ "slice": {},
+ "as_of": "2026-08-31 23:45:00",
+ "contract_version": "1.0.0",
+ "likelihood_source": "CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed",
+ "likelihood_temperature": 2.0,
+ "generated_at": "2026-09-02T05:16:00",
+ "reconciliation": {
+  "canonical_source": "commerce",
+  "canonical_total": 877516500.2486097,
+  "alternate_source": "finance_erp.fin_revenue",
+  "alternate_total": 880021310.9388717,
+  "delta_abs": 2504810.6902620792,
+  "delta_pct": 0.28544314432292045,
+  "tolerance_pct": 0.5,
+  "breached": false,
+  "explained_by": {
+   "supplier_rebates_netted_by_finance": 0.12,
+   "ship_date_vs_order_date_timing": 0.088
+  },
+  "unexplained_pct": 0.077,
+  "confidence_multiplier": 1.0,
+  "action": "within_tolerance",
+  "note": "recognises revenue at ship date, nets supplier rebates. Canonical for all downstream claims is commerce; the ledger figure is reported beside it, never merged."
+ },
+ "freshness": {
+  "source": "finance_erp",
+  "table": "sku_week_cost",
+  "state": "STALE_BLOCKED",
+  "lag_minutes": 25920.0,
+  "sla_minutes": 11520.0,
+  "watermark": "2026-08-13",
+  "blocks_claims": true
+ },
+ "signal_gate": {
+  "family": {
+   "family_size": 16,
+   "evaluated": 16,
+   "fired": 2,
+   "suppressed_by_fdr": 8,
+   "suppressed_by_materiality": 0,
+   "suppressed_by_persistence": 6,
+   "fdr_method": "benjamini_hochberg",
+   "fdr_q": 0.05
+  },
+  "top_monitors": [
+   {
+    "monitor_id": "conversion_rate|SOUTH",
+    "kpi": "conversion_rate",
+    "slice": {
+     "region": "SOUTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 0.05257244791575037,
+    "expected": 0.06050922965936518,
+    "delta_abs": -0.007936781743614806,
+    "delta_pct": -0.13116646482354297,
+    "p_raw": 1e-12,
+    "p_conformal_rank": 0.0011933174224343676,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -19.123445295217234,
+    "weight": 1.9841954359037013,
+    "p_weighted": 2.7361174695826573e-12,
+    "q_value": 8.755575902664503e-12,
+    "gate_statistical": true,
+    "gate_materiality": true,
+    "gate_persistence": true,
+    "persistence_days": 22,
+    "material_value": 7143103.5692533245,
+    "priority_score": 22857931.421410505,
+    "fired": true,
+    "note": "MSTL periods=(7,), level from 49/60 non-anomalous days, damped drift -7.19e-05/day; contract declares weekly=True yearly=False; trained on 919 days, projected 22 | window effect -0.15 sd"
+   },
+   {
+    "monitor_id": "conversion_rate|NORTH",
+    "kpi": "conversion_rate",
+    "slice": {
+     "region": "NORTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 0.05593233782892504,
+    "expected": 0.06018283255811679,
+    "delta_abs": -0.004250494729191749,
+    "delta_pct": -0.07062636550194229,
+    "p_raw": 1e-12,
+    "p_conformal_rank": 0.0011933174224343676,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -17.84562800558924,
+    "weight": 1.0626236822979374,
+    "p_weighted": 5.109044608813939e-12,
+    "q_value": 1.3624118956837171e-11,
+    "gate_statistical": true,
+    "gate_materiality": true,
+    "gate_persistence": true,
+    "persistence_days": 22,
+    "material_value": 3825445.2562725744,
+    "priority_score": 12241424.81990546,
+    "fired": true,
+    "note": "MSTL periods=(7,), level from 51/60 non-anomalous days, damped drift -1.33e-04/day; contract declares weekly=True yearly=False; trained on 919 days, projected 22 | window effect -0.08 sd"
+   },
+   {
+    "monitor_id": "net_revenue|EAST",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "EAST"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 2001055.2051307096,
+    "expected": 2089201.0101469895,
+    "delta_abs": -88145.80501627992,
+    "delta_pct": -0.042191155656237336,
+    "p_raw": 0.3107563875733054,
+    "p_conformal_rank": 0.16706443914081145,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -0.4938911689760177,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": true,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 88145.80501627992,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 49/60 non-anomalous days, damped drift +9.09e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect -0.04 sd"
+   },
+   {
+    "monitor_id": "net_revenue|NORTH",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "NORTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 3205686.572494792,
+    "expected": 3186976.290565807,
+    "delta_abs": 18710.281928984914,
+    "delta_pct": 0.00587085695754051,
+    "p_raw": 0.47738802263319224,
+    "p_conformal_rank": 0.5596658711217184,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -0.05672722017992757,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": false,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 18710.281928984914,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 44/60 non-anomalous days, damped drift +8.30e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect +0.00 sd"
+   },
+   {
+    "monitor_id": "net_revenue|SOUTH",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "SOUTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 2714652.339496116,
+    "expected": 2870843.8880741796,
+    "delta_abs": -156191.5485780635,
+    "delta_pct": -0.05440614490634667,
+    "p_raw": 0.27579177619908657,
+    "p_conformal_rank": 0.13723150357995226,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -0.5956301316020612,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": true,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 156191.5485780635,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 30/60 non-anomalous days, damped drift +9.89e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect -0.06 sd"
+   },
+   {
+    "monitor_id": "net_revenue|WEST",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "WEST"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 3626038.5933116903,
+    "expected": 3471431.157559871,
+    "delta_abs": 154607.43575181905,
+    "delta_pct": 0.04453708823092297,
+    "p_raw": 0.3573618849639124,
+    "p_conformal_rank": 0.1658711217183771,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": 0.3656432821274543,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": true,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 154607.43575181905,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 41/60 non-anomalous days, damped drift +3.81e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect +0.04 sd"
+   }
+  ]
+ },
+ "detection": {
+  "baseline_method": "NOT_RUN",
+  "blocked": true,
+  "baseline_note": "finance_erp.sku_week_cost watermark is 25920 min old against a 11520 min SLA.",
+  "delta_pct": null,
+  "actual": null,
+  "expected": null,
+  "freshness": {
+   "source": "finance_erp",
+   "table": "sku_week_cost",
+   "state": "STALE_BLOCKED",
+   "lag_minutes": 25920.0,
+   "sla_minutes": 11520.0,
+   "watermark": "2026-08-13",
+   "blocks_claims": true
+  },
+  "lineage": [],
+  "sparse_history": false
+ },
+ "change_point": {
+  "onset": null,
+  "onset_interval_90": null,
+  "statistic": 0.0
+ },
+ "contribution": {
+  "rung": "R0",
+  "top": [],
+  "caveat": "not run: source stale"
+ },
+ "evidence": [],
+ "causal": {},
+ "posterior_meta": {},
+ "verdict": {
+  "incident_id": "INC-004",
+  "kpi": "gross_margin_pct",
+  "decision": "ABSTAIN",
+  "abstain_type": "stale_source",
+  "leading": null,
+  "posterior": {
+   "H_NULL": 0.0
+  },
+  "entropy_bits": -0.0,
+  "max_rung": "R1",
+  "threshold": 0.7,
+  "reason": "A source required for this claim is beyond its freshness SLA. The engine does not estimate on data it knows to be incomplete.",
+  "hypotheses": [
+   {
+    "id": "H_NULL",
+    "label": "Cause outside the library",
+    "prior": 1.0,
+    "log_lr": 0.0,
+    "posterior": 0.0,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_penalty": 0.0,
+    "alibi_note": "",
+    "lever": "none",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   }
+  ],
+  "evpi": 0.0,
+  "cost_of_waiting_per_day": 180000.0,
+  "acted_on": null,
+  "established": [],
+  "unestablished_leading": null
+ },
+ "decisive_test": {
+  "recommended": null,
+  "note": "the correct next step is a pipeline fix, not an experiment",
+  "remediation": {
+   "owner": "data_platform_lead",
+   "action": "restore the weekly ERP export",
+   "lever": "data_pipeline_fix"
+  }
+ },
+ "entitlement": {
+  "ops_manager": {
+   "regions": [
+    "WEST"
+   ],
+   "column_grants": [],
+   "evidence_admitted": 0,
+   "withheld_count": 0,
+   "withheld_reasons": [],
+   "max_rung": "R0",
+   "rung_capped_by_entitlement": false,
+   "note": "no evidence admitted; source is stale"
+  },
+  "category_director": {
+   "regions": [
+    "WEST",
+    "NORTH",
+    "SOUTH",
+    "EAST"
+   ],
+   "column_grants": [
+    "restricted_cost"
+   ],
+   "evidence_admitted": 0,
+   "withheld_count": 0,
+   "withheld_reasons": [],
+   "max_rung": "R0",
+   "rung_capped_by_entitlement": false,
+   "note": "no evidence admitted; source is stale"
+  },
+  "cfo": {
+   "regions": [
+    "WEST",
+    "NORTH",
+    "SOUTH",
+    "EAST"
+   ],
+   "column_grants": [
+    "restricted_cost"
+   ],
+   "evidence_admitted": 0,
+   "withheld_count": 0,
+   "withheld_reasons": [],
+   "max_rung": "R0",
+   "rung_capped_by_entitlement": false,
+   "note": "no evidence admitted; source is stale"
+  },
+  "analyst": {
+   "regions": [
+    "WEST",
+    "NORTH",
+    "SOUTH",
+    "EAST"
+   ],
+   "column_grants": [
+    "restricted_cost"
+   ],
+   "evidence_admitted": 0,
+   "withheld_count": 0,
+   "withheld_reasons": [],
+   "max_rung": "R0",
+   "rung_capped_by_entitlement": false,
+   "note": "no evidence admitted; source is stale"
+  }
+ },
+ "actions_by_persona": {
+  "ops_manager": [],
+  "category_director": [],
+  "cfo": [],
+  "analyst": []
+ },
+ "narratives": {
+  "ops_manager": {
+   "text": "Gross margin, all regions cannot be assessed. The finance_erp.sku_week_cost feed is 18.0 days old against a 8.0 day service level, so any figure would be computed on incomplete data. No verdict is offered. The next step is a pipeline fix owned by the data platform team, not a business decision.",
+   "mode": "deterministic-template",
+   "closure": {
+    "passed": true,
+    "numerals_in_text": 0,
+    "bound": 0,
+    "free_numerals": []
+   },
+   "attempts": 0
+  },
+  "category_director": {
+   "text": "Gross margin, all regions cannot be assessed. The finance_erp.sku_week_cost feed is 18.0 days old against a 8.0 day service level, so any figure would be computed on incomplete data. No verdict is offered. The next step is a pipeline fix owned by the data platform team, not a business decision.",
+   "mode": "deterministic-template",
+   "closure": {
+    "passed": true,
+    "numerals_in_text": 0,
+    "bound": 0,
+    "free_numerals": []
+   },
+   "attempts": 0
+  },
+  "cfo": {
+   "text": "Gross margin, all regions cannot be assessed. The finance_erp.sku_week_cost feed is 18.0 days old against a 8.0 day service level, so any figure would be computed on incomplete data. No verdict is offered. The next step is a pipeline fix owned by the data platform team, not a business decision.",
+   "mode": "deterministic-template",
+   "closure": {
+    "passed": true,
+    "numerals_in_text": 0,
+    "bound": 0,
+    "free_numerals": []
+   },
+   "attempts": 0
+  },
+  "analyst": {
+   "text": "Gross margin, all regions cannot be assessed. The finance_erp.sku_week_cost feed is 18.0 days old against a 8.0 day service level, so any figure would be computed on incomplete data. No verdict is offered. The next step is a pipeline fix owned by the data platform team, not a business decision.",
+   "mode": "deterministic-template",
+   "closure": {
+    "passed": true,
+    "numerals_in_text": 0,
+    "bound": 0,
+    "free_numerals": []
+   },
+   "attempts": 0
+  }
+ },
+ "telemetry": {
+  "run_id": "20260902T051600-ee969e",
+  "spans": 3,
+  "wall_ms_total": 8732.2,
+  "llm_calls": 0,
+  "tokens_in": 0,
+  "tokens_out": 0,
+  "cost_usd": 0.0,
+  "quantitative_spans": 3,
+  "quantitative_spans_using_a_model": 0,
+  "llm_boundary_intact": true,
+  "by_method_class": {
+   "business rules": {
+    "spans": 2,
+    "wall_ms": 18.4,
+    "cost_usd": 0.0
+   },
+   "statistics": {
+    "spans": 1,
+    "wall_ms": 8713.9,
+    "cost_usd": 0.0
+   }
+  },
+  "budget_breaches": []
+ },
+ "llm_mode": "off",
+ "personas_rendered": [
+  "ops_manager",
+  "category_director",
+  "cfo",
+  "analyst"
+ ]
+}

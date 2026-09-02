@@ -1,0 +1,1009 @@
+contract:
+  version: 1.0.0
+  effective_from: '2026-01-01'
+  steward: Enterprise Data Governance
+  company: Vantage Retail Group
+  currency: INR
+  timezone: Asia/Kolkata
+calendars:
+  fiscal:
+    starts_month: 4
+    week_starts_on: monday
+  holiday_sets:
+    IN_RETAIL:
+    - '2026-01-26'
+    - '2026-03-04'
+    - '2026-03-21'
+    - '2026-04-14'
+    - '2026-05-01'
+    - '2026-08-15'
+    - '2026-10-02'
+    - '2026-10-20'
+    - '2026-11-08'
+    - '2026-12-25'
+  blackout_windows:
+  - name: Festive peak freeze
+    from: '2026-10-10'
+    to: '2026-11-12'
+    blocks:
+    - price_change
+    - promo_depth
+    reason: Revenue-critical trading period
+sources:
+  commerce:
+    system: OrderHub (OLTP -> CDC -> warehouse)
+    kind: structured
+    grain: order_line
+    refresh_cadence_minutes: 15
+    expected_lag_minutes: 20
+    freshness_sla_minutes: 90
+    historical_coverage_from: '2024-01-01'
+    quality_tier: gold
+    quality_checks:
+    - pk_unique:order_line_id
+    - not_null:order_ts
+    - fk:sku_id
+    - range:qty>0
+    tables:
+      orders:
+        pk: order_id
+        cols:
+        - order_id
+        - order_ts
+        - region
+        - channel
+        - customer_segment
+        - site_id
+        - gross_amount
+        - discount_amount
+        - returns_amount
+      order_items:
+        pk: order_line_id
+        cols:
+        - order_line_id
+        - order_id
+        - sku_id
+        - category
+        - qty
+        - unit_price
+        - list_price
+      sessions:
+        pk: session_id
+        cols:
+        - session_id
+        - session_ts
+        - region
+        - channel
+        - device
+        - landed
+        - converted
+  finance_erp:
+    system: Ledger ERP (weekly batch export)
+    kind: structured
+    grain: sku_week
+    refresh_cadence_minutes: 10080
+    expected_lag_minutes: 4320
+    freshness_sla_minutes: 11520
+    historical_coverage_from: '2024-01-01'
+    quality_tier: silver
+    quality_checks:
+    - not_null:unit_cost
+    - recon:net_revenue_vs_commerce<=0.5%
+    sensitivity: restricted
+    tables:
+      sku_week_cost:
+        pk:
+        - sku_id
+        - iso_week
+        cols:
+        - sku_id
+        - iso_week
+        - unit_cost
+        - landed_cost
+        - supplier_id
+      promo_spend:
+        pk:
+        - campaign_id
+        - iso_week
+        cols:
+        - campaign_id
+        - iso_week
+        - category
+        - region
+        - spend
+        - promo_depth_pct
+      fin_revenue:
+        pk:
+        - region
+        - iso_week
+        cols:
+        - region
+        - iso_week
+        - net_revenue_fin
+  ops_voice:
+    system: Fulfilment telemetry + voice-of-customer lake
+    kind: mixed
+    grain: shipment_event | document
+    refresh_cadence_minutes: 60
+    expected_lag_minutes: 45
+    freshness_sla_minutes: 240
+    historical_coverage_from: '2024-06-01'
+    quality_tier: bronze
+    quality_checks:
+    - not_null:shipment_id
+    - enum:status
+    tables:
+      shipment_events:
+        pk: event_id
+        cols:
+        - event_id
+        - shipment_id
+        - order_id
+        - region
+        - carrier_id
+        - promised_ts
+        - delivered_ts
+        - status
+      inventory_daily:
+        pk:
+        - sku_id
+        - d
+        cols:
+        - sku_id
+        - d
+        - region
+        - on_hand
+        - oos_minutes
+    corpora:
+      reviews:
+        anchor:
+        - sku_id
+        - region
+        - ts
+        pii: low
+        trust: medium
+      support_tickets:
+        anchor:
+        - order_id
+        - region
+        - ts
+        pii: HIGH
+        trust: high
+      store_notes:
+        anchor:
+        - site_id
+        - region
+        - d
+        pii: low
+        trust: high
+      supplier_emails:
+        anchor:
+        - supplier_id
+        - ts
+        pii: medium
+        trust: medium
+      release_log:
+        anchor:
+        - release_id
+        - ts
+        pii: none
+        trust: authoritative
+      competitor_intel:
+        anchor:
+        - region
+        - category
+        - d
+        pii: none
+        trust: LOW
+      incident_reports:
+        anchor:
+        - region
+        - ts
+        pii: low
+        trust: authoritative
+entities:
+  region:
+    values:
+    - WEST
+    - NORTH
+    - SOUTH
+    - EAST
+    role_scoped: true
+  channel:
+    values:
+    - WEB
+    - APP
+    - STORE
+    - MARKETPLACE
+  category:
+    values:
+    - KITCHEN
+    - DECOR
+    - FURNITURE
+    - LIGHTING
+    - OUTDOOR
+    - SMART_HOME
+  customer_segment:
+    values:
+    - NEW
+    - RETURNING
+    - VIP
+  carrier:
+    values:
+    - C_SWIFT
+    - C_METRO
+    - C_BLUEDART_LIKE
+    - C_NEWCO
+kpis:
+  net_revenue:
+    label: Net Revenue
+    definition: Gross order value less discounts and returns, order-line grain, booked at order timestamp.
+    measure: SUM(o.gross_amount - o.discount_amount - o.returns_amount)
+    from: commerce.orders
+    grain: day
+    unit: currency
+    direction: higher_is_better
+    dimensions:
+    - region
+    - channel
+    - category
+    - customer_segment
+    min_history_days: 180
+    seasonality:
+      weekly: true
+      yearly: true
+      holiday_set: IN_RETAIL
+    thresholds:
+      statistical:
+        alpha: 0.01
+        fdr_q: 0.05
+        fdr_method: benjamini_hochberg
+      materiality:
+        abs_currency: 5000000
+        pct_of_baseline: 0.02
+      persistence_days: 5
+    owner_role: cfo
+    lineage:
+    - commerce.orders.gross_amount
+    - commerce.orders.discount_amount
+    - commerce.orders.returns_amount
+    access:
+      row_policy: region_scope
+      column_policy: none
+      domain: commercial
+    reconciliation:
+      canonical: commerce
+      alternates:
+      - source: finance_erp.fin_revenue
+        column: net_revenue_fin
+        differs_by: recognises revenue at ship date, nets supplier rebates
+        tolerance_pct: 0.5
+        on_breach: report_delta_and_degrade_confidence
+  conversion_rate:
+    label: Conversion Rate
+    definition: Converted sessions divided by landed sessions, session grain, rolled to day.
+    measure: SUM(CASE WHEN s.converted THEN 1 ELSE 0 END)::DOUBLE / NULLIF(SUM(CASE WHEN s.landed THEN 1 ELSE 0
+      END),0)
+    from: commerce.sessions
+    grain: day
+    unit: ratio
+    direction: higher_is_better
+    dimensions:
+    - region
+    - channel
+    - device
+    min_history_days: 120
+    seasonality:
+      weekly: true
+      yearly: false
+      holiday_set: IN_RETAIL
+    thresholds:
+      statistical:
+        alpha: 0.01
+        fdr_q: 0.05
+        fdr_method: benjamini_hochberg
+      materiality:
+        abs_pp: 0.004
+        pct_of_baseline: 0.03
+      persistence_days: 4
+    owner_role: category_director
+    lineage:
+    - commerce.sessions.converted
+    - commerce.sessions.landed
+    access:
+      row_policy: region_scope
+      column_policy: none
+      domain: commercial
+  avg_order_value:
+    label: Average Order Value
+    definition: Net revenue divided by order count. Derived KPI; inherits both parents' freshness.
+    measure: SUM(o.gross_amount - o.discount_amount - o.returns_amount) / NULLIF(COUNT(DISTINCT o.order_id),0)
+    from: commerce.orders
+    grain: day
+    unit: currency
+    direction: higher_is_better
+    dimensions:
+    - region
+    - channel
+    - category
+    - customer_segment
+    min_history_days: 180
+    seasonality:
+      weekly: true
+      yearly: true
+      holiday_set: IN_RETAIL
+    thresholds:
+      statistical:
+        alpha: 0.01
+        fdr_q: 0.05
+        fdr_method: benjamini_hochberg
+      materiality:
+        abs_currency: 40
+        pct_of_baseline: 0.025
+      persistence_days: 5
+    owner_role: category_director
+    lineage:
+    - commerce.orders.gross_amount
+    - commerce.orders.order_id
+    access:
+      row_policy: region_scope
+      column_policy: none
+      domain: commercial
+  gross_margin_pct:
+    label: Gross Margin %
+    definition: (Net revenue - landed COGS) / net revenue. Weekly grain from ERP, 3-day lag.
+    measure: (SUM(nr) - SUM(qty * f.landed_cost)) / NULLIF(SUM(nr),0)
+    from: finance_erp.sku_week_cost
+    grain: iso_week
+    unit: ratio
+    direction: higher_is_better
+    dimensions:
+    - region
+    - category
+    min_history_days: 365
+    seasonality:
+      weekly: false
+      yearly: true
+      holiday_set: IN_RETAIL
+    thresholds:
+      statistical:
+        alpha: 0.05
+        fdr_q: 0.1
+        fdr_method: benjamini_hochberg
+      materiality:
+        abs_pp: 0.008
+        pct_of_baseline: 0.02
+      persistence_days: 14
+    owner_role: cfo
+    lineage:
+    - finance_erp.sku_week_cost.landed_cost
+    - commerce.order_items.qty
+    access:
+      row_policy: region_scope
+      column_policy: restricted_cost
+      domain: financial
+  fulfilment_ontime_pct:
+    label: Fulfilment On-Time %
+    definition: Shipments delivered on or before promised timestamp, over all delivered shipments.
+    measure: AVG(CASE WHEN e.delivered_ts <= e.promised_ts THEN 1.0 ELSE 0.0 END)
+    from: ops_voice.shipment_events
+    grain: day
+    unit: ratio
+    direction: higher_is_better
+    dimensions:
+    - region
+    - carrier
+    - channel
+    min_history_days: 90
+    seasonality:
+      weekly: true
+      yearly: false
+      holiday_set: IN_RETAIL
+    thresholds:
+      statistical:
+        alpha: 0.01
+        fdr_q: 0.05
+        fdr_method: benjamini_hochberg
+      materiality:
+        abs_pp: 0.02
+        pct_of_baseline: 0.02
+      persistence_days: 3
+    owner_role: ops_manager
+    lineage:
+    - ops_voice.shipment_events.delivered_ts
+    - ops_voice.shipment_events.promised_ts
+    access:
+      row_policy: region_scope
+      column_policy: none
+      domain: operational
+kpi_graph:
+  edges:
+  - from: sessions
+    to: net_revenue
+    sign: +
+    mechanism: volume term of the revenue identity
+    provenance: ASSERTED
+  - from: conversion_rate
+    to: net_revenue
+    sign: +
+    mechanism: rate term of the revenue identity
+    provenance: ASSERTED
+  - from: avg_order_value
+    to: net_revenue
+    sign: +
+    mechanism: value term of the revenue identity
+    provenance: ASSERTED
+  - from: fulfilment_ontime_pct
+    to: conversion_rate
+    sign: +
+    mechanism: delivery reliability affects repeat purchase and on-site trust badges
+    provenance: OBSERVATIONAL
+  - from: fulfilment_ontime_pct
+    to: returns_rate
+    sign: '-'
+    mechanism: late deliveries raise refusal and return rates
+    provenance: OBSERVATIONAL
+  - from: returns_rate
+    to: gross_margin_pct
+    sign: '-'
+    mechanism: reverse logistics and markdown of returned stock
+    provenance: ASSERTED
+  - from: price_index
+    to: avg_order_value
+    sign: +
+    mechanism: direct price effect on basket value
+    provenance: OBSERVATIONAL
+  - from: price_index
+    to: conversion_rate
+    sign: '-'
+    mechanism: demand elasticity
+    provenance: OBSERVATIONAL
+  - from: price_index
+    to: gross_margin_pct
+    sign: +
+    mechanism: price over fixed landed cost
+    provenance: ASSERTED
+  - from: promo_depth
+    to: conversion_rate
+    sign: +
+    mechanism: discount lifts conversion
+    provenance: MEASURED
+    effect: 0.08258
+    ci:
+    - 0.05252
+    - 0.10569
+    n: 6
+    measured_on: '2026-09-11'
+    measured_on_basis: simulated-world date; world clock is 2026-08-31
+  - from: promo_depth
+    to: gross_margin_pct
+    sign: '-'
+    mechanism: discount consumes margin
+    provenance: ASSERTED
+  - from: marketing_spend
+    to: sessions
+    sign: +
+    mechanism: paid media buys traffic
+    provenance: OBSERVATIONAL
+  - from: competitor_price_gap
+    to: conversion_rate
+    sign: '-'
+    mechanism: relative price drives share of consideration
+    provenance: OBSERVATIONAL
+  - from: stockout_rate
+    to: conversion_rate
+    sign: '-'
+    mechanism: out-of-stock PDPs cannot convert
+    provenance: ASSERTED
+  - from: checkout_error_rate
+    to: conversion_rate
+    sign: '-'
+    mechanism: failed payment or validation aborts the session
+    provenance: ASSERTED
+hypothesis_library:
+- id: H_CARRIER_DEGRADE
+  label: Carrier performance degradation
+  targets:
+  - fulfilment_ontime_pct
+  - conversion_rate
+  - net_revenue
+  mechanism_path:
+  - carrier_mix
+  - fulfilment_ontime_pct
+  - conversion_rate
+  - net_revenue
+  lever: carrier_routing
+  evidence_plan:
+    structured:
+    - ontime_by_carrier_prepost
+    - shipment_share_by_carrier
+    - late_minutes_distribution
+    unstructured:
+    - reviews:delivery_late
+    - support_tickets:delivery
+    - incident_reports:carrier
+    control_available: true
+  falsifier: On-time % did not fall in the cohort served by the changed carrier.
+- id: H_PRICE_RISE
+  label: List price increase suppressed demand
+  targets:
+  - conversion_rate
+  - avg_order_value
+  - net_revenue
+  - gross_margin_pct
+  mechanism_path:
+  - price_index
+  - conversion_rate
+  - net_revenue
+  lever: price_change
+  evidence_plan:
+    structured:
+    - price_index_prepost
+    - elasticity_backtest
+    - conversion_by_price_decile
+    unstructured:
+    - reviews:price
+    - competitor_intel:price
+    control_available: false
+  falsifier: Conversion did not fall in the SKUs whose price actually changed.
+- id: H_CHECKOUT_DEFECT
+  label: Checkout or payment defect
+  targets:
+  - conversion_rate
+  - net_revenue
+  mechanism_path:
+  - checkout_error_rate
+  - conversion_rate
+  - net_revenue
+  lever: checkout_config_flag
+  evidence_plan:
+    structured:
+    - checkout_error_rate_prepost
+    - funnel_step_dropoff
+    - error_by_device
+    unstructured:
+    - release_log:checkout
+    - support_tickets:payment
+    control_available: true
+  falsifier: Checkout error rate is flat across the change window.
+- id: H_STOCKOUT
+  label: Availability / stock-out
+  targets:
+  - conversion_rate
+  - net_revenue
+  mechanism_path:
+  - stockout_rate
+  - conversion_rate
+  - net_revenue
+  lever: inventory_replenish
+  evidence_plan:
+    structured:
+    - oos_minutes_prepost
+    - revenue_loss_from_oos
+    - affected_sku_overlap
+    unstructured:
+    - supplier_emails:delay
+    - store_notes:stock
+    control_available: true
+  falsifier: Out-of-stock minutes did not rise for the affected SKUs.
+- id: H_COMPETITOR
+  label: Competitor price or promotion action
+  targets:
+  - conversion_rate
+  - net_revenue
+  mechanism_path:
+  - competitor_price_gap
+  - conversion_rate
+  - net_revenue
+  lever: promo_depth
+  evidence_plan:
+    structured:
+    - catchment_overlap
+    - conversion_by_competitor_exposure
+    unstructured:
+    - competitor_intel:promo
+    control_available: false
+  falsifier: Affected population does not overlap competitor-exposed catchments.
+- id: H_PROMO_WITHDRAWAL
+  label: Promotion ended or depth reduced
+  targets:
+  - conversion_rate
+  - avg_order_value
+  - net_revenue
+  - gross_margin_pct
+  mechanism_path:
+  - promo_depth
+  - conversion_rate
+  - net_revenue
+  lever: promo_depth
+  evidence_plan:
+    structured:
+    - promo_depth_prepost
+    - promo_calendar_diff
+    unstructured:
+    - release_log:campaign
+    control_available: true
+  falsifier: Promotional depth is unchanged across the window.
+- id: H_MARKETING_CUT
+  label: Paid media reduction cut traffic
+  targets:
+  - net_revenue
+  mechanism_path:
+  - marketing_spend
+  - sessions
+  - net_revenue
+  lever: paid_media_spend
+  evidence_plan:
+    structured:
+    - spend_prepost
+    - sessions_prepost
+    - spend_to_sessions_elasticity
+    unstructured:
+    - release_log:campaign
+    control_available: true
+  falsifier: Landed sessions are flat despite the spend change.
+- id: H_MIX_SHIFT
+  label: Category or channel mix shift
+  targets:
+  - avg_order_value
+  - gross_margin_pct
+  - net_revenue
+  mechanism_path:
+  - mix
+  - avg_order_value
+  - net_revenue
+  lever: merchandising_mix
+  evidence_plan:
+    structured:
+    - price_volume_mix_decomposition
+    - mix_share_prepost
+    unstructured: []
+    control_available: false
+  falsifier: Mix-effect term of the PVM decomposition is near zero.
+- id: H_EXTERNAL
+  label: External event (weather, holiday shift, disruption)
+  targets:
+  - net_revenue
+  - conversion_rate
+  - fulfilment_ontime_pct
+  mechanism_path:
+  - external
+  - sessions
+  - net_revenue
+  lever: none
+  evidence_plan:
+    structured:
+    - covariate_residual_after_weather
+    - matched_region_did
+    unstructured:
+    - incident_reports:external
+    control_available: true
+  falsifier: A weather-and-calendar-matched control region shows no comparable gap.
+- id: H_DATA_ARTIFACT
+  label: Instrumentation or pipeline artifact
+  targets:
+  - net_revenue
+  - conversion_rate
+  - avg_order_value
+  - gross_margin_pct
+  - fulfilment_ontime_pct
+  mechanism_path:
+  - pipeline
+  - measurement
+  lever: data_pipeline_fix
+  evidence_plan:
+    structured:
+    - source_reconciliation
+    - row_count_continuity
+    - null_rate_shift
+    - freshness_watermark
+    unstructured:
+    - release_log:pipeline
+    - incident_reports:data
+    control_available: true
+  falsifier: Commerce totals reconcile to the finance ledger within tolerance.
+- id: H_NULL
+  label: Cause outside the modelled library
+  targets:
+  - '*'
+  mechanism_path: []
+  lever: escalate_to_analyst
+  evidence_plan:
+    structured: []
+    unstructured: []
+    control_available: false
+  falsifier: Not falsifiable. Carries a floor prior; rises when Decision Memory records an out-of-library cause.
+  prior_floor: 0.06
+levers:
+  carrier_routing:
+    label: Re-route shipments to alternate carrier
+    owner_role: ops_manager
+    cost_model:
+      fixed: 0
+      per_shipment: 12
+    reversibility: full
+    lead_time_days: 2
+    blast_radius: region
+    approval_required: false
+    budget_cap: 4000000
+  checkout_config_flag:
+    label: Toggle checkout feature flag
+    owner_role: engineering_lead
+    cost_model:
+      fixed: 0
+      per_shipment: 0
+    reversibility: instant
+    lead_time_days: 0
+    blast_radius: cohort
+    approval_required: false
+    budget_cap: 0
+  price_change:
+    label: Revise list price
+    owner_role: category_director
+    cost_model:
+      margin_pct_of_revenue: 0.04
+    reversibility: poor
+    lead_time_days: 14
+    blast_radius: national
+    approval_required: true
+    budget_cap: 25000000
+  promo_depth:
+    label: Adjust promotional depth
+    owner_role: category_director
+    cost_model:
+      margin_pct_of_revenue: 0.03
+    reversibility: weekly
+    lead_time_days: 3
+    blast_radius: region
+    approval_required: true
+    budget_cap: 12000000
+  paid_media_spend:
+    label: Adjust paid media spend
+    owner_role: marketing_lead
+    cost_model:
+      direct: 1.0
+    reversibility: daily
+    lead_time_days: 1
+    blast_radius: region
+    approval_required: true
+    budget_cap: 8000000
+  inventory_replenish:
+    label: Expedite replenishment
+    owner_role: supply_lead
+    cost_model:
+      per_unit: 45
+    reversibility: poor
+    lead_time_days: 7
+    blast_radius: region
+    approval_required: true
+    budget_cap: 15000000
+  merchandising_mix:
+    label: Re-weight category merchandising
+    owner_role: category_director
+    cost_model:
+      fixed: 250000
+    reversibility: weekly
+    lead_time_days: 5
+    blast_radius: national
+    approval_required: true
+    budget_cap: 3000000
+  data_pipeline_fix:
+    label: Repair ingestion pipeline
+    owner_role: data_platform_lead
+    cost_model:
+      fixed: 120000
+    reversibility: full
+    lead_time_days: 1
+    blast_radius: none
+    approval_required: false
+    budget_cap: 500000
+  escalate_to_analyst:
+    label: Escalate for human investigation
+    owner_role: analyst
+    cost_model:
+      fixed: 60000
+    reversibility: full
+    lead_time_days: 2
+    blast_radius: none
+    approval_required: false
+    budget_cap: 200000
+  none:
+    label: No controllable lever
+    owner_role: none
+    cost_model: {}
+    reversibility: n_a
+    lead_time_days: 0
+    blast_radius: none
+    approval_required: false
+    budget_cap: 0
+policies:
+  row_level:
+    region_scope:
+      description: A principal sees only regions in their grant.
+      predicate: region IN :allowed_regions
+  column_level:
+    restricted_cost:
+      description: Unit cost, landed cost and absolute margin are restricted.
+      protected_columns:
+      - finance_erp.sku_week_cost.unit_cost
+      - finance_erp.sku_week_cost.landed_cost
+      - gross_margin_pct
+      allowed_roles:
+      - category_director
+      - cfo
+      - analyst
+      on_deny: withhold_and_disclose_count
+  domain_level:
+    pii_shield:
+      description: Raw customer text and identifiers never leave the extraction boundary.
+      applies_to_corpora:
+      - support_tickets
+      - supplier_emails
+      rule: extract typed claims only; persist entity keys and character spans, never raw PII text
+      allowed_roles_for_raw: []
+  audit:
+    log_events:
+    - query_issued
+    - policy_denied
+    - evidence_admitted
+    - evidence_withheld
+    - llm_call
+    - verdict_emitted
+    - action_recommended
+    - feedback_received
+    - outcome_measured
+    immutable: true
+personas:
+  ops_manager:
+    label: Regional Fulfilment Manager
+    entitlements:
+      regions:
+      - WEST
+      columns_denied:
+      - restricted_cost
+      corpora_raw: []
+    kpi_focus:
+    - fulfilment_ontime_pct
+    - conversion_rate
+    narrative:
+      depth: brief
+      tone: operational
+      max_words: 130
+      lead_with: action
+    action_scope:
+    - carrier_routing
+    - checkout_config_flag
+    channel: Teams alert
+    decision_rights:
+      can_approve_upto: 4000000
+      requires_approval_from: none
+  category_director:
+    label: Category Director (P&L owner)
+    entitlements:
+      regions:
+      - WEST
+      - NORTH
+      - SOUTH
+      - EAST
+      columns_denied: []
+      corpora_raw: []
+    kpi_focus:
+    - net_revenue
+    - avg_order_value
+    - gross_margin_pct
+    - conversion_rate
+    narrative:
+      depth: standard
+      tone: commercial
+      max_words: 230
+      lead_with: driver_decomposition
+    action_scope:
+    - price_change
+    - promo_depth
+    - merchandising_mix
+    - paid_media_spend
+    channel: Email digest
+    decision_rights:
+      can_approve_upto: 12000000
+      requires_approval_from: cfo
+  cfo:
+    label: Chief Financial Officer
+    entitlements:
+      regions:
+      - WEST
+      - NORTH
+      - SOUTH
+      - EAST
+      columns_denied: []
+      corpora_raw: []
+    kpi_focus:
+    - net_revenue
+    - gross_margin_pct
+    narrative:
+      depth: executive
+      tone: financial
+      max_words: 150
+      lead_with: exposure_and_decision
+    action_scope:
+    - price_change
+    - promo_depth
+    - paid_media_spend
+    - inventory_replenish
+    channel: Executive brief
+    decision_rights:
+      can_approve_upto: 100000000
+      requires_approval_from: none
+  analyst:
+    label: Insight Analyst
+    entitlements:
+      regions:
+      - WEST
+      - NORTH
+      - SOUTH
+      - EAST
+      columns_denied: []
+      corpora_raw: []
+    kpi_focus:
+    - net_revenue
+    - conversion_rate
+    - avg_order_value
+    - gross_margin_pct
+    - fulfilment_ontime_pct
+    narrative:
+      depth: full_method
+      tone: technical
+      max_words: 420
+      lead_with: method_and_evidence
+    action_scope:
+    - escalate_to_analyst
+    - data_pipeline_fix
+    channel: Workbench
+    decision_rights:
+      can_approve_upto: 200000
+      requires_approval_from: category_director
+decision_policy:
+  multiplicity:
+    default_method: benjamini_hochberg
+    assumption: Monitors over the same business are positively dependent (PRDS), under which Benjamini-Hochberg
+      controls FDR. Benjamini-Yekutieli is available and makes no dependence assumption; it costs a factor of H_m
+      in power and is used for adversarial review.
+    alternative_method: benjamini_yekutieli
+    materiality_weighting: Genovese-Roeder-Wasserman p-value weights, normalised to mean one. Materiality never
+      filters the family before the procedure runs.
+  act_threshold_posterior: 0.7
+  min_rung_to_claim_cause: R3
+  min_posterior_mass_ev_positive: 0.8
+  abstain_types:
+  - collinear_causes
+  - underpowered
+  - missing_evidence
+  - contradictory_evidence
+  - out_of_library
+  - stale_source
+  - sparse_history
+  sparse_history:
+    below_min_history: pool_hierarchical_prior
+    pooled_from: comparable launches in same category family
+    widen_interval_factor: 1.9
+    causal_claims_allowed: false
+  proof_ladder:
+    R0:
+      name: Arithmetic
+      verb: accounts for
+      allows_causal_language: false
+    R1:
+      name: Association
+      verb: is associated with
+      allows_causal_language: false
+    R2:
+      name: Temporal+Mechanism
+      verb: is consistent with
+      allows_causal_language: false
+    R3:
+      name: Quasi-experimental
+      verb: the evidence suggests caused
+      allows_causal_language: true
+    R4:
+      name: Measured
+      verb: caused
+      allows_causal_language: true

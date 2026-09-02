@@ -1,0 +1,58 @@
+{
+  "n_incidents": 300,
+  "n_identifiable": 198,
+  "n_unidentifiable": 102,
+  "likelihood_source": "CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed",
+  "identifiable": {
+    "naive_top1_accuracy": 0.9949494949494949,
+    "casefile_top1_accuracy": 1.0,
+    "casefile_answer_rate": 0.6666666666666666
+  },
+  "unidentifiable": {
+    "naive_false_certainty_rate": 0.00980392156862745,
+    "naive_abstention_rate": 0.0,
+    "casefile_false_certainty_rate": 0.0,
+    "casefile_abstention_rate": 1.0
+  },
+  "wrong_lever_rate_unidentifiable": {
+    "naive": 0.38235294117647056,
+    "casefile_acted_and_wrong": 0.0,
+    "note": "fraction of unidentifiable incidents where the system committed to a lever that was not the dominant true cause"
+  },
+  "answer_rate_by_cause_count": {
+    "single_cause": 0.296875,
+    "multi_cause": 0.4788135593220339
+  },
+  "brier": {
+    "naive": 0.026962452901709066,
+    "casefile": 0.022575068734994867
+  },
+  "calibration": {
+    "bins": [
+      {
+        "bin": "60%-80%",
+        "n": 37,
+        "stated": 0.755,
+        "actual": 0.568
+      },
+      {
+        "bin": "80%-101%",
+        "n": 95,
+        "stated": 0.927,
+        "actual": 0.758
+      }
+    ],
+    "brier_score": 0.23,
+    "n": 132
+  },
+  "cost_of_being_wrong": {
+    "basis": "lever cost from the contract, 30-day horizon, exposure 250,000/day, 1000 units",
+    "unidentifiable_incidents": 102,
+    "naive_false_interventions": 39,
+    "naive_wasted_spend": 6492000.0,
+    "casefile_false_interventions": 0,
+    "casefile_wasted_spend": 0.0,
+    "avoided": 6492000.0,
+    "avoided_per_incident": 63647.0
+  }
+}

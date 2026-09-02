@@ -1,0 +1,2178 @@
+{
+ "incident_id": "INC-002",
+ "kpi": "net_revenue",
+ "label": "Net revenue, KITCHEN and DECOR",
+ "window": [
+  "2026-08-10",
+  "2026-08-31"
+ ],
+ "slice": {
+  "category_in": [
+   "KITCHEN",
+   "DECOR"
+  ]
+ },
+ "as_of": "2026-08-31 23:45:00",
+ "contract_version": "1.0.0",
+ "likelihood_source": "PRIOR table declared in engine/likelihood.py (calibration has not run)",
+ "generated_at": "2026-09-02T01:21:18",
+ "reconciliation": {
+  "canonical_source": "commerce",
+  "canonical_total": 888899993.9335027,
+  "alternate_source": "finance_erp.fin_revenue",
+  "alternate_total": 891117589.2979524,
+  "delta_abs": 2217595.3644497395,
+  "delta_pct": 0.24947636174870247,
+  "tolerance_pct": 0.5,
+  "breached": false,
+  "explained_by": {
+   "supplier_rebates_netted_by_finance": 0.105,
+   "ship_date_vs_order_date_timing": 0.077
+  },
+  "unexplained_pct": 0.067,
+  "confidence_multiplier": 1.0,
+  "action": "within_tolerance",
+  "note": "recognises revenue at ship date, nets supplier rebates. Canonical for all downstream claims is commerce; the ledger figure is reported beside it, never merged."
+ },
+ "freshness": {
+  "source": "commerce",
+  "table": "orders",
+  "state": "fresh",
+  "lag_minutes": 0.0,
+  "sla_minutes": 90.0,
+  "watermark": "2026-08-31",
+  "blocks_claims": false
+ },
+ "signal_gate": {
+  "family": {
+   "family_size": 16,
+   "evaluated": 16,
+   "fired": 2,
+   "suppressed_by_fdr": 8,
+   "suppressed_by_materiality": 0,
+   "suppressed_by_persistence": 6,
+   "fdr_method": "benjamini_hochberg",
+   "fdr_q": 0.05
+  },
+  "top_monitors": [
+   {
+    "monitor_id": "conversion_rate|SOUTH",
+    "kpi": "conversion_rate",
+    "slice": {
+     "region": "SOUTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 0.05274154436947958,
+    "expected": 0.0597535164948907,
+    "delta_abs": -0.007011972125411117,
+    "delta_pct": -0.1173482756619133,
+    "p_raw": 1e-12,
+    "p_conformal_rank": 0.0011933174224343676,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -12.977779333059123,
+    "weight": 1.7529930313527793,
+    "p_weighted": 3.128544956499863e-12,
+    "q_value": 1.66855731013326e-11,
+    "gate_statistical": true,
+    "gate_materiality": true,
+    "gate_persistence": true,
+    "persistence_days": 22,
+    "material_value": 6310774.912870006,
+    "priority_score": 20194479.720847063,
+    "fired": true,
+    "note": "MSTL periods=(7,), level from 46/60 non-anomalous days, damped drift -1.49e-04/day; contract declares weekly=True yearly=False; trained on 919 days, projected 22 | window effect -0.13 sd"
+   },
+   {
+    "monitor_id": "conversion_rate|NORTH",
+    "kpi": "conversion_rate",
+    "slice": {
+     "region": "NORTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 0.055601783950167814,
+    "expected": 0.05998689299911972,
+    "delta_abs": -0.004385109048951903,
+    "delta_pct": -0.07310111975654837,
+    "p_raw": 1e-12,
+    "p_conformal_rank": 0.0011933174224343676,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -15.586411111339226,
+    "weight": 1.0962772622379757,
+    "p_weighted": 5.002673772346861e-12,
+    "q_value": 2.0010695089387445e-11,
+    "gate_statistical": true,
+    "gate_materiality": true,
+    "gate_persistence": true,
+    "persistence_days": 12,
+    "material_value": 3946598.1440567127,
+    "priority_score": 8682515.916751027,
+    "fired": true,
+    "note": "MSTL periods=(7,), level from 51/60 non-anomalous days, damped drift -1.54e-04/day; contract declares weekly=True yearly=False; trained on 919 days, projected 22 | window effect -0.08 sd"
+   },
+   {
+    "monitor_id": "net_revenue|EAST",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "EAST"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 2114366.463841995,
+    "expected": 1988811.2031068988,
+    "delta_abs": 125555.26073509641,
+    "delta_pct": 0.06313080926885135,
+    "p_raw": 0.3055763995631412,
+    "p_conformal_rank": 0.1766109785202864,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": 0.5086200025684029,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": true,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 125555.26073509641,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 40/60 non-anomalous days, damped drift +6.53e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect +0.06 sd"
+   },
+   {
+    "monitor_id": "net_revenue|NORTH",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "NORTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 3190685.2859115805,
+    "expected": 3149593.9280997603,
+    "delta_abs": 41091.35781182023,
+    "delta_pct": 0.01304655734989044,
+    "p_raw": 0.48457138482241036,
+    "p_conformal_rank": 0.31742243436754175,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": 0.03869503565705803,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": false,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 41091.35781182023,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 37/60 non-anomalous days, damped drift +8.60e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect +0.01 sd"
+   },
+   {
+    "monitor_id": "net_revenue|SOUTH",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "SOUTH"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 2723155.454144324,
+    "expected": 2869189.6179305897,
+    "delta_abs": -146034.16378626553,
+    "delta_pct": -0.05089735543222586,
+    "p_raw": 0.2934129724650596,
+    "p_conformal_rank": 0.15513126491646778,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": -0.5436519478708145,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": true,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 146034.16378626553,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 40/60 non-anomalous days, damped drift +8.62e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect -0.05 sd"
+   },
+   {
+    "monitor_id": "net_revenue|WEST",
+    "kpi": "net_revenue",
+    "slice": {
+     "region": "WEST"
+    },
+    "baseline_method": "MSTL_PROJECTED",
+    "n_calib": 367,
+    "actual": 3505686.613284443,
+    "expected": 3472259.689105321,
+    "delta_abs": 33426.92417912185,
+    "delta_pct": 0.009626850285421708,
+    "p_raw": 0.47723359311466335,
+    "p_conformal_rank": 0.39856801909307876,
+    "p_conformal_floor": 0.0011933174224343676,
+    "effect_sd": 0.05711506190323008,
+    "weight": 0.05,
+    "p_weighted": 1.0,
+    "q_value": 1.0,
+    "gate_statistical": false,
+    "gate_materiality": false,
+    "gate_persistence": false,
+    "persistence_days": 0,
+    "material_value": 33426.92417912185,
+    "priority_score": 0.0,
+    "fired": false,
+    "note": "MSTL periods=(7, 365), level from 38/60 non-anomalous days, damped drift +7.54e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22 | window effect +0.01 sd"
+   }
+  ]
+ },
+ "detection": {
+  "baseline_method": "MSTL_PROJECTED",
+  "baseline_note": "MSTL periods=(7, 365), level from 47/60 non-anomalous days, damped drift +7.80e-05/day; contract declares weekly=True yearly=True; trained on 919 days, projected 22",
+  "n_calibration_windows": 837,
+  "actual": 2927842.7594249677,
+  "expected": 3115012.382866527,
+  "delta_abs": -187169.62344155926,
+  "delta_pct": -0.060086317624625366,
+  "p_studentised": 0.2609687464240045,
+  "p_conformal_rank": 0.1467780429594272,
+  "p_conformal_floor": 0.0011933174224343676,
+  "effect_sd": -0.06286634295298993,
+  "sparse_history": false,
+  "causal_claims_allowed": true,
+  "shortfall_currency": -4117731.715714304,
+  "freshness": {
+   "source": "commerce",
+   "table": "orders",
+   "state": "fresh",
+   "lag_minutes": 0.0,
+   "sla_minutes": 90.0,
+   "watermark": "2026-08-31",
+   "blocks_claims": false
+  },
+  "lineage": [
+   "commerce.orders.gross_amount",
+   "commerce.orders.discount_amount",
+   "commerce.orders.returns_amount"
+  ],
+  "plan_hash": "06168d80f072d5b1",
+  "sql": "WITH b AS (SELECT order_ts::DATE AS d, region, channel, category, customer_segment, SUM(gross_amount-discount_amount-returns_amount) AS num, SUM(order_multiplicity) AS den FROM commerce.orders GROUP BY 1,2,3,4,5)\nSELECT d, region, channel, category, SUM(num) AS value, SUM(num) AS numerator, SUM(den) AS denominator\nFROM b\nWHERE region IN ('WEST','NORTH','SOUTH','EAST')\nGROUP BY 1, 2, 3, 4\nORDER BY 1"
+ },
+ "change_point": {
+  "onset": "2026-08-09",
+  "onset_interval_90": [
+   "2026-08-09",
+   "2026-08-13"
+  ],
+  "statistic": 0.247
+ },
+ "contribution": {
+  "rung": "R0",
+  "caveat": "An accounting identity. True by construction and silent about mechanism.",
+  "top": [
+   {
+    "path": {
+     "region": "EAST",
+     "channel": "STORE"
+    },
+    "dim": "channel",
+    "segment": "STORE",
+    "contribution": 112.2721447428184,
+    "share_of_move": 0.5835438255512492,
+    "numerator_effect": 190.50707384920491,
+    "denominator_effect": -78.23492910638652,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   },
+   {
+    "path": {
+     "region": "SOUTH",
+     "channel": "STORE"
+    },
+    "dim": "channel",
+    "segment": "STORE",
+    "contribution": 104.62219476334121,
+    "share_of_move": 0.5404020584508883,
+    "numerator_effect": -66.8452185465818,
+    "denominator_effect": 171.46741330992302,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   },
+   {
+    "path": {
+     "region": "WEST",
+     "channel": "STORE"
+    },
+    "dim": "channel",
+    "segment": "STORE",
+    "contribution": 107.94022198516052,
+    "share_of_move": 0.5278450712380539,
+    "numerator_effect": 31.178600536829958,
+    "denominator_effect": 76.76162144833056,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   },
+   {
+    "path": {
+     "region": "NORTH",
+     "channel": "STORE"
+    },
+    "dim": "channel",
+    "segment": "STORE",
+    "contribution": 94.20448382297809,
+    "share_of_move": 0.5166624664648354,
+    "numerator_effect": 19.660666254238148,
+    "denominator_effect": 74.54381756873994,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   },
+   {
+    "path": {
+     "region": "WEST"
+    },
+    "dim": "region",
+    "segment": "WEST",
+    "contribution": 62.789095998277105,
+    "share_of_move": 0.32288933742733333,
+    "numerator_effect": 27.66819667078998,
+    "denominator_effect": 35.12089932748712,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   },
+   {
+    "path": {
+     "region": "NORTH"
+    },
+    "dim": "region",
+    "segment": "NORTH",
+    "contribution": 50.15585590644106,
+    "share_of_move": 0.2579236223145486,
+    "numerator_effect": 18.638479174576656,
+    "denominator_effect": 31.517376731864402,
+    "rung": "R0",
+    "method": "exact ratio-of-sums decomposition"
+   }
+  ]
+ },
+ "injection_defence": {
+  "documents_scanned": 1206,
+  "quarantined": [],
+  "policy": "quarantine, never strip-and-continue"
+ },
+ "posterior_meta": {
+  "evidence_used": 5,
+  "evidence_ignored_non_diagnostic": [],
+  "source_groups_collapsed": 12,
+  "prior_adjustments": [
+   "H_COMPETITOR prior x0.6 after a rejection by analyst",
+   "H_NULL prior raised to 0.075: 1 rejected verdict(s) are evidence the library is incomplete"
+  ]
+ },
+ "causal": {
+  "H_PRICE_RISE": {
+   "hypothesis_id": "H_PRICE_RISE",
+   "method": "none",
+   "effect": NaN,
+   "effect_pct": NaN,
+   "ci_low": NaN,
+   "ci_high": NaN,
+   "placebo_p": 1.0,
+   "placebo_p_floor": 1.0,
+   "pretrend_p": 1.0,
+   "n_donors": 0,
+   "rung": "R2",
+   "refutations": {
+    "reason": "no untreated population exists for this change"
+   },
+   "note": "The change rolled out to every unit at once, so no control group exists. An effect cannot be identified from this data; capped at R2 (temporal and mechanism only).",
+   "derived_from": []
+  },
+  "H_COMPETITOR": {
+   "hypothesis_id": "H_COMPETITOR",
+   "method": "none",
+   "effect": NaN,
+   "effect_pct": NaN,
+   "ci_low": NaN,
+   "ci_high": NaN,
+   "placebo_p": 1.0,
+   "placebo_p_floor": 1.0,
+   "pretrend_p": 1.0,
+   "n_donors": 0,
+   "rung": "R2",
+   "refutations": {
+    "reason": "no untreated population exists for this change"
+   },
+   "note": "The change rolled out to every unit at once, so no control group exists. An effect cannot be identified from this data; capped at R2 (temporal and mechanism only).",
+   "derived_from": []
+  },
+  "H_PROMO_WITHDRAWAL": {
+   "hypothesis_id": "H_PROMO_WITHDRAWAL",
+   "method": "none",
+   "effect": NaN,
+   "effect_pct": NaN,
+   "ci_low": NaN,
+   "ci_high": NaN,
+   "placebo_p": 1.0,
+   "placebo_p_floor": 1.0,
+   "pretrend_p": 1.0,
+   "n_donors": 0,
+   "rung": "R2",
+   "refutations": {
+    "reason": "no untreated population exists for this change"
+   },
+   "note": "The change rolled out to every unit at once, so no control group exists. An effect cannot be identified from this data; capped at R2 (temporal and mechanism only).",
+   "derived_from": []
+  },
+  "H_MIX_SHIFT": {
+   "hypothesis_id": "H_MIX_SHIFT",
+   "method": "none",
+   "effect": NaN,
+   "effect_pct": NaN,
+   "ci_low": NaN,
+   "ci_high": NaN,
+   "placebo_p": 1.0,
+   "placebo_p_floor": 1.0,
+   "pretrend_p": 1.0,
+   "n_donors": 0,
+   "rung": "R2",
+   "refutations": {
+    "reason": "no untreated population exists for this change"
+   },
+   "note": "The change rolled out to every unit at once, so no control group exists. An effect cannot be identified from this data; capped at R2 (temporal and mechanism only).",
+   "derived_from": []
+  }
+ },
+ "contradiction": {},
+ "verdict": {
+  "incident_id": "INC-002",
+  "kpi": "net_revenue",
+  "decision": "ABSTAIN",
+  "abstain_type": "collinear_causes",
+  "leading": null,
+  "posterior": {
+   "H_PRICE_RISE": 0.6044,
+   "H_PROMO_WITHDRAWAL": 0.1872,
+   "H_MIX_SHIFT": 0.04,
+   "H_STOCKOUT": 0.0356,
+   "H_MARKETING_CUT": 0.0356,
+   "H_DATA_ARTIFACT": 0.0356,
+   "H_COMPETITOR": 0.033,
+   "H_NULL": 0.0284,
+   "H_CARRIER_DEGRADE": 0.0001,
+   "H_EXTERNAL": 0.0,
+   "H_CHECKOUT_DEFECT": 0.0
+  },
+  "entropy_bits": 1.9010749491998362,
+  "max_rung": "R2",
+  "threshold": 0.7,
+  "reason": "List price increase suppressed demand and Promotion ended or depth reduced cannot be separated: they changed inside the same window, over the same population, and at least one has no untreated group. Posterior 60% vs 19% is below the 70% bar to act, and the two imply different and expensive actions.",
+  "hypotheses": [
+   {
+    "id": "H_PRICE_RISE",
+    "label": "List price increase suppressed demand",
+    "prior": 0.09617352158788622,
+    "log_lr": 2.8309752257785767,
+    "posterior": 0.6043551777413251,
+    "rung": "R2",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "event 2026-08-03 is inside the onset window 2026-07-28..2026-08-16",
+    "lever": "price_change",
+    "evidence_ids": [
+     "E_price_move",
+     "E_promo_move",
+     "E_txt_price_26-08-16"
+    ],
+    "control_available": false,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_PROMO_WITHDRAWAL",
+    "label": "Promotion ended or depth reduced",
+    "prior": 0.09617352158788622,
+    "log_lr": 1.6590935028799614,
+    "posterior": 0.18721924155110808,
+    "rung": "R2",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "event 2026-08-04 is inside the onset window 2026-07-28..2026-08-16",
+    "lever": "promo_depth",
+    "evidence_ids": [
+     "E_promo_move"
+    ],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_MIX_SHIFT",
+    "label": "Category or channel mix shift",
+    "prior": 0.09617352158788622,
+    "log_lr": 0.11666258735989335,
+    "posterior": 0.04003881783076186,
+    "rung": "R2",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "no dated event on record; not screened",
+    "lever": "merchandising_mix",
+    "evidence_ids": [
+     "E_price_move"
+    ],
+    "control_available": false,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_STOCKOUT",
+    "label": "Availability / stock-out",
+    "prior": 0.09617352158788622,
+    "log_lr": 0.0,
+    "posterior": 0.03562995946474375,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "no dated event on record; not screened",
+    "lever": "inventory_replenish",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_MARKETING_CUT",
+    "label": "Paid media reduction cut traffic",
+    "prior": 0.09617352158788622,
+    "log_lr": 0.0,
+    "posterior": 0.03562995946474375,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "no dated event on record; not screened",
+    "lever": "paid_media_spend",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_DATA_ARTIFACT",
+    "label": "Instrumentation or pipeline artifact",
+    "prior": 0.09617352158788622,
+    "log_lr": 0.0,
+    "posterior": 0.03562995946474375,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "no dated event on record; not screened",
+    "lever": "data_pipeline_fix",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_COMPETITOR",
+    "label": "Competitor price or promotion action",
+    "prior": 0.057704112952731736,
+    "log_lr": 0.43441033697154774,
+    "posterior": 0.03300871294160524,
+    "rung": "R2",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "event 2026-08-08 is inside the onset window 2026-07-28..2026-08-16",
+    "lever": "promo_depth",
+    "evidence_ids": [
+     "E_txt_price_26-08-16"
+    ],
+    "control_available": false,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_NULL",
+    "label": "Cause outside the modelled library",
+    "prior": 0.0767341927562922,
+    "log_lr": 0.0,
+    "posterior": 0.028428159147401922,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": true,
+    "alibi_note": "no dated event on record; not screened",
+    "lever": "none",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_CARRIER_DEGRADE",
+    "label": "Carrier performance degradation",
+    "prior": 0.09617352158788622,
+    "log_lr": -6.547061665496676,
+    "posterior": 5.110490370035527e-05,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": false,
+    "alibi_note": "event dated 2026-07-15 lies outside the detected onset window 2026-07-28..2026-08-16; eliminated before evidence was weighed",
+    "lever": "carrier_routing",
+    "evidence_ids": [
+     "E_carrier_shift",
+     "E_txt_delivery_late_26-08-02"
+    ],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_EXTERNAL",
+    "label": "External event (weather, holiday shift, disruption)",
+    "prior": 0.09617352158788622,
+    "log_lr": -8.804875263868018,
+    "posterior": 5.3444939197115635e-06,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": false,
+    "alibi_note": "event dated 2026-07-20 lies outside the detected onset window 2026-07-28..2026-08-16; eliminated before evidence was weighed",
+    "lever": "none",
+    "evidence_ids": [
+     "E_txt_delivery_late_26-08-02"
+    ],
+    "control_available": true,
+    "contribution_pp": null
+   },
+   {
+    "id": "H_CHECKOUT_DEFECT",
+    "label": "Checkout or payment defect",
+    "prior": 0.09617352158788622,
+    "log_lr": -9.210340371976182,
+    "posterior": 3.562995946474378e-06,
+    "rung": "R1",
+    "effect": null,
+    "effect_pct": null,
+    "alibi_ok": false,
+    "alibi_note": "event dated 2026-07-18 lies outside the detected onset window 2026-07-28..2026-08-16; eliminated before evidence was weighed",
+    "lever": "checkout_config_flag",
+    "evidence_ids": [],
+    "control_available": true,
+    "contribution_pp": null
+   }
+  ],
+  "evpi": 0.0,
+  "cost_of_waiting_per_day": 259000.0,
+  "acted_on": null,
+  "established": [],
+  "unestablished_leading": null
+ },
+ "decisive_test": {
+  "recommended": {
+   "id": "T_WAIT",
+   "label": "Wait two more weeks for natural variation",
+   "discriminates": [],
+   "units_available": 0,
+   "units_used": 0,
+   "days": 14,
+   "fixed_cost": 0,
+   "per_unit_cost": 0,
+   "mde": 0.05,
+   "reversibility": "n_a",
+   "owner_role": "cfo",
+   "randomised": false,
+   "evsi": 0.0,
+   "cost": 0,
+   "enbs": 0.0,
+   "enbs_per_day": 0.0,
+   "power": 0.35,
+   "eig_bits": 0.6653762322199426
+  },
+  "ranked": [
+   {
+    "id": "T_WAIT",
+    "label": "Wait two more weeks for natural variation",
+    "discriminates": [],
+    "units_available": 0,
+    "units_used": 0,
+    "days": 14,
+    "fixed_cost": 0,
+    "per_unit_cost": 0,
+    "mde": 0.05,
+    "reversibility": "n_a",
+    "owner_role": "cfo",
+    "randomised": false,
+    "evsi": 0.0,
+    "cost": 0,
+    "enbs": 0.0,
+    "enbs_per_day": 0.0,
+    "power": 0.35,
+    "eig_bits": 0.6653762322199426
+   },
+   {
+    "id": "T_PROMO_HOLDOUT",
+    "label": "Restore promotional depth in 24 randomised store cohorts",
+    "discriminates": [
+     "H_PROMO_WITHDRAWAL"
+    ],
+    "units_available": 96,
+    "units_used": 24,
+    "days": 10,
+    "fixed_cost": 0,
+    "per_unit_cost": 4200,
+    "mde": 0.02,
+    "reversibility": "weekly",
+    "owner_role": "category_director",
+    "randomised": true,
+    "evsi": 42096.47285308759,
+    "cost": 100800,
+    "enbs": -58703.52714691241,
+    "enbs_per_day": -5870.352714691241,
+    "power": 0.86,
+    "eig_bits": 1.634924456311859
+   },
+   {
+    "id": "T_SURVEY",
+    "label": "Survey 4,000 customers in affected catchments",
+    "discriminates": [
+     "H_PRICE_RISE",
+     "H_PROMO_WITHDRAWAL"
+    ],
+    "units_available": 4000,
+    "units_used": 4000,
+    "days": 9,
+    "fixed_cost": 80000,
+    "per_unit_cost": 12,
+    "mde": 0.05,
+    "reversibility": "full",
+    "owner_role": "category_director",
+    "randomised": true,
+    "evsi": 4049.825603903446,
+    "cost": 128000,
+    "enbs": -123950.17439609655,
+    "enbs_per_day": -13772.241599566283,
+    "power": 0.55,
+    "eig_bits": 1.04559122205991
+   },
+   {
+    "id": "T_PRICE_REVERT",
+    "label": "Revert list price in 24 matched cohorts",
+    "discriminates": [
+     "H_PRICE_RISE"
+    ],
+    "units_available": 96,
+    "units_used": 24,
+    "days": 14,
+    "fixed_cost": 340000,
+    "per_unit_cost": 5200,
+    "mde": 0.02,
+    "reversibility": "poor",
+    "owner_role": "category_director",
+    "randomised": true,
+    "evsi": 39035.56636400978,
+    "cost": 464800,
+    "enbs": -425764.43363599025,
+    "enbs_per_day": -30411.74525971359,
+    "power": 0.84,
+    "eig_bits": 1.5969029573278621
+   }
+  ],
+  "evpi": 234886.0,
+  "hedge": {
+   "chosen": {
+    "lever": "carrier_routing",
+    "max_regret": 621600.0,
+    "reversibility": "full",
+    "owner": "ops_manager"
+   },
+   "considered": [
+    {
+     "lever": "carrier_routing",
+     "max_regret": 621600.0,
+     "reversibility": "full",
+     "owner": "ops_manager"
+    },
+    {
+     "lever": "checkout_config_flag",
+     "max_regret": 621600.0,
+     "reversibility": "instant",
+     "owner": "engineering_lead"
+    },
+    {
+     "lever": "promo_depth",
+     "max_regret": 621600.0,
+     "reversibility": "weekly",
+     "owner": "category_director"
+    },
+    {
+     "lever": "paid_media_spend",
+     "max_regret": 621600.0,
+     "reversibility": "daily",
+     "owner": "marketing_lead"
+    },
+    {
+     "lever": "merchandising_mix",
+     "max_regret": 621600.0,
+     "reversibility": "weekly",
+     "owner": "category_director"
+    }
+   ],
+   "rule": "minimax regret across the surviving hypotheses"
+  },
+  "cost_of_waiting_per_day": 15562.356264777969,
+  "objective": "expected net benefit of sampling per day (EVSI minus cost)"
+ },
+ "evidence": [
+  {
+   "id": "E_ontime_drop",
+   "test_id": "ontime_drop",
+   "label": "Fulfilment on-time fell in the affected cohort",
+   "evidence_class": "statistical",
+   "fired": false,
+   "strength": 0.2113432203538057,
+   "detail": "on-time 92.2% -> 93.2% (+1.06pp)",
+   "source": "ops_voice.shipment_events",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.shipment_events.delivered_ts"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 52.0,
+    "sla_min": 240.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.2113432203538057,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:ontime_drop",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R0",
+   "quarantined": false
+  },
+  {
+   "id": "E_carrier_shift",
+   "test_id": "carrier_shift",
+   "label": "Shipment share moved to a different carrier",
+   "evidence_class": "temporal",
+   "fired": true,
+   "strength": 0.323226230011959,
+   "detail": "share to C_SWIFT +12.9pp",
+   "source": "ops_voice.shipment_events",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.shipment_events.carrier_id"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 52.0,
+    "sla_min": 240.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.323226230011959,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:carrier_shift",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_checkout_errors",
+   "test_id": "checkout_errors",
+   "label": "Checkout error rate rose",
+   "evidence_class": "statistical",
+   "fired": false,
+   "strength": 0.0,
+   "detail": "checkout error 0.953% -> 0.400%",
+   "source": "commerce.checkout_events",
+   "derived_from": [],
+   "lineage": [
+    "commerce.checkout_events.errors"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 0.0,
+    "sla_min": 90.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.0,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:checkout_errors",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R0",
+   "quarantined": false
+  },
+  {
+   "id": "E_price_move",
+   "test_id": "price_move",
+   "label": "List price index moved",
+   "evidence_class": "business-rule",
+   "fired": true,
+   "strength": 0.6187010078387436,
+   "detail": "price index 1.0148 -> 1.0650 (+4.95%)",
+   "source": "commerce.price_promo_daily",
+   "derived_from": [],
+   "lineage": [
+    "commerce.price_promo_daily.list_price_index"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 0.0,
+    "sla_min": 90.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.6187010078387436,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:price_move",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_promo_move",
+   "test_id": "promo_move",
+   "label": "Promotional depth changed",
+   "evidence_class": "business-rule",
+   "fired": true,
+   "strength": 0.6545454545454547,
+   "detail": "promo depth -0.007 -> -0.040",
+   "source": "commerce.price_promo_daily",
+   "derived_from": [],
+   "lineage": [
+    "commerce.price_promo_daily.promo_depth"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 0.0,
+    "sla_min": 90.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.6545454545454547,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:promo_move",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_stockout_rise",
+   "test_id": "stockout_rise",
+   "label": "Out-of-stock minutes rose",
+   "evidence_class": "statistical",
+   "fired": false,
+   "strength": 0.0,
+   "detail": "oos minutes/day 30 -> 30 (+0%)",
+   "source": "ops_voice.inventory_daily",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.inventory_daily.oos_minutes"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 95.0,
+    "sla_min": 240.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.0,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:stockout_rise",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R0",
+   "quarantined": false
+  },
+  {
+   "id": "E_source_reconciles",
+   "test_id": "source_reconciles",
+   "label": "Commerce reconciles to the finance ledger",
+   "evidence_class": "business-rule",
+   "fired": false,
+   "strength": 0.09520393210969501,
+   "detail": "ledger delta 0.476%",
+   "source": "finance_erp.fin_revenue",
+   "derived_from": [],
+   "lineage": [
+    "finance_erp.fin_revenue.net_revenue_fin"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 4320.0,
+    "sla_min": 11520.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.09520393210969501,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:source_reconciles",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R0",
+   "quarantined": false
+  },
+  {
+   "id": "E_mix_shift",
+   "test_id": "mix_shift",
+   "label": "Category or channel mix shifted",
+   "evidence_class": "statistical",
+   "fired": false,
+   "strength": 0.16673546614708115,
+   "detail": "total variation of mix 1.67pp",
+   "source": "commerce.orders",
+   "derived_from": [],
+   "lineage": [
+    "commerce.orders.category"
+   ],
+   "freshness": {
+    "state": "fresh",
+    "lag_min": 0.0,
+    "sla_min": 90.0
+   },
+   "method": "pre-registered SQL against the semantic layer",
+   "contribution": null,
+   "confidence": 0.16673546614708115,
+   "region": null,
+   "t_window": [
+    "2026-08-10",
+    "2026-08-31"
+   ],
+   "source_group": "sql:mix_shift",
+   "corroboration": 1,
+   "spans": [],
+   "rung": "R0",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_delivery_late_26-08-02",
+   "test_id": "txt_delivery_late",
+   "label": "40 documents mention delivery late",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 1.0,
+   "detail": "40 mentions across 2 independent source(s), trust=high, week 2026-07-27/2026-08-02",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 1.0,
+   "region": "WEST",
+   "t_window": null,
+   "source_group": "text:delivery_late",
+   "corroboration": 40,
+   "spans": [
+    {
+     "doc_id": "REV-003237",
+     "span": [
+      25,
+      28
+     ]
+    },
+    {
+     "doc_id": "REV-003238",
+     "span": [
+      20,
+      24
+     ]
+    },
+    {
+     "doc_id": "REV-003239",
+     "span": [
+      25,
+      28
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_delivery_late_26-08-09",
+   "test_id": "txt_delivery_late",
+   "label": "35 documents mention delivery late",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.9649789674437054,
+   "detail": "35 mentions across 2 independent source(s), trust=high, week 2026-08-03/2026-08-09",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.9649789674437054,
+   "region": "WEST",
+   "t_window": null,
+   "source_group": "text:delivery_late",
+   "corroboration": 35,
+   "spans": [
+    {
+     "doc_id": "REV-003326",
+     "span": [
+      20,
+      24
+     ]
+    },
+    {
+     "doc_id": "REV-003328",
+     "span": [
+      6,
+      10
+     ]
+    },
+    {
+     "doc_id": "REV-003329",
+     "span": [
+      20,
+      24
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-16",
+   "test_id": "txt_price",
+   "label": "28 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.906753866493523,
+   "detail": "28 mentions across 1 independent source(s), trust=medium, week 2026-08-10/2026-08-16",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.906753866493523,
+   "region": "NORTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 28,
+   "spans": [
+    {
+     "doc_id": "REV-002398",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002402",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002418",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-09",
+   "test_id": "txt_price",
+   "label": "27 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8973043878834545,
+   "detail": "27 mentions across 1 independent source(s), trust=medium, week 2026-08-03/2026-08-09",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8973043878834545,
+   "region": "WEST",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 27,
+   "spans": [
+    {
+     "doc_id": "REV-002242",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002249",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002281",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-09",
+   "test_id": "txt_price",
+   "label": "25 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8773484072743342,
+   "detail": "25 mentions across 1 independent source(s), trust=medium, week 2026-08-03/2026-08-09",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8773484072743342,
+   "region": "SOUTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 25,
+   "spans": [
+    {
+     "doc_id": "REV-002236",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002246",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002267",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-16",
+   "test_id": "txt_price",
+   "label": "23 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8557943061997394,
+   "detail": "23 mentions across 1 independent source(s), trust=medium, week 2026-08-10/2026-08-16",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8557943061997394,
+   "region": "SOUTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 23,
+   "spans": [
+    {
+     "doc_id": "REV-002411",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002429",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002444",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-30",
+   "test_id": "txt_price",
+   "label": "23 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8557943061997394,
+   "detail": "23 mentions across 1 independent source(s), trust=medium, week 2026-08-24/2026-08-30",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8557943061997394,
+   "region": "WEST",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 23,
+   "spans": [
+    {
+     "doc_id": "REV-002699",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002707",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002791",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-23",
+   "test_id": "txt_price",
+   "label": "22 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8443337464867926,
+   "detail": "22 mentions across 1 independent source(s), trust=medium, week 2026-08-17/2026-08-23",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8443337464867926,
+   "region": "SOUTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 22,
+   "spans": [
+    {
+     "doc_id": "REV-002552",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002592",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002687",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-30",
+   "test_id": "txt_price",
+   "label": "22 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8443337464867926,
+   "detail": "22 mentions across 1 independent source(s), trust=medium, week 2026-08-24/2026-08-30",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8443337464867926,
+   "region": "SOUTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 22,
+   "spans": [
+    {
+     "doc_id": "REV-002728",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002737",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002745",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-16",
+   "test_id": "txt_price",
+   "label": "21 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8323636643738357,
+   "detail": "21 mentions across 1 independent source(s), trust=medium, week 2026-08-10/2026-08-16",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8323636643738357,
+   "region": "EAST",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 21,
+   "spans": [
+    {
+     "doc_id": "REV-002413",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002442",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002443",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-30",
+   "test_id": "txt_price",
+   "label": "21 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.8323636643738357,
+   "detail": "21 mentions across 1 independent source(s), trust=medium, week 2026-08-24/2026-08-30",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.8323636643738357,
+   "region": "EAST",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 21,
+   "spans": [
+    {
+     "doc_id": "REV-002702",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002714",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002715",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-09",
+   "test_id": "txt_price",
+   "label": "20 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.819836637888477,
+   "detail": "20 mentions across 1 independent source(s), trust=medium, week 2026-08-03/2026-08-09",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.819836637888477,
+   "region": "NORTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 20,
+   "spans": [
+    {
+     "doc_id": "REV-002235",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002260",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002277",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-09",
+   "test_id": "txt_price",
+   "label": "20 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.819836637888477,
+   "detail": "20 mentions across 1 independent source(s), trust=medium, week 2026-08-03/2026-08-09",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.819836637888477,
+   "region": "EAST",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 20,
+   "spans": [
+    {
+     "doc_id": "REV-002257",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002307",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002310",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  },
+  {
+   "id": "E_txt_price_26-08-30",
+   "test_id": "txt_price",
+   "label": "19 documents mention price",
+   "evidence_class": "textual",
+   "fired": true,
+   "strength": 0.806698300112059,
+   "detail": "19 mentions across 1 independent source(s), trust=medium, week 2026-08-24/2026-08-30",
+   "source": "ops_voice.documents",
+   "derived_from": [],
+   "lineage": [
+    "ops_voice.documents.text"
+   ],
+   "freshness": {
+    "state": "fresh"
+   },
+   "method": "gazetteer + template extraction, clustered",
+   "contribution": null,
+   "confidence": 0.806698300112059,
+   "region": "NORTH",
+   "t_window": null,
+   "source_group": "text:price",
+   "corroboration": 19,
+   "spans": [
+    {
+     "doc_id": "REV-002695",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002705",
+     "span": [
+      40,
+      45
+     ]
+    },
+    {
+     "doc_id": "REV-002732",
+     "span": [
+      40,
+      45
+     ]
+    }
+   ],
+   "rung": "R1",
+   "quarantined": false
+  }
+ ],
+ "entitlement": {
+  "ops_manager": {
+   "regions": [
+    "WEST"
+   ],
+   "column_grants": [],
+   "evidence_admitted": 12,
+   "withheld_count": 10,
+   "withheld_reasons": [
+    "E_txt_price_26-08-16: row:NORTH",
+    "E_txt_price_26-08-09: row:SOUTH",
+    "E_txt_price_26-08-16: row:SOUTH",
+    "E_txt_price_26-08-23: row:SOUTH",
+    "E_txt_price_26-08-30: row:SOUTH",
+    "E_txt_price_26-08-16: row:EAST"
+   ],
+   "max_rung": "R2",
+   "rung_capped_by_entitlement": false,
+   "note": "Full evidence set admitted."
+  },
+  "cfo": {
+   "regions": [
+    "WEST",
+    "NORTH",
+    "SOUTH",
+    "EAST"
+   ],
+   "column_grants": [
+    "restricted_cost"
+   ],
+   "evidence_admitted": 22,
+   "withheld_count": 0,
+   "withheld_reasons": [],
+   "max_rung": "R2",
+   "rung_capped_by_entitlement": false,
+   "note": "Full evidence set admitted."
+  }
+ },
+ "actions_by_persona": {
+  "ops_manager": [
+   {
+    "id": "ACT-H_CHECKOUT_DEFECT",
+    "driver": "Checkout or payment defect",
+    "lever": "checkout_config_flag",
+    "action": "Toggle checkout feature flag",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 0.0,
+    "owner_role": "engineering_lead",
+    "confidence": 0.0,
+    "time_to_impact_days": 0,
+    "reversibility": "instant",
+    "blast_radius": "cohort",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "checkout error rate",
+     "check_after_days": 3,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 3",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -933462.3767780057,
+    "rank": 1,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_CARRIER_DEGRADE",
+    "driver": "Carrier performance degradation",
+    "lever": "carrier_routing",
+    "action": "Re-route shipments to alternate carrier",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 12000.0,
+    "owner_role": "ops_manager",
+    "confidence": 0.0,
+    "time_to_impact_days": 2,
+    "reversibility": "full",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "fulfilment_ontime_pct",
+     "check_after_days": 5,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 5",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -952116.1391002052,
+    "rank": 2,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_MARKETING_CUT",
+    "driver": "Paid media reduction cut traffic",
+    "lever": "paid_media_spend",
+    "action": "Adjust paid media spend",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 0.0,
+    "owner_role": "marketing_lead",
+    "confidence": 0.014,
+    "time_to_impact_days": 1,
+    "reversibility": "daily",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "net_revenue",
+     "check_after_days": 4,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 4",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1000946769.9014224,
+    "rank": 3,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_STOCKOUT",
+    "driver": "Availability / stock-out",
+    "lever": "inventory_replenish",
+    "action": "Expedite replenishment",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 45000.0,
+    "owner_role": "supply_lead",
+    "confidence": 0.014,
+    "time_to_impact_days": 7,
+    "reversibility": "poor",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "oos_minutes",
+     "check_after_days": 10,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 10",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1001028365.5941945,
+    "rank": 4,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_DATA_ARTIFACT",
+    "driver": "Instrumentation or pipeline artifact",
+    "lever": "data_pipeline_fix",
+    "action": "Repair ingestion pipeline",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 120000.0,
+    "owner_role": "data_platform_lead",
+    "confidence": 0.014,
+    "time_to_impact_days": 1,
+    "reversibility": "full",
+    "blast_radius": "none",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "net_revenue",
+     "check_after_days": 4,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 4",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1001060116.1391002,
+    "rank": 5,
+    "rung": "R1",
+    "derived_from": []
+   }
+  ],
+  "cfo": [
+   {
+    "id": "ACT-H_MARKETING_CUT",
+    "driver": "Paid media reduction cut traffic",
+    "lever": "paid_media_spend",
+    "action": "Adjust paid media spend",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 0.0,
+    "owner_role": "marketing_lead",
+    "confidence": 0.014,
+    "time_to_impact_days": 1,
+    "reversibility": "daily",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "net_revenue",
+     "check_after_days": 4,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 4",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -946769.9014224046,
+    "rank": 1,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_STOCKOUT",
+    "driver": "Availability / stock-out",
+    "lever": "inventory_replenish",
+    "action": "Expedite replenishment",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 45000.0,
+    "owner_role": "supply_lead",
+    "confidence": 0.014,
+    "time_to_impact_days": 7,
+    "reversibility": "poor",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "oos_minutes",
+     "check_after_days": 10,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 10",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1028365.5941945014,
+    "rank": 2,
+    "rung": "R1",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_COMPETITOR",
+    "driver": "Competitor price or promotion action",
+    "lever": "promo_depth",
+    "action": "Adjust promotional depth",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 233100.0,
+    "owner_role": "category_director",
+    "confidence": 0.013,
+    "time_to_impact_days": 3,
+    "reversibility": "weekly",
+    "blast_radius": "region",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "net_revenue",
+     "check_after_days": 6,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 6",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1193177.4260668035,
+    "rank": 3,
+    "rung": "R2",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_PRICE_RISE",
+    "driver": "List price increase suppressed demand",
+    "lever": "price_change",
+    "action": "Revise list price",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 310800.0,
+    "owner_role": "category_director",
+    "confidence": 0.242,
+    "time_to_impact_days": 14,
+    "reversibility": "poor",
+    "blast_radius": "national",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "conversion_rate",
+     "check_after_days": 17,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 17",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1294165.5941945014,
+    "rank": 4,
+    "rung": "R2",
+    "derived_from": []
+   },
+   {
+    "id": "ACT-H_CHECKOUT_DEFECT",
+    "driver": "Checkout or payment defect",
+    "lever": "checkout_config_flag",
+    "action": "Toggle checkout feature flag",
+    "expected_impact": 0.0,
+    "expected_impact_basis": "NO_MEASURED_EFFECT: no measured edge and no identified causal estimate",
+    "cost": 0.0,
+    "owner_role": "engineering_lead",
+    "confidence": 0.0,
+    "time_to_impact_days": 0,
+    "reversibility": "instant",
+    "blast_radius": "cohort",
+    "monitoring_plan": {
+     "kpi": "net_revenue",
+     "leading_indicator": "checkout error rate",
+     "check_after_days": 3,
+     "success_criterion": "net_revenue recovers at least 60% of the estimated shortfall",
+     "rollback_trigger": "no movement in the leading indicator by day 3",
+     "measured_by": "synthetic control against untreated units, written to the Outcome Ledger"
+    },
+    "requires_approval_from": null,
+    "within_decision_rights": true,
+    "blocked_by": null,
+    "score": -1000933462.376778,
+    "rank": 5,
+    "rung": "R1",
+    "derived_from": []
+   }
+  ]
+ },
+ "narratives": {
+  "ops_manager": {
+   "text": "The net revenue fell by 6.01% from the expected $3,115,012.38 to the actual $2,927,842.76 during the period from August 10 to August 31, 2026. The primary contributors to this decline were STORE channels in EAST, SOUTH, and WEST regions. However, the cause is not established due to collinear causes. Recommended next steps include waiting two more weeks for natural variation to occur. Adjusting paid media spend could also be considered with a lead time of one day.",
+   "mode": "local",
+   "closure": {
+    "numerals_in_text": 6,
+    "bound": 6,
+    "free_numerals": [],
+    "passed": true
+   },
+   "attempts": 1,
+   "latency_ms": 18978.3,
+   "cache_hit": false
+  },
+  "cfo": {
+   "text": "Exposure to daily sales of $259,000 across the window from August 10 to August 31, 2026, resulted in a net revenue of $2,927,842.76, which is below the expected value of $3,115,012.38 by 6.01%. The primary segments contributing to this variance include STORE channels in EAST, SOUTH, and WEST regions. However, the cause of the deviation is not established due to collinear causes. Recommended actions include adjusting paid media spend, expediting replenishment, and adjusting promotional depth, each with respective lead times and costs. The next step is to wait two more weeks for natural variation to clarify underlying factors.",
+   "mode": "local",
+   "closure": {
+    "numerals_in_text": 7,
+    "bound": 7,
+    "free_numerals": [],
+    "passed": true
+   },
+   "attempts": 1,
+   "latency_ms": 7242.3,
+   "cache_hit": false
+  }
+ },
+ "telemetry": {
+  "run_id": "20260902T012118-6c6eef",
+  "spans": 15,
+  "wall_ms_total": 35622.6,
+  "llm_calls": 2,
+  "tokens_in": 3056,
+  "tokens_out": 286,
+  "cost_usd": 0.000144,
+  "quantitative_spans": 12,
+  "quantitative_spans_using_a_model": 0,
+  "llm_boundary_intact": true,
+  "by_method_class": {
+   "LLM": {
+    "spans": 2,
+    "wall_ms": 26225.4,
+    "cost_usd": 0.000144
+   },
+   "SQL": {
+    "spans": 1,
+    "wall_ms": 119.9,
+    "cost_usd": 0.0
+   },
+   "business rules": {
+    "spans": 4,
+    "wall_ms": 17.7,
+    "cost_usd": 0.0
+   },
+   "causal inference": {
+    "spans": 1,
+    "wall_ms": 0.7,
+    "cost_usd": 0.0
+   },
+   "deterministic logic": {
+    "spans": 3,
+    "wall_ms": 164.7,
+    "cost_usd": 0.0
+   },
+   "retrieval": {
+    "spans": 1,
+    "wall_ms": 20.2,
+    "cost_usd": 0.0
+   },
+   "statistics": {
+    "spans": 3,
+    "wall_ms": 9074.1,
+    "cost_usd": 0.0
+   }
+  },
+  "budget_breaches": []
+ }
+}

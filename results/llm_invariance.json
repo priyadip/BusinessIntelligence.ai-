@@ -1,0 +1,17 @@
+{
+  "incident": "INC-002",
+  "modes": [
+    "off",
+    "local"
+  ],
+  "fields_compared": 258,
+  "identical": true,
+  "differing_fields": [],
+  "relative_tolerance": 1e-12,
+  "worst_relative_difference": 9.518427082272954e-14,
+  "tolerance_note": "Float summation in a parallel query engine is not associative, so bitwise reproducibility is not claimed. Agreement is asserted to relative tolerance.",
+  "personas_rendered": "cfo",
+  "narrative_differs": true,
+  "narrative_mode_on": "local",
+  "claim": "every computed field is identical with the model off and on; only the prose changes"
+}

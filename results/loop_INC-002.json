@@ -1,0 +1,132 @@
+{
+ "ran": true,
+ "plan": {
+  "test_id": "T_PROMO_HOLDOUT",
+  "hypothesis_under_test": "H_PROMO_WITHDRAWAL",
+  "randomisation_seed": 4242,
+  "assignment_method": "simple randomisation over units",
+  "treated_units": [
+   "EAST|LIGHTING",
+   "EAST|OUTDOOR",
+   "NORTH|KITCHEN",
+   "SOUTH|FURNITURE",
+   "SOUTH|KITCHEN",
+   "WEST|OUTDOOR"
+  ],
+  "control_units": [
+   "EAST|DECOR",
+   "EAST|FURNITURE",
+   "EAST|KITCHEN",
+   "NORTH|DECOR",
+   "NORTH|FURNITURE",
+   "NORTH|LIGHTING",
+   "NORTH|OUTDOOR",
+   "SOUTH|DECOR",
+   "SOUTH|LIGHTING",
+   "SOUTH|OUTDOOR",
+   "WEST|DECOR",
+   "WEST|FURNITURE",
+   "WEST|KITCHEN",
+   "WEST|LIGHTING"
+  ],
+  "start": "2026-09-01",
+  "days": 10,
+  "end": "2026-09-11",
+  "falsification_criterion": "Restoring promotional depth does not recover conversion in the treated cohort relative to the control pool.",
+  "analysis_plan": "synthetic control on the treated units against the control pool, Abadie in-space placebo inference, pre-trend placebo must pass",
+  "plan_hash": "c3b02159a5f80800"
+ },
+ "result": {
+  "plan": {
+   "test_id": "T_PROMO_HOLDOUT",
+   "hypothesis_under_test": "H_PROMO_WITHDRAWAL",
+   "randomisation_seed": 4242,
+   "assignment_method": "simple randomisation over units",
+   "treated_units": [
+    "EAST|LIGHTING",
+    "EAST|OUTDOOR",
+    "NORTH|KITCHEN",
+    "SOUTH|FURNITURE",
+    "SOUTH|KITCHEN",
+    "WEST|OUTDOOR"
+   ],
+   "control_units": [
+    "EAST|DECOR",
+    "EAST|FURNITURE",
+    "EAST|KITCHEN",
+    "NORTH|DECOR",
+    "NORTH|FURNITURE",
+    "NORTH|LIGHTING",
+    "NORTH|OUTDOOR",
+    "SOUTH|DECOR",
+    "SOUTH|LIGHTING",
+    "SOUTH|OUTDOOR",
+    "WEST|DECOR",
+    "WEST|FURNITURE",
+    "WEST|KITCHEN",
+    "WEST|LIGHTING"
+   ],
+   "start": "2026-09-01",
+   "days": 10,
+   "end": "2026-09-11",
+   "falsification_criterion": "Restoring promotional depth does not recover conversion in the treated cohort relative to the control pool.",
+   "analysis_plan": "synthetic control on the treated units against the control pool, Abadie in-space placebo inference, pre-trend placebo must pass",
+   "plan_hash": "c3b02159a5f80800"
+  },
+  "measured": {
+   "effect_pct": 0.08257697808053774,
+   "ci_low": 0.052522167290556,
+   "ci_high": 0.10568572973537829,
+   "placebo_p": 0.06666666666666667,
+   "units_measured": 6,
+   "units_reaching_R3": 2,
+   "n_donors": 14,
+   "rung": "R4",
+   "method": "randomised assignment measured by synthetic control"
+  },
+  "note": "Randomised assignment over 6 treated units against 14 controls; aggregate placebo p=0.067. Because assignment was randomised and pre-registered before the data existed (plan c3b02159a5f80800), confounding is designed out and this reaches R4."
+ },
+ "ledger": {
+  "ts": "2026-09-02T05:10:43",
+  "incident_id": "INC-002",
+  "action_id": "T_PROMO_HOLDOUT",
+  "lever": "promo_depth",
+  "kpi": "net_revenue",
+  "predicted_impact": 0.0,
+  "measured_effect": 0.08257697808053774,
+  "ci_low": 0.052522167290556,
+  "ci_high": 0.10568572973537829,
+  "placebo_p": 0.06666666666666667,
+  "n_donors": 14,
+  "method": "randomised assignment measured by synthetic control",
+  "prediction_error_pct": null,
+  "edge_upgraded_to": "MEASURED"
+ },
+ "upgraded_edge": true,
+ "before": {
+  "verdict": "ABSTAIN",
+  "abstain_type": "collinear_causes",
+  "posterior": {
+   "H_PRICE_RISE": 0.4011,
+   "H_PROMO_WITHDRAWAL": 0.337,
+   "H_MIX_SHIFT": 0.0433,
+   "H_DATA_ARTIFACT": 0.0433,
+   "H_STOCKOUT": 0.0358,
+   "H_NULL": 0.0346,
+   "H_EXTERNAL": 0.0284,
+   "H_CARRIER_DEGRADE": 0.024,
+   "H_MARKETING_CUT": 0.0213,
+   "H_COMPETITOR": 0.0163,
+   "H_CHECKOUT_DEFECT": 0.015
+  },
+  "max_rung": "R2"
+ },
+ "after": {
+  "verdict": "ACT",
+  "abstain_type": null,
+  "established_cause": "H_PROMO_WITHDRAWAL",
+  "rung": "R4",
+  "measured_effect_pct": 0.08257697808053774,
+  "note": "the edge promo_depth -> conversion_rate is now MEASURED; the next incident inherits this effect size as a prior"
+ }
+}
