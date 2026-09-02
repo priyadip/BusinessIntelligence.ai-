@@ -38,6 +38,27 @@ def blocks(s: dict) -> dict[str, str]:
             "likelihood": s.get("likelihood_source", "")}
 
 
+def invariance(o: Path) -> dict[str, str]:
+    """The invariance proof reports its own field count; three documents used to restate it."""
+    f = o / "llm_invariance.json"
+    if not f.exists(): return {}
+    d = json.loads(f.read_text())
+    return {"fields": str(d["fields_compared"]),
+            "worst": f"{d['worst_relative_difference']:.1e}"}
+
+
+def badges(root: Path, tests: int) -> None:
+    """The README badges quote counts too, so they are generated like every other figure."""
+    r = json.loads((root / "results/rubric.json").read_text())
+    npass, tot = sum(x["status"] == "PASS" for x in r), len(r)
+    f = root / "README.md"
+    if not f.exists(): return
+    s = f.read_text()
+    s = re.sub(r"(badge/tests-)\d+(%20passed)", rf"\g<1>{tests}\g<2>", s)
+    s = re.sub(r"(badge/brief%20coverage-)[\d]+%2F[\d]+", rf"\g<1>{npass}%2F{tot}", s)
+    f.write_text(s)
+
+
 def apply(path: Path, b: dict[str, str]) -> int:
     if not path.exists(): return 0
     t = path.read_text(); n = 0
@@ -50,13 +71,15 @@ def apply(path: Path, b: dict[str, str]) -> int:
 
 def main():
     s = json.loads((OUT() / "eval/summary.json").read_text())
-    b = blocks(s)
+    b = blocks(s) | invariance(OUT())
     total = 0
     for rel in ("README.md", "FINAL_REPORT.md", "docs/README.md", "docs/ARCHITECTURE.md"):
         for base in (ROOT, ROOT.parent):
             total += apply(base / rel, b)
+    n = sync_test_count()
+    badges(ROOT.parent if (ROOT.parent / "README.md").exists() else ROOT, n)
     print(f"synced {total} number blocks from an evaluation of n={s['n_incidents']}")
-    print(f"  likelihoods: {s.get('likelihood_source','')[:70]}")
+    print(f"  tests: {n}    likelihoods: {s.get('likelihood_source','')[:70]}")
 
 
 def sync_test_count() -> int:

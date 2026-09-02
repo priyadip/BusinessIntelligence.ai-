@@ -34,7 +34,7 @@ open out/workspace.html                    # the Decision Workspace
 ```
 
 `--llm-mode off` is not a degraded mode. It is the control arm: every computed field is
-identical with the model off and on, and `eval/llm_invariance.py` proves it over 196 fields.
+identical with the model off and on, and `eval/llm_invariance.py` proves it over <!--NUMBERS:fields-->258<!--/NUMBERS:fields--> fields.
 
 ## The four demonstration incidents
 

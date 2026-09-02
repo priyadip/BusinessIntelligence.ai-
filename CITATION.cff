@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+title: "CaseFile: a KPI intelligence-to-action engine"
+message: "If you refer to this work, please cite it as below."
+type: software
+authors:
+  - family-names: Sau
+    given-names: Priyadip
+    email: saupriyadip571@gmail.com
+repository-code: "https://github.com/priyadip/BusinessIntelligence.ai-"
+abstract: >-
+  CaseFile turns a KPI movement into a decision. It decomposes the move,
+  ranks candidate causes against a proof ladder, and states the standard of
+  evidence each explanation actually meets. Where the data cannot identify a
+  cause, it declines to name one and instead ranks the experiments that would
+  settle the question by expected net benefit of sampling.
+keywords:
+  - business intelligence
+  - causal inference
+  - decision support
+  - abstention
+  - key performance indicators
+license: MIT
+date-released: "2026-09-02"

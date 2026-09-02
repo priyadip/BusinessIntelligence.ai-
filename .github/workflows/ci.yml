@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: build world, test, score against the brief
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install core dependencies
+        run: python -m pip install -q -r requirements.txt
+
+      - name: Generate the synthetic world
+        run: python -m casefile.sim.build_all 20260901
+        working-directory: src
+
+      - name: Run the four incidents with the model off
+        run: python run_case.py all --llm-mode off
+        working-directory: src
+
+      - name: Tests
+        run: python -m pytest ../tests -q
+        working-directory: src
+
+      - name: Score against the Round 2 brief
+        run: python verify_rubric.py
+        working-directory: src

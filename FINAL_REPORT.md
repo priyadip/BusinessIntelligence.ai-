@@ -61,7 +61,7 @@ and a written justification; six are `backend: none` and the gateway raises if t
 | Unit and invariant suite (`pytest tests`) | **25 passed** |
 | Semantic-gateway choke point (AST walk over every module) | **pass** — nothing bypasses it |
 | LLM boundary (no model on the quantitative path, in emitted telemetry) | **pass** |
-| LLM invariance: same incident, model off vs local, 196 computed fields | **identical** to 1e-12 relative; worst observed 1.0e-14 |
+| LLM invariance: same incident, model off vs local, <!--NUMBERS:fields-->258<!--/NUMBERS:fields--> computed fields | **identical** to 1e-12 relative; worst observed <!--NUMBERS:worst-->9.5e-14<!--/NUMBERS:worst--> |
 | LMDI decomposition residual | 5.6e-09 |
 | Ratio decomposition residual | 4.3e-19 |
 | Shapley ground truth sums to total effect | exact, all incidents |
