@@ -1,25 +1,5 @@
 #!/usr/bin/env python3
-"""
-Calibrate the evidence likelihood ratios from data, on seeds held apart from evaluation.
-
-Until now the posterior rested on a DECLARED prior table: plausible numbers, chosen by hand,
-which is exactly the thing a judge should push on. The simulator injects known causes, so
-these likelihoods are measurable rather than assumed.
-
-For every evidence test e and hypothesis h we estimate, over many simulated worlds:
-
-    P(e fires | h is a true cause)      and      P(e fires | h is not)
-
-with Jeffreys smoothing (+0.5 numerator, +1 denominator) so no cell is ever 0 or 1 and no
-single incident can drive a ratio to infinity. The likelihood ratio is their quotient,
-clipped to [0.05, 50] so that no one piece of evidence can manufacture certainty on its own.
-
-TRAIN and TEST seed ranges are disjoint and asserted to be so. Everything reported in the
-evaluation is measured on seeds this calibration never saw.
-
-In a real deployment the identical procedure runs against the company's own incident history,
-which is what the Outcome Ledger accumulates over time.
-"""
+"""Calibrate evidence likelihood ratios from simulated incidents, with held-out evaluation."""
 from __future__ import annotations
 import json, sys
 from collections import defaultdict
@@ -42,10 +22,8 @@ DRIVER_COLS = {"ontime": "ontime_pct", "checkout": "checkout_error_rate",
                "price": "price_index", "promo": "promo_depth",
                "stockout": "stockout_rate", "competitor": "competitor_gap",
                "marketing": "marketing_mult"}
-# NOTE: "promo" includes txt_price. A shopper observes the price they pay, not whether a list
-# price rose or a discount ended, so both causes generate the same complaint theme. The
-# calibration must model the world the corpus actually produces, or it will learn that price
-# complaints are diagnostic of a price rise when they are not.
+# "promo" includes txt_price: a shopper cannot tell a price rise from an ended discount,
+# so both produce the same complaint theme and the calibration must reflect that.
 DRIVER_TESTS = {
     "ontime":     ["ontime_drop", "carrier_shift", "txt_delivery_late"],
     "checkout":   ["checkout_errors", "txt_payment_fail", "doc_release_checkout"],
@@ -83,11 +61,7 @@ def _observe(seed: int):
 
 
 def _retemper(p_top: float, T: float) -> float:
-    """Re-apply a temperature to a top-class probability under a softmax over K classes.
-
-    Only the winning probability is stored, so the remaining mass is treated as spread evenly
-    over the other classes. That is the standard approximation for post-hoc rescaling of a
-    stored top-1 confidence and it is monotone, so the ranking cannot change."""
+    """Re-apply a temperature to a top-class probability under a softmax over K classes."""
     K = len(ALL_HYPS)
     p_top = float(np.clip(p_top, 1e-9, 1 - 1e-9))
     logit = np.log(p_top / (1 - p_top)) + np.log(K - 1)

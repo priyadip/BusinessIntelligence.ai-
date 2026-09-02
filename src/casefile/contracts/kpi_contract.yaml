@@ -1,3 +1,6 @@
+# CaseFile semantic and KPI contract. This file is executable, not documentation:
+# it drives every generated query, access decision, freshness gate and threshold.
+# Changing it changes system behaviour.
 contract:
   version: 1.0.0
   effective_from: '2026-01-01'
@@ -469,9 +472,7 @@ kpi_graph:
     mechanism: discount lifts conversion
     provenance: MEASURED
     effect: 0.08258
-    ci:
-    - 0.05252
-    - 0.10569
+    ci: [0.05252, 0.10569]
     n: 6
     measured_on: '2026-09-11'
     measured_on_basis: simulated-world date; world clock is 2026-08-31

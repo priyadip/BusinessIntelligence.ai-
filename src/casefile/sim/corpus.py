@@ -1,17 +1,4 @@
-"""
-Unstructured corpus generation, anchored to the same keys as the fact tables.
-
-Design rules that make this a real test rather than a convenient one:
-  * background noise dominates. Most documents are unrelated to any incident, so keyed
-    retrieval has to actually work.
-  * documents are ANCHORED (entity + timestamp), never free-floating. That is what lets
-    the evidence layer ask "what changed for THIS population inside THIS window".
-  * trust tiers differ by corpus: release_log is authoritative, competitor_intel is low
-    trust. The evidence layer weights accordingly.
-  * two documents deliberately CONTRADICT each other, to exercise contradiction handling.
-  * one document carries an embedded prompt-injection payload, to exercise the defence.
-  * support_tickets carry realistic PII, to exercise the domain-level PII shield.
-"""
+"""Unstructured corpus generation, anchored to the same keys as the fact tables."""
 from __future__ import annotations
 import json, random
 from datetime import date, timedelta

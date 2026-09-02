@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CLI entry point. `python3 run_case.py INC-002 --llm-mode template`"""
+"""CLI: run one incident or all of them."""
 import argparse, json, sys, time, yaml
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))

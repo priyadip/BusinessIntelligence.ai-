@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""
-`python3 run_seeded.py 4271` -- draw an incident from a seed and diagnose it.
-
-Nothing about which cause is real, how large it is, when it started, or whether it is
-identifiable at all is fixed in advance. Pick a number and watch the engine meet a world it
-has not seen, including worlds where no honest answer exists.
-"""
+"""CLI: draw a random incident from a seed and diagnose it."""
 import sys, time, json
 from pathlib import Path
 import numpy as np, pandas as pd, yaml

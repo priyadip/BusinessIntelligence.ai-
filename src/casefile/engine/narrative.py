@@ -1,16 +1,6 @@
-"""
-Persona narratives, and the check that makes them safe.
+"""Persona narratives, and the numeric closure check that keeps them honest.
 
-The LLM writes prose. It does not produce a single number. After generation the text is
-tokenised for numerals, percentages and currency amounts, and EVERY one must bind to a value
-in the frozen evidence object within display rounding. A free numeral triggers regeneration;
-three failures fall back to the template renderer. That converts the most damaging class of
-hallucination, a confidently wrong figure, into a mechanically detectable event.
-
-Personas differ by DECISION, not merely depth. The confidence bar is a function of what the
-action costs and how reversible it is, so the Regional Ops Manager can act at a posterior the
-CFO would not act on, because rerouting a carrier is cheap and reversible while a national
-price change is neither. The contract holds those thresholds; this module applies them.
+Every numeral in generated prose must bind to a computed value or the draft is rejected.
 """
 from __future__ import annotations
 import re, json, math

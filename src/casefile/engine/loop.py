@@ -1,18 +1,4 @@
-"""
-The third arrow: run the recommended experiment, measure it, write the result back.
-
-Abstaining and proposing a test is only half the claim. This module executes the other half
-against the same generative process that produced the incident, so the loop is demonstrated
-rather than asserted:
-
-    ABSTAIN (collinear) -> EVSI picks the cheapest decisive test -> the test is RANDOMISED
-    over units -> the world advances -> synthetic control measures the effect -> the KPI
-    graph edge is upgraded ASSERTED/OBSERVATIONAL -> MEASURED -> the next incident starts
-    with a real prior instead of an assumption.
-
-The assignment vector and its seed are recorded before the test runs, so the analysis cannot
-be tuned to the outcome afterwards.
-"""
+"""Run the recommended experiment, measure it, and write the result back to the graph."""
 from __future__ import annotations
 import hashlib, json
 import numpy as np, pandas as pd
@@ -122,11 +108,8 @@ def close_loop(case: dict, contract_path: Path, seed: int = 4242) -> dict:
                             predicted or 0.0, m["effect_pct"],
                             (m["ci_low"], m["ci_high"]), m["placebo_p"],
                             m["n_donors"], m["method"])
-    # measured_on is SIMULATED-WORLD time, derived from the pre-registered plan's end date,
-    # not a wall-clock date and not a literal. The world clock is 2026-08-31; the experiment
-    # is registered to start the next day and run for the duration the EVSI ranker chose, so
-    # its readout necessarily lands after the incident window. Hardcoding the date would also
-    # silently lie if the plan duration changed.
+    # measured_on is simulated-world time from the plan's end date, so it necessarily
+    # falls after the incident window. World clock is 2026-08-31.
     upgraded = upgrade_contract_edge(contract_path, "promo_depth", "conversion_rate",
                                      m["effect_pct"], (m["ci_low"], m["ci_high"]),
                                      m["units_measured"], plan["end"])

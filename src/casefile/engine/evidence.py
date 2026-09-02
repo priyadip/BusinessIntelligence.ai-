@@ -1,25 +1,8 @@
-"""
-Evidence tests, and the ledger that weighs them.
+"""Evidence tests over observable tables, and typed claim extraction from documents.
 
-Every test is a deterministic query against OBSERVABLE tables. The engine never reads the
-simulator's latent drivers; if a hypothesis has no observable proxy it cannot be tested,
-which is itself a finding (abstain type: missing-evidence).
-
-Two design choices carry most of the weight here.
-
-DIAGNOSTICITY, not consistency. An LLM asked to explain a drop collects everything
-consistent with its favourite story. Heuer's method inverts that: evidence consistent with
-EVERY hypothesis has no diagnostic value, no matter how compelling it reads. "Complaints
-rose" fits a price rise, a carrier failure, a competitor promotion and bad weather equally,
-so its likelihood-ratio vector is flat and it contributes nothing to the posterior. The
-ledger shows that explicitly rather than quietly including it.
-
-CLUSTERING BEFORE SCORING. Forty reviews about late delivery from one week are one piece
-of evidence with forty mentions, not forty independent pieces. Multiplying their likelihood
-ratios would drive the posterior to certainty on the strength of a single syndicated feed.
-Claims are clustered by (entity, time bucket, claim type); each cluster contributes ONE
-log-likelihood-ratio, taking the strongest member, and the corroboration count is displayed
-beside it without entering the arithmetic.
+Evidence is weighted by diagnosticity, so a likelihood-ratio vector that is flat across
+hypotheses contributes nothing. Claims are clustered before scoring, so repeated mentions
+of one event count once with a corroboration count beside them.
 """
 from __future__ import annotations
 import json, math, re
@@ -213,10 +196,7 @@ def scan_injection(text: str) -> tuple[bool, str]:
 
 
 def extract_claims(docs: pd.DataFrame, policy=None, principal=None) -> tuple[list[dict], list[dict]]:
-    """Deterministic extraction: gazetteer + templates. No model on this path.
-
-    An LLM upgrade exists (llm/extract.py) and is measured against this, but the pipeline
-    must not lose its unstructured pillar when no model is available."""
+    """Deterministic extraction: gazetteer + templates. No model on this path."""
     claims, quarantined = [], []
     for r in docs.itertuples(index=False):
         text = str(r.text)

@@ -1,11 +1,4 @@
-"""
-The industry-standard comparator, implemented faithfully and without strawmanning.
-
-This is what a good contribution-analysis product does today: decompose the movement,
-take the largest contributor, report it as the cause, and set confidence to its share of
-total absolute contribution. It never abstains, because there is no mechanism by which it
-could. That is the point of the comparison, not a criticism of the implementation.
-"""
+"""The industry-standard comparator: largest contributor wins, never abstains."""
 from __future__ import annotations
 import numpy as np
 

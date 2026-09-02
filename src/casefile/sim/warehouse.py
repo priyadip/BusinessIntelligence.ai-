@@ -1,9 +1,4 @@
-"""
-Materialise the simulated world into a DuckDB warehouse with THREE schemas that behave
-like three different source systems: different grains, different refresh cadences,
-different lag, different quality tiers, and a deliberately DIFFERENT revenue definition
-in finance so the reconciliation layer has real work to do.
-"""
+"""Materialise the simulated world into DuckDB as three source systems."""
 from __future__ import annotations
 import json, math
 from datetime import date, timedelta, datetime

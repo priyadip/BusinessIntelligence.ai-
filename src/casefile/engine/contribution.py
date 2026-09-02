@@ -1,27 +1,7 @@
-"""
-Where the movement landed, arithmetically. NEVER why.
+"""Where a movement landed, arithmetically. Rung R0; never a cause.
 
-Everything in this module is rung R0. A decomposition is an accounting identity: it is
-true by construction and carries no information about mechanism. Business dimensions
-co-vary heavily, so the segment that concentrates a shortfall is routinely a coincidence.
-Labelling this R0 is the whole point; the causal engine is a separate module and has to
-earn R3 the hard way.
-
-Two exact, residual-free decompositions. Both were checked to machine precision.
-
-  ADDITIVE, multiplicative factors (net_revenue = sessions x conversion x AOV):
-      Logarithmic Mean Divisia Index. dV_k = L(V1,V0) * ln(x_k1/x_k0),
-      with L(a,b) = (a-b)/ln(a/b). Sums to dV exactly, order independent, no interaction
-      term left over. Price-volume-mix by simple differencing leaves a residual and gets
-      argued about in the room; this does not.
-
-  RATIO KPIs (conversion = converted/landed, margin, on-time, AOV):
-      r = N/D = sum_i A_i / sum_i B_i. Per-segment contribution
-          c_i = dA_i / D1  -  (N0 / (D0 * D1)) * dB_i
-      Summing c_i telescopes exactly to N1/D1 - N0/D0. The first term is the numerator
-      effect (the rate genuinely moved), the second is the denominator effect (the mix of
-      traffic moved). Applying price-volume-mix to a ratio, which is the common error,
-      is simply not an identity.
+Two exact decompositions: LMDI for multiplicative factors, and a ratio-of-sums identity
+for ratio KPIs, where price-volume-mix is not an identity at all.
 """
 from __future__ import annotations
 import numpy as np, pandas as pd
@@ -93,10 +73,7 @@ def ratio_segments(pre: pd.DataFrame, post: pd.DataFrame, key: str,
 def hierarchical_drill(pre: pd.DataFrame, post: pd.DataFrame, dims: list[str],
                        materiality_floor: float = 0.05, top_k: int = 4,
                        num: str = "numerator", den: str = "denominator") -> list[dict]:
-    """Greedy drill: at each level keep segments carrying >= floor of the total move.
-
-    Greedy, not exhaustive. An exhaustive lattice search is the commodity part of this
-    problem and buys nothing here; the value is in what happens after the drill."""
+    """Greedy drill: at each level keep segments carrying >= floor of the total move."""
     frontier = [{"path": {}, "share": 1.0}]
     results = []
     for d in dims:
@@ -119,4 +96,6 @@ def hierarchical_drill(pre: pd.DataFrame, post: pd.DataFrame, dims: list[str],
         frontier = nxt
         if not frontier: break
     results.sort(key=lambda r: -abs(r["share_of_move"]))
+    for i, r in enumerate(results, 1):
+        r["rank"] = i
     return results

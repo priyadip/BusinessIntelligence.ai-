@@ -1,19 +1,4 @@
-"""
-From explanation to a decision someone can sign.
-
-The brief asks for actions structured as
-    driver -> controllable lever -> action -> expected impact -> owner -> confidence -> monitoring plan
-and that is exactly the record this module emits. Three rules keep it honest:
-
-  * an action must resolve to a LEVER in the contract. A recommendation with no owner and no
-    cost model is a suggestion, not an action, and is rejected before it reaches a persona.
-  * expected impact comes from a MEASURED graph edge where one exists. Where it does not, the
-    action is stamped NO_MEASURED_EFFECT and ranked below everything that has one, rather than
-    quietly inheriting a plausible number.
-  * decision rights bite. An action whose cost exceeds the persona's approval limit is still
-    shown, but marked as requiring escalation and to whom. Blackout windows in the contract
-    can veto a lever outright.
-"""
+"""driver -> lever -> action -> expected impact -> owner -> confidence -> monitoring plan."""
 from __future__ import annotations
 import numpy as np
 from dataclasses import dataclass, field, asdict

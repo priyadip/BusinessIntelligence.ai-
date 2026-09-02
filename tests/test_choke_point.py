@@ -1,4 +1,4 @@
-"""The semantic gateway is only a choke point if nothing bypasses it. Enforce by AST."""
+"""The semantic gateway is only a choke point if nothing bypasses it."""
 import ast, pathlib, sys
 ROOT = pathlib.Path(__file__).resolve().parents[1] / "casefile"
 ALLOWED = {"semantic/gateway.py", "sim/warehouse.py"}   # sim builds the DB; engine may not

@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
-"""
-Batch evaluation over seeded incidents, scored against injected ground truth.
-
-Both systems see EXACTLY the same evidence. The only difference is what they are allowed to
-do with it: the baseline must name a cause, CaseFile may decline. Roughly a third of the
-incidents are unidentifiable by construction (causes made collinear on purpose), which is
-where the two diverge.
-"""
+"""Batch evaluation over seeded incidents, scored against injected ground truth."""
 from __future__ import annotations
 import json, sys, math
 from pathlib import Path
@@ -30,10 +23,8 @@ DRIVER_COLS = {"ontime": "ontime_pct", "checkout": "checkout_error_rate",
                "price": "price_index", "promo": "promo_depth",
                "stockout": "stockout_rate", "competitor": "competitor_gap",
                "marketing": "marketing_mult"}
-# NOTE: "promo" includes txt_price. A shopper observes the price they pay, not whether a list
-# price rose or a discount ended, so both causes generate the same complaint theme. The
-# calibration must model the world the corpus actually produces, or it will learn that price
-# complaints are diagnostic of a price rise when they are not.
+# "promo" includes txt_price: a shopper cannot tell a price rise from an ended discount,
+# so both produce the same complaint theme and the calibration must reflect that.
 DRIVER_TESTS = {
     "ontime":     ["ontime_drop", "carrier_shift", "txt_delivery_late"],
     "checkout":   ["checkout_errors", "txt_payment_fail", "doc_release_checkout"],
@@ -196,9 +187,7 @@ def main(n=300, workers=32, out=None):
                              for r in named.itertuples()])
     summary["calibration"] = cal
 
-    # --- what being wrong actually costs ---
-    # A false intervention pulls a lever that was not the cause: its cost is spent and its
-    # expected benefit does not arrive. Lever costs come from the contract, not from thin air.
+    # cost of being wrong: a false intervention spends the lever's cost for no benefit.
     import yaml as _y
     C = _y.safe_load(open(_contract()))
     lever_of = {"H_CARRIER_DEGRADE": "carrier_routing", "H_CHECKOUT_DEFECT": "checkout_config_flag",

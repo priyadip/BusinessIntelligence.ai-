@@ -1,19 +1,4 @@
-"""
-The only path to a model. Three interchangeable backends behind one signature.
-
-  local     transformers on the GPU. Real tokens, real latency, real cost. Default.
-  template  deterministic Jinja writer. Always available, zero dependencies. This is not a
-            degraded mode: it is the control arm that proves the numbers are model-independent.
-  api       Anthropic, if a key is present. Optional.
-
-Every call returns the same envelope carrying a mandatory `token_source`, so "estimated cost"
-can be audited rather than believed. Counting is done with the model's OWN tokenizer over the
-exact string that was sent, never a heuristic.
-
-Prompts are built as [stable prefix][volatile suffix]. The prefix holds the instruction block,
-the contract excerpt and the claim schema with sorted keys and no timestamps, so it is
-byte-identical across calls and a KV cache can actually hit it.
-"""
+"""The only path to a model. Three backends: local, template, api."""
 from __future__ import annotations
 import hashlib, json, os, time
 from dataclasses import dataclass, field

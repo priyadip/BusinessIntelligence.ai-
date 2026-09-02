@@ -1,25 +1,8 @@
-"""
-The posterior, the abstention taxonomy, and the decisive test.
+"""The posterior, the abstention taxonomy, and the decisive test.
 
-This module is where the product's claim lives. Three rules govern it.
-
-  1. H_NULL IS PERMANENT. A "cause outside the modelled library" hypothesis always carries
-     prior mass. Without it the system is forced to pick the best of a possibly-all-wrong
-     set, which is the structural reason confident BI narratives go wrong.
-
-  2. DIAGNOSTICITY, NOT CONSISTENCY. Evidence whose likelihood-ratio vector is flat across
-     hypotheses discriminates nothing and contributes nothing, however compelling it reads.
-
-  3. THREE CONDITIONS TO ACT, not one. Recommend a cause-specific action only if the
-     leading posterior clears the contract's threshold AND its mechanism reaches R3 AND the
-     action's expected value stays positive across most of the posterior mass. Failing any
-     of them produces a TYPED abstention, because the remedy differs by type: collinear
-     causes need an experiment, missing evidence needs instrumentation, a stale source needs
-     a pipeline fix.
-
-When the verdict is ABSTAIN, the engine does not stop. It ranks candidate experiments by
-EXPECTED NET BENEFIT OF SAMPLING (EVSI minus the test's cost), reports EVPI as the ceiling
-any test could reach, and proposes a hedge action chosen by minimax regret for the interim.
+Act only if the leading posterior clears the threshold, its mechanism reaches R3, and
+expected value holds across most of the posterior mass. Otherwise abstain with a type,
+then rank candidate experiments by expected net benefit of sampling.
 """
 from __future__ import annotations
 import json, math
@@ -90,23 +73,7 @@ def alibi_screen(hyps: list[Hypothesis], events: dict[str, date],
                  lookback_days: int = 12, lookahead_days: int = 3,
                  onset_confidence: float = 1.0,
                  supported: set[str] | None = None) -> dict:
-    """An alibi is evidence, not a verdict.
-
-    A cause precedes its effect, so an event dated after the metric moved cannot have caused
-    it, and the window reaches well back before the onset because real rollouts ramp. But the
-    onset is an ESTIMATE. Treating a point estimate as an eliminator is unsafe: if the
-    change-point is wrong, every genuinely evidenced hypothesis is killed and whatever had no
-    evidence at all wins by default, which is precisely the "best of a bad set" failure this
-    system exists to prevent. Observed in practice: a change-point off by two weeks eliminated
-    both true causes and handed a 37% posterior to a data artifact that fired nothing.
-
-    So two safeguards:
-      * the penalty is SOFT and scaled by how well determined the onset is and by how far
-        outside the window the event falls. A weak change-point can barely penalise anything.
-      * if screening would eliminate every hypothesis that actually has supporting evidence,
-        the onset estimate is not trustworthy for this incident. The screen is disabled and
-        the case file says so, rather than silently promoting unevidenced hypotheses.
-    """
+    """An alibi is evidence, not a verdict."""
     meta = {"applied": False, "disabled_reason": None, "onset_confidence": round(onset_confidence, 3),
             "penalised": []}
     if not onset_interval:
@@ -126,11 +93,8 @@ def alibi_screen(hyps: list[Hypothesis], events: dict[str, date],
         if lo <= ev <= hi:
             h.alibi_note = f"event {ev} is inside the onset window {lo}..{hi}"; continue
         days_out = (lo - ev).days if ev < lo else (ev - hi).days
-        # Distance is capped before confidence is applied. Being six months outside the window
-        # is not meaningfully stronger evidence than being three weeks outside, and letting
-        # distance grow without bound allowed a near-worthless onset estimate to eliminate a
-        # hypothesis purely because the event was old. Elimination (penalty >= 2.0) therefore
-        # requires onset confidence above about 0.67: only a well-determined onset may kill.
+        # distance is capped before confidence is applied, so only a well-determined onset
+        # (confidence above ~0.67) can eliminate a hypothesis.
         pen = conf * min(3.0, 0.6 + 0.30 * days_out)
         proposed[h.id] = (pen, ev, days_out)
 
@@ -248,9 +212,7 @@ def decide(incident_id: str, kpi: str, hyps: list[Hypothesis], contract: dict,
                 f"{top.posterior:.0%}; the evidence available does not separate the field.")
         return V("ABSTAIN", at, why)
     if RUNG_ORDER[top.rung] < RUNG_ORDER[need_rung]:
-        # A multi-factor incident can have one contributor established and another not.
-        # Refusing to act on what IS established, because something else is not, would be
-        # the wrong kind of caution. Act on the established cause, name the gap explicitly.
+        # act on what IS established even when a larger contributor is not, and name the gap.
         est = [h for h in hyps if h.id != "H_NULL"
                and RUNG_ORDER[h.rung] >= RUNG_ORDER[need_rung] and h.posterior >= 0.08]
         if est:
@@ -284,15 +246,9 @@ def decide(incident_id: str, kpi: str, hyps: list[Hypothesis], contract: dict,
 
 def upgrade_conditions(h: Hypothesis, lib_entry: dict, fired_tests: set[str],
                        contract: dict) -> dict:
-    """What evidence would move this hypothesis up the proof ladder, and what would kill it.
-
-    A confidence score tells you what the system believes. This tells you what it would take
-    to change its mind, which is the more useful thing and is checkable by a human who knows
-    the business."""
+    """What evidence would move this hypothesis up the proof ladder, and what would kill it."""
     plan = lib_entry.get("evidence_plan", {}) or {}
-    # Which tests actually bear on this hypothesis is a property of the CALIBRATED likelihood
-    # table, not of the prose names in the contract's plan. Matching those two vocabularies by
-    # string was meaningless and reported every check as unsatisfied.
+    # relevance comes from the calibrated likelihood table, not the contract's prose names.
     from .likelihood import load_table as _lt
     table, _ = _lt()
     relevant = sorted(t for t, row in table.items() if float(row.get(h.id, 1.0)) > 1.2)
@@ -356,10 +312,7 @@ def _utility(action_lever: str, h: Hypothesis, daily_exposure: float, days: int 
 
 def rank_tests(hyps: list[Hypothesis], tests: list[CandidateTest], daily_exposure: float,
                n_mc: int = 4000, seed: int = 11) -> tuple[list[CandidateTest], float]:
-    """Expected value of sample information by Monte Carlo, then rank on ENBS per day.
-
-    Ranking on raw EVSI would ignore what the test costs, and the product claim is
-    'the cheapest test that settles it', so ENBS is the right objective."""
+    """Expected value of sample information by Monte Carlo, then rank on ENBS per day."""
     rng = np.random.default_rng(seed)
     P = np.array([h.posterior for h in hyps]); P = P / P.sum()
     levers = sorted({h.lever for h in hyps if h.lever not in ("none", "escalate_to_analyst")}) + ["hold"]

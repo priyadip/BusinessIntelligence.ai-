@@ -13,14 +13,14 @@
  "contract_version": "1.0.0",
  "likelihood_source": "CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed",
  "likelihood_temperature": 2.0,
- "generated_at": "2026-09-02T05:15:51",
+ "generated_at": "2026-09-02T14:59:14",
  "reconciliation": {
   "canonical_source": "commerce",
   "canonical_total": 790875911.0732608,
   "alternate_source": "finance_erp.fin_revenue",
-  "alternate_total": 806096775.4882178,
-  "delta_abs": 15220864.414957047,
-  "delta_pct": 1.9245578480575445,
+  "alternate_total": 806096775.4882177,
+  "delta_abs": 15220864.414956927,
+  "delta_pct": 1.9245578480575294,
   "tolerance_pct": 0.5,
   "breached": true,
   "explained_by": {
@@ -118,13 +118,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 370,
     "actual": 1991590.0054688086,
-    "expected": 2020608.835390528,
-    "delta_abs": -29018.829921719385,
-    "delta_pct": -0.014361428799805702,
-    "p_raw": 0.437352904831394,
+    "expected": 2020608.835390527,
+    "delta_abs": -29018.829921718454,
+    "delta_pct": -0.014361428799805247,
+    "p_raw": 0.4373529048313954,
     "p_conformal_rank": 0.3770491803278688,
     "p_conformal_floor": 0.00117096018735363,
-    "effect_sd": -0.15773142593855297,
+    "effect_sd": -0.15773142593854952,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -132,7 +132,7 @@
     "gate_materiality": false,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 29018.829921719385,
+    "material_value": 29018.829921718454,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 48/60 non-anomalous days, damped drift +7.94e-05/day; contract declares weekly=True yearly=True; trained on 927 days, projected 14 | window effect -0.01 sd"
@@ -146,13 +146,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 370,
     "actual": 3088977.4230702,
-    "expected": 3130489.495047006,
-    "delta_abs": -41512.07197680604,
-    "delta_pct": -0.013260569007653773,
-    "p_raw": 0.44904782395811327,
+    "expected": 3130489.4950470026,
+    "delta_abs": -41512.07197680278,
+    "delta_pct": -0.013260569007652746,
+    "p_raw": 0.4490478239581145,
     "p_conformal_rank": 0.3395784543325527,
     "p_conformal_floor": 0.00117096018735363,
-    "effect_sd": -0.1281055839510001,
+    "effect_sd": -0.12810558395099705,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -160,7 +160,7 @@
     "gate_materiality": false,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 41512.07197680604,
+    "material_value": 41512.07197680278,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 44/60 non-anomalous days, damped drift +8.37e-05/day; contract declares weekly=True yearly=True; trained on 927 days, projected 14 | window effect -0.01 sd"
@@ -174,13 +174,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 370,
     "actual": 2698079.916098893,
-    "expected": 2789877.251507144,
-    "delta_abs": -91797.3354082508,
-    "delta_pct": -0.03290371838354543,
-    "p_raw": 0.3724447959475156,
+    "expected": 2789877.2515071454,
+    "delta_abs": -91797.3354082522,
+    "delta_pct": -0.03290371838354591,
+    "p_raw": 0.37244479594751356,
     "p_conformal_rank": 0.18501170960187355,
     "p_conformal_floor": 0.00117096018735363,
-    "effect_sd": -0.32549075934024757,
+    "effect_sd": -0.32549075934025284,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -188,7 +188,7 @@
     "gate_materiality": true,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 91797.3354082508,
+    "material_value": 91797.3354082522,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 34/60 non-anomalous days, damped drift +8.76e-05/day; contract declares weekly=True yearly=True; trained on 927 days, projected 14 | window effect -0.03 sd"
@@ -202,13 +202,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 370,
     "actual": 3534366.457036639,
-    "expected": 3372576.7583169057,
-    "delta_abs": 161789.6987197334,
-    "delta_pct": 0.04797213238238498,
-    "p_raw": 0.32561316009545055,
+    "expected": 3372576.7583169052,
+    "delta_abs": 161789.69871973386,
+    "delta_pct": 0.047972132382385124,
+    "p_raw": 0.3256131600954509,
     "p_conformal_rank": 0.15339578454332553,
     "p_conformal_floor": 0.00117096018735363,
-    "effect_sd": 0.4522190165026123,
+    "effect_sd": 0.4522190165026116,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -216,7 +216,7 @@
     "gate_materiality": true,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 161789.6987197334,
+    "material_value": 161789.69871973386,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 47/60 non-anomalous days, damped drift +3.66e-05/day; contract declares weekly=True yearly=True; trained on 927 days, projected 14 | window effect +0.05 sd"
@@ -276,7 +276,8 @@
     "numerator_effect": 1745.2799795338447,
     "denominator_effect": -1704.5725705128968,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 1
    },
    {
     "path": {
@@ -290,7 +291,8 @@
     "numerator_effect": 699.9170867645132,
     "denominator_effect": -734.7295562555589,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 2
    },
    {
     "path": {
@@ -304,7 +306,8 @@
     "numerator_effect": 633.4529524122543,
     "denominator_effect": -646.5620095048919,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 3
    },
    {
     "path": {
@@ -318,7 +321,8 @@
     "numerator_effect": 1667.6170834940783,
     "denominator_effect": -1491.2118298868872,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 4
    },
    {
     "path": {
@@ -332,7 +336,8 @@
     "numerator_effect": 626.849691450642,
     "denominator_effect": -574.7780718970275,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 5
    },
    {
     "path": {
@@ -346,7 +351,8 @@
     "numerator_effect": 665.5628732576224,
     "denominator_effect": -617.3542253708814,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 6
    }
   ]
  },
@@ -1245,7 +1251,7 @@
    "label": "Category or channel mix shifted",
    "evidence_class": "statistical",
    "fired": false,
-   "strength": 0.13333019226780574,
+   "strength": 0.13333019226780712,
    "detail": "total variation of mix 1.33pp",
    "source": "commerce.orders",
    "derived_from": [],
@@ -1259,7 +1265,7 @@
    },
    "method": "pre-registered SQL against the semantic layer",
    "contribution": null,
-   "confidence": 0.13333019226780574,
+   "confidence": 0.13333019226780712,
    "region": null,
    "t_window": [
     "2026-08-18",
@@ -2551,9 +2557,9 @@
   }
  },
  "telemetry": {
-  "run_id": "20260902T051551-8e39b3",
+  "run_id": "20260902T145914-66e7c9",
   "spans": 19,
-  "wall_ms_total": 8970.1,
+  "wall_ms_total": 8995.4,
   "llm_calls": 0,
   "tokens_in": 0,
   "tokens_out": 0,
@@ -2564,17 +2570,17 @@
   "by_method_class": {
    "LLM": {
     "spans": 4,
-    "wall_ms": 3.2,
+    "wall_ms": 3.4,
     "cost_usd": 0.0
    },
    "SQL": {
     "spans": 1,
-    "wall_ms": 109.7,
+    "wall_ms": 134.8,
     "cost_usd": 0.0
    },
    "business rules": {
     "spans": 6,
-    "wall_ms": 14.3,
+    "wall_ms": 15.8,
     "cost_usd": 0.0
    },
    "causal inference": {
@@ -2584,17 +2590,17 @@
    },
    "deterministic logic": {
     "spans": 3,
-    "wall_ms": 125.3,
+    "wall_ms": 123.4,
     "cost_usd": 0.0
    },
    "retrieval": {
     "spans": 1,
-    "wall_ms": 16.1,
+    "wall_ms": 16.0,
     "cost_usd": 0.0
    },
    "statistics": {
     "spans": 3,
-    "wall_ms": 8701.0,
+    "wall_ms": 8701.6,
     "cost_usd": 0.0
    }
   },

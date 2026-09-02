@@ -1,12 +1,4 @@
-"""
-Path resolution, so the prototype runs from either the development tree or the packaged
-deliverable folder without editing anything.
-
-Development layout          Deliverable layout
-  casefile/contracts/...      config/kpi_contract.yaml
-  data/warehouse/...          data/vantage.duckdb
-  out/                        results/
-"""
+"""Path resolution, so the code runs from the development tree or the packaged folder."""
 from __future__ import annotations
 import os
 from pathlib import Path

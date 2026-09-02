@@ -1,4 +1,4 @@
-"""Regenerate the entire synthetic world from scratch. Deterministic given the seed."""
+"""Regenerate the entire synthetic world. Deterministic given the seed."""
 import json, sys, time
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]

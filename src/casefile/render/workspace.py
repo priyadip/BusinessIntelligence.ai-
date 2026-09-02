@@ -1,12 +1,4 @@
-"""
-The Decision Workspace: one self-contained HTML file, no server, no network.
-
-Answer-first. A judge meets the verdict, the standard of proof and the next move in the
-first forty words, before any architecture. Everything below that exists to let them audit
-the claim: the evidence ledger with source and freshness per item, the proof ladder, the
-posterior, the abstention type, the ranked experiments, the actions per persona, and the
-method provenance showing which stages used a model and which are forbidden from doing so.
-"""
+"""The Decision Workspace: one self-contained HTML file, no server, no network."""
 from __future__ import annotations
 import html, json, math
 from pathlib import Path

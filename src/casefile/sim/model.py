@@ -1,17 +1,4 @@
-"""
-Structural simulator for Vantage Retail Group (FICTIONAL company, synthetic data).
-
-Why a simulator and not only real data:
-  A root-cause engine cannot be scored on real business data, because real data carries
-  no ground-truth label for WHY a metric moved. Nobody knows. Here we generate the world
-  from a known structural model, inject known interventions with known magnitudes, and
-  recover the true contribution of each by COUNTERFACTUAL RE-SIMULATION (run the world
-  again with that one intervention switched off; the difference is its exact effect).
-  That is what makes false-certainty rate, ambiguity recall and calibration measurable.
-
-The structural model deliberately mirrors the KPI dependency graph declared in
-contracts/kpi_contract.yaml, so the contract is true by construction in this world.
-"""
+"""Structural simulator for a fictional retailer. Deterministic given a seed."""
 from __future__ import annotations
 import zlib
 import numpy as np, pandas as pd
@@ -20,12 +7,7 @@ from datetime import date, timedelta
 
 
 def stable_hash(*parts) -> int:
-    """Deterministic across processes.
-
-    Python salts str.__hash__ per interpreter unless PYTHONHASHSEED is pinned, so seeding a
-    per-cell RNG with builtin hash() made the whole world irreproducible between runs: the
-    ground truth was generated in one process and the warehouse in another, and they silently
-    disagreed. CRC32 over the encoded key is stable everywhere."""
+    """Deterministic across processes."""
     return zlib.crc32("\x1f".join(str(p) for p in parts).encode()) & 0xFFFFFFFF
 
 REGIONS    = ["WEST", "NORTH", "SOUTH", "EAST"]

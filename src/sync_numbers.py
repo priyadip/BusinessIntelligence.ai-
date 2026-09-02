@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""
-Regenerate every headline number in the documentation from the canonical evaluation.
-
-The numbers drifted once already: the workspace was rendered from one evaluation run while
-the markdown quoted another, and a reader comparing them would rightly have lost confidence in
-all of it. Hand-maintained figures in prose are a defect waiting to happen, so the prose now
-carries markers and this script fills them from results/eval/summary.json. Run it after any
-evaluation; CI can diff it to prove the docs match the run.
-"""
+"""Regenerate the headline figures in the documentation from the canonical evaluation."""
 from __future__ import annotations
 import json, re, sys
 from pathlib import Path

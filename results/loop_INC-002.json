@@ -87,7 +87,7 @@
   "note": "Randomised assignment over 6 treated units against 14 controls; aggregate placebo p=0.067. Because assignment was randomised and pre-registered before the data existed (plan c3b02159a5f80800), confounding is designed out and this reaches R4."
  },
  "ledger": {
-  "ts": "2026-09-02T05:10:43",
+  "ts": "2026-09-02T15:00:53",
   "incident_id": "INC-002",
   "action_id": "T_PROMO_HOLDOUT",
   "lever": "promo_depth",

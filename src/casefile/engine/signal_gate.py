@@ -1,20 +1,7 @@
-"""
-Three gates and a multiplicity correction, then a priority score.
+"""Three gates, a multiplicity correction, and a priority score.
 
-The multiplicity point is the one most systems skip. Evaluating thousands of
-(KPI x segment) monitors every morning at a 1% threshold manufactures dozens of anomalies
-from noise alone. So:
-
-  * the FDR procedure runs on the FULL pre-specified family, never on a subset already
-    filtered by materiality, which would invalidate it;
-  * materiality enters as Genovese-Roeder-Wasserman p-value WEIGHTS (w normalised to mean
-    one, BH applied to p/w), which is the statistically correct way to say "a large-rupee
-    move deserves a lower bar" without breaking the guarantee;
-  * Benjamini-Yekutieli is available for the cross-KPI family where monitors are dependent.
-
-Then a change-point locates WHEN the regime broke, with a block-bootstrap interval. That
-interval becomes the alibi test: a candidate cause whose event timestamp lies outside it is
-eliminated before any evidence is weighed.
+The FDR procedure runs on the full family; materiality enters as p-value weights rather
+than filtering the family first. A change-point then dates the regime break.
 """
 from __future__ import annotations
 import numpy as np, pandas as pd
@@ -66,10 +53,8 @@ def _bh(p: np.ndarray, q: float, method: str = "benjamini_yekutieli"):
 
 def change_point(resid_z: np.ndarray, dates, n_boot: int = 500, seed: int = 7):
     """Binary segmentation on the residual series, with an onset interval obtained by
-    resampling residuals WITHIN each segment while holding the step fixed.
-
-    Resampling the whole series instead would destroy the step and return an interval
-    spanning the entire history, which is what a naive bootstrap does here."""
+        resampling residuals WITHIN each segment while holding the step fixed.
+    """
     r = np.nan_to_num(np.asarray(resid_z, dtype=float))
     n = len(r)
     if n < 20: return None, None, 0.0

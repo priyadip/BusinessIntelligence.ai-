@@ -1,22 +1,7 @@
-"""
-Estimating whether reversing a candidate cause would have moved the metric.
+"""Synthetic control with Abadie in-space placebo inference on the MSPE ratio.
 
-The audit's warning was blunt: synthetic difference-in-differences with a single treated
-unit has no valid standard error, and eight donors cannot reach a placebo p of 0.05. So:
-
-  * donors are region x category cells, which gives 24 units, not 4;
-  * weights come from non-negative least squares on the pre-period, constrained to the
-    simplex, which is plain synthetic control rather than an optimisation we cannot defend;
-  * inference is by IN-SPACE PLACEBO. Every donor is assigned the treatment in turn, the
-    effect is re-estimated, and the treated unit's effect is ranked against that null
-    distribution. With 24 donors the smallest attainable p is 1/25 = 0.04, which is exactly
-    what we report, floor and all. Nothing here pretends to more precision than the design
-    supports.
-  * a pre-trend placebo runs on a fake intervention date before the real one. If that comes
-    back significant, parallel trends is not credible and the estimate is DEMOTED to R2 with
-    the failure shown in the case file rather than dropped.
-
-Rungs are assigned here and nowhere else.
+Donor pools exclude units touched by a concurrent cause, the fitting period ends at the
+detected onset, and a failed pre-trend placebo demotes the estimate rather than hiding it.
 """
 from __future__ import annotations
 import numpy as np, pandas as pd
@@ -56,10 +41,7 @@ def synthetic_control(panel: pd.DataFrame, unit_col: str, time_col: str, value_c
                       treated_unit: str, t0: date, t1: date,
                       pre_days: int = 56, exclude: set | None = None,
                       pre_end: date | None = None):
-    """Returns (effect, weights, donors, gaps, pre_mspe, post_mspe).
-
-    pre_end: last day usable for fitting. Defaults to t0, but when the change-point puts
-    the onset before the analysis window it must be the onset, or the fit is contaminated."""
+    """Returns (effect, weights, donors, gaps, pre_mspe, post_mspe)."""
     p = panel.copy(); p[time_col] = pd.to_datetime(p[time_col]).dt.date
     fit_end = pre_end or t0
     pre_lo = fit_end - timedelta(days=pre_days)
@@ -108,9 +90,8 @@ def estimate(panel: pd.DataFrame, hypothesis_id: str, treated_unit: str,
                               float("nan"), float("nan"), 1.0, 1.0, 1.0, 0, "R1",
                               {"reason": "estimation failed"}, "insufficient donor pool")
 
-    # Abadie in-space placebo on the MSPE RATIO (post fit / pre fit). Using the raw effect
-    # would let a small noisy donor cell dominate the null; the ratio normalises for how
-    # well each unit could be fitted in the first place.
+    # Abadie placebo on the MSPE ratio, not the raw effect: it normalises for how well
+    # each unit could be fitted, so a noisy donor cannot dominate the null.
     treated_ratio = post_mspe / pre_mspe if pre_mspe and pre_mspe > 0 else np.inf
     ratios, effs = [], []
     for d in donors:

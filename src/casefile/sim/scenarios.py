@@ -1,14 +1,4 @@
-"""
-Injected incidents = the ground truth the engine is scored against.
-
-Ground truth contribution is computed by EXACT SHAPLEY VALUES over counterfactual
-re-simulations: for every subset of interventions we re-run the world with only that
-subset active, then average each intervention's marginal contribution over all orderings.
-With n<=6 interventions that is 2^n runs of a 1.7s simulator, which is affordable and is
-the correct decomposition rather than an approximation. It is also the honest one: the
-interventions interact (a checkout defect and a carrier failure are not additive), and
-leave-one-out would mis-state that.
-"""
+"""Injected incidents, with ground truth by exact Shapley over counterfactual re-simulation."""
 from __future__ import annotations
 import itertools, json, math
 from dataclasses import asdict
@@ -56,10 +46,8 @@ def incident_interventions() -> list[Intervention]:
             start=date(2026, 8, 4), categories=["KITCHEN", "DECOR"],
             promo_depth_delta=-0.040, ramp_days=1,
             visible_in_release_log=True,
-            # A shopper sees the price they pay, not its decomposition. An ended discount and
-            # a list-price rise are indistinguishable at the shelf, so both must generate the
-            # same complaint theme. Letting only the price rise generate text made a genuinely
-            # confounded pair look separable, which is a modelling error, not a demo choice.
+            # a shopper sees the price paid, not its decomposition, so an ended discount and a
+            # list-price rise must generate the same complaint theme.
             generates_reviews="price"),
 
         # ---- background noise cause, gives the engine something to correctly reject -
@@ -124,11 +112,7 @@ def _sim_subset(args):
 
 
 def build_ground_truth(out_path: str, seed: int = 20260901, workers: int = 16) -> dict:
-    """One simulation per SUBSET (not per subset x incident), run in parallel.
-
-    2^n simulations total. Every incident's Shapley decomposition is then read off the
-    same shared value table, because the world is identical regardless of which metric
-    we later measure on it."""
+    """One simulation per SUBSET (not per subset x incident), run in parallel."""
     import itertools as _it, math as _m
     from multiprocessing import Pool
 

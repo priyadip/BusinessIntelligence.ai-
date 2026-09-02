@@ -1,11 +1,4 @@
-"""
-Row-, column- and domain-level security, enforced at three layers, failing CLOSED.
-
-The audit's warning was that column security is defeated by derived values: you can drop
-`landed_cost` from a result set and still leak it through a margin figure computed from it.
-So every computed value carries `derived_from`, and the render layer refuses to emit any
-value whose provenance is not fully granted. That is why this is an assertion, not a filter.
-"""
+"""Row, column and domain security, enforced at three layers and failing closed."""
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any

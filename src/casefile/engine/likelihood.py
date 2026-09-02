@@ -1,20 +1,4 @@
-"""
-Likelihood ratios: where the posterior's numbers actually come from.
-
-A prototype that asserts P(evidence | hypothesis) out of thin air deserves the question
-"where did that come from". Two answers, in order of preference:
-
-  CALIBRATED (preferred). The simulator injects known causes, so these likelihoods are
-  MEASURABLE. calibrate.py runs many incidents on held-out seeds, records which evidence
-  test fired under which true cause, and estimates P(e|h) with Jeffreys smoothing
-  (fires + 0.5) / (n_h + 1) so no cell is ever 0 or 1. The result is persisted and loaded
-  here. In a real deployment the same table is learned from the company's own incident
-  history, which is what the Outcome Ledger accumulates.
-
-  PRIOR (fallback). A declared, visible table below, used only until calibration has run.
-  Every case file states which of the two produced its posterior, so the provenance of the
-  confidence figure is never ambiguous.
-"""
+"""Likelihood ratios: calibrated from simulated incidents where available, else a declared prior."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -48,14 +32,7 @@ ALL_HYPS = ["H_CARRIER_DEGRADE", "H_PRICE_RISE", "H_CHECKOUT_DEFECT", "H_STOCKOU
 
 
 def load_temperature() -> float:
-    """Temperature for the summed log-likelihood-ratio.
-
-    Calibrated ratios are near-deterministic in this world and saturate the clip, which piles
-    the posterior up against 1.0: the engine said 97.8% and was right 69.7% of the time. A
-    single scalar temperature, fitted on the calibration seeds and locked before evaluation,
-    divides the summed log-LR and brings stated confidence back onto the diagonal. This is
-    standard temperature scaling; it cannot change the RANKING of hypotheses, only how
-    confident the engine is allowed to be about it."""
+    """Temperature for the summed log-likelihood-ratio."""
     if CALIBRATED_PATH.exists():
         d = json.loads(CALIBRATED_PATH.read_text())
         return float(d.get("temperature", 1.0))
@@ -71,10 +48,7 @@ def load_table() -> tuple[dict, str]:
 
 
 def lr_vector(test_id: str, strength: float, table: dict) -> dict:
-    """Scale the full-strength ratio by how strongly the test actually fired.
-
-    A test that barely fires must not carry the same weight as one that fires hard, and a
-    hypothesis the test says nothing about must get exactly 1.0, never a nudge."""
+    """Scale the full-strength ratio by how strongly the test actually fired."""
     row = table.get(test_id, {})
     s = max(0.0, min(1.0, float(strength)))
     out = {}

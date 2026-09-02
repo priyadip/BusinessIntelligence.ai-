@@ -1,13 +1,7 @@
-"""
-run_case(): the whole pipeline, as one deterministic function.
+"""run_case(): the whole pipeline as one deterministic function.
 
-Contract for this module: the quantitative path is pure and model-free. Every stage opens a
-telemetry span declaring its method class in the brief's own vocabulary and whether it sits
-on the quantitative path. A span on that path that touches a model is flagged
-violates_llm_boundary, and tests/test_llm_boundary.py fails the build on it.
-
-Narrative generation is the only stage permitted to call a model, and it runs AFTER the
-evidence object is frozen.
+The quantitative path is model-free. Every stage opens a telemetry span declaring its
+method class and whether it sits on that path.
 """
 from __future__ import annotations
 import json, hashlib, math
@@ -305,9 +299,7 @@ def run_case(incident_id: str, contract: dict, gw: SemanticGateway, pol: PolicyE
         onset_pair = ((date.fromisoformat(case["change_point"]["onset_interval_90"][0]),
                        date.fromisoformat(case["change_point"]["onset_interval_90"][1]))
                       if case["change_point"]["onset_interval_90"] else None)
-        # How much the alibi screen is allowed to matter depends on how well the onset is
-        # determined: a narrow interval from a strong segmentation statistic earns trust, a
-        # wide or weak one earns almost none.
+        # the alibi screen's weight scales with how well the onset is determined.
         cp_stat = float(case["change_point"].get("statistic") or 0.0)
         if onset_pair:
             width = (onset_pair[1] - onset_pair[0]).days
@@ -335,11 +327,8 @@ def run_case(incident_id: str, contract: dict, gw: SemanticGateway, pol: PolicyE
         estimates = {}
         if raw is not None and not sparse:
             raw["d"] = pd.to_datetime(raw["d"]).dt.date
-            # Each hypothesis gets the aggregation its own scope implies. A region-scoped
-            # cause is tested on region x category units built from channels it did not
-            # touch; a channel-scoped cause on channel x category units from untouched
-            # regions. Cell-level units carry too much noise to detect a 3% effect, and
-            # aggregating over the treated dimension would destroy the contrast.
+            # each hypothesis is tested at the aggregation its own scope implies, over
+            # units untouched by the concurrent cause. Cell level is too noisy for 3%.
             plans = [
                 ("H_CARRIER_DEGRADE", raw[raw.channel != "APP"], "region", "WEST"),
                 ("H_CHECKOUT_DEFECT", raw[raw.region != "WEST"], "channel", "APP"),
@@ -480,10 +469,7 @@ RANK = {"low": 0, "medium": 1, "high": 2, "authoritative": 3}
 
 
 def _has_contradiction(ev_items, docs) -> tuple[bool, dict]:
-    """Only a conflict between sources of COMPARABLE trust is a real contradiction.
-
-    A medium-trust vendor denial against an authoritative internal incident report is
-    resolved by the contract's trust ordering; escalating it to a human would be noise."""
+    """Only a conflict between sources of COMPARABLE trust is a real contradiction."""
     if not len(docs): return False, {}
     deny = docs[docs.text.str.lower().str.contains("no degradation|consider the sla met",
                                                    regex=True, na=False)]

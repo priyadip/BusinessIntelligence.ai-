@@ -1,23 +1,7 @@
-"""
-Expectation, not history. "Revenue fell 8%" is meaningless until you say 8% below WHAT.
+"""Expectation, not history: three baseline rungs selected by available history.
 
-Three baseline rungs, selected by available history and declared in the evidence pack, so
-a reader can see which one produced the interval:
-
-  MSTL           n >= 2 seasonal cycles. Multi-seasonal decomposition on a variance-
-                 stabilised scale (log for value KPIs, logit for rates), residual variance
-                 roughly constant, which is what makes conformal scores comparable.
-  POOLED_COHORT  new product or market. Level comes from the item's own short history,
-                 seasonal SHAPE is borrowed from its category siblings, and the two are
-                 blended by empirical-Bayes shrinkage w = tau^2/(tau^2 + sigma^2/n).
-                 Intervals are widened by the contract's factor and causal claims are
-                 switched off entirely.
-  INSUFFICIENT   below the floor. The gate returns no verdict rather than a wide one.
-
-Conformal intervals use split-conformal RANK p-values,
-    p = (1 + #{i in calib : s_i >= s_new}) / (n_calib + 1)
-which are exactly valid under exchangeability and can be fed to a multiple-testing
-procedure directly. Anything else would make the FDR control downstream meaningless.
+MSTL is fitted on training data only and projected forward; calibration uses
+rolling-origin forecast errors at the same horizon, not in-sample residuals.
 """
 from __future__ import annotations
 import numpy as np, pandas as pd
@@ -64,14 +48,7 @@ class Baseline:
         return (1.0 + np.sum(c[None, :] >= s[:, None], axis=1)) / (len(c) + 1.0)
 
     def window_rank_p(self, idx) -> tuple[float, float]:
-        """Conformal p-value for the WINDOW, not for a point.
-
-        A drop that persists for twelve days is not twelve independent surprises, so
-        combining point p-values would overstate the evidence. Instead calibrate the
-        window statistic itself: slide a window of the same length across the held-out
-        training residuals, collect the distribution of window means, and rank the test
-        window against it. Valid under block exchangeability, and it is the quantity the
-        FDR procedure downstream actually needs. Returns (one-sided p, effect in sd)."""
+        """Conformal p-value for the WINDOW, not for a point."""
         idx = np.asarray(idx)
         if idx.dtype == bool: idx = np.where(idx)[0]
         w = len(idx)
@@ -135,9 +112,8 @@ def _project(train_z: np.ndarray, n_ahead: int, periods=(7, 365)):
     if seas.ndim == 1: seas = seas[:, None]
     trend = np.asarray(res.trend)
 
-    # robust local level from NORMAL days only. Fitting the level on the raw trend tail lets
-    # a prior, unrelated incident sitting in that tail depress the projection, which would
-    # make the next window look healthy when it is not.
+    # level from non-anomalous days only: a prior incident in the trend tail would
+    # depress the projection and make the next window look healthy.
     resid_in = train_z - fitted_pre if (fitted_pre := trend + seas.sum(axis=1)) is not None else None
     sc = np.median(np.abs(resid_in - np.median(resid_in))) * 1.4826 + 1e-9
     normal = np.abs(resid_in - np.median(resid_in)) < 2.5 * sc

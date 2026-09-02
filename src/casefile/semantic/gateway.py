@@ -1,12 +1,4 @@
-"""
-The ONLY path from the engine to data. No module outside casefile/semantic/ may open a
-DuckDB connection; tests/test_choke_point.py enforces that by walking the AST.
-
-Every request is compiled from the contract, so the contract is executable rather than
-documentation: the measure expression, the row predicate, the column grants, the freshness
-SLA and the lineage all come from YAML and all bite. Each result carries provenance and a
-plan hash, which is what makes evidence traceable later.
-"""
+"""The only path from the engine to data. Nothing outside this module opens a connection."""
 from __future__ import annotations
 import hashlib, json
 from dataclasses import dataclass, field

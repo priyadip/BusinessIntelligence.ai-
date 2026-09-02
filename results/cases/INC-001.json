@@ -13,14 +13,14 @@
  "contract_version": "1.0.0",
  "likelihood_source": "CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed",
  "likelihood_temperature": 2.0,
- "generated_at": "2026-09-02T05:15:25",
+ "generated_at": "2026-09-02T14:58:48",
  "reconciliation": {
   "canonical_source": "commerce",
   "canonical_total": 778415580.6358117,
   "alternate_source": "finance_erp.fin_revenue",
-  "alternate_total": 831753966.550262,
-  "delta_abs": 53338385.91445029,
-  "delta_pct": 6.852173471512911,
+  "alternate_total": 831753966.5502619,
+  "delta_abs": 53338385.91445017,
+  "delta_pct": 6.852173471512897,
   "tolerance_pct": 0.5,
   "breached": true,
   "explained_by": {
@@ -118,13 +118,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 360,
     "actual": 1680959.4121048383,
-    "expected": 1808933.1682715297,
-    "delta_abs": -127973.75616669143,
-    "delta_pct": -0.07074543073858987,
-    "p_raw": 0.22404425311744575,
+    "expected": 1808933.1682715258,
+    "delta_abs": -127973.75616668747,
+    "delta_pct": -0.07074543073858783,
+    "p_raw": 0.22404425311745219,
     "p_conformal_rank": 0.12907117008443908,
     "p_conformal_floor": 0.0012062726176115801,
-    "effect_sd": -0.7589670829732439,
+    "effect_sd": -0.7589670829732225,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -132,7 +132,7 @@
     "gate_materiality": true,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 127973.75616669143,
+    "material_value": 127973.75616668747,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 34/60 non-anomalous days, damped drift +9.32e-05/day; contract declares weekly=True yearly=True; trained on 900 days, projected 12 | window effect -0.08 sd"
@@ -146,13 +146,13 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 360,
     "actual": 2941635.5732583697,
-    "expected": 3093641.2789091296,
-    "delta_abs": -152005.70565075986,
-    "delta_pct": -0.049134884088552,
-    "p_raw": 0.32172224767048274,
+    "expected": 3093641.2789091277,
+    "delta_abs": -152005.705650758,
+    "delta_pct": -0.049134884088551434,
+    "p_raw": 0.32172224767048363,
     "p_conformal_rank": 0.15560916767189384,
     "p_conformal_floor": 0.0012062726176115801,
-    "effect_sd": -0.46305817390272663,
+    "effect_sd": -0.4630581739027241,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -160,7 +160,7 @@
     "gate_materiality": true,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 152005.70565075986,
+    "material_value": 152005.705650758,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 31/60 non-anomalous days, damped drift +9.25e-05/day; contract declares weekly=True yearly=True; trained on 900 days, projected 12 | window effect -0.05 sd"
@@ -177,10 +177,10 @@
     "expected": 2896627.519721264,
     "delta_abs": -194618.3079121029,
     "delta_pct": -0.06718789578123963,
-    "p_raw": 0.2476214335301272,
+    "p_raw": 0.24762143353012686,
     "p_conformal_rank": 0.13027744270205066,
     "p_conformal_floor": 0.0012062726176115801,
-    "effect_sd": -0.6822959819026184,
+    "effect_sd": -0.6822959819026192,
     "weight": 0.05,
     "p_weighted": 1.0,
     "q_value": 1.0,
@@ -202,21 +202,21 @@
     "baseline_method": "MSTL_PROJECTED",
     "n_calib": 360,
     "actual": 2837422.674374944,
-    "expected": 3548133.8047928563,
-    "delta_abs": -710711.1304179123,
-    "delta_pct": -0.20030561684507958,
-    "p_raw": 0.017675051685237097,
+    "expected": 3548133.8047928493,
+    "delta_abs": -710711.1304179053,
+    "delta_pct": -0.200305616845078,
+    "p_raw": 0.017675051685238034,
     "p_conformal_rank": 0.061519903498190594,
     "p_conformal_floor": 0.0012062726176115801,
-    "effect_sd": -2.107783596674354,
-    "weight": 0.14214222608358246,
-    "p_weighted": 0.6689802054288941,
+    "effect_sd": -2.1077835966743326,
+    "weight": 0.14214222608358107,
+    "p_weighted": 0.6689802054289361,
     "q_value": 1.0,
     "gate_statistical": false,
     "gate_materiality": true,
     "gate_persistence": false,
     "persistence_days": 0,
-    "material_value": 710711.1304179123,
+    "material_value": 710711.1304179053,
     "priority_score": 0.0,
     "fired": false,
     "note": "MSTL periods=(7, 365), level from 34/60 non-anomalous days, damped drift +8.17e-05/day; contract declares weekly=True yearly=True; trained on 900 days, projected 12 | window effect -0.22 sd"
@@ -279,7 +279,8 @@
     "numerator_effect": -0.02630771443640025,
     "denominator_effect": 0.00816268928444211,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 1
    },
    {
     "path": {
@@ -293,7 +294,8 @@
     "numerator_effect": -0.01006376756005178,
     "denominator_effect": 0.018992862480543708,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 2
    },
    {
     "path": {
@@ -306,7 +308,8 @@
     "numerator_effect": -0.05050103082897828,
     "denominator_effect": 0.046577958600814415,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 3
    },
    {
     "path": {
@@ -320,7 +323,8 @@
     "numerator_effect": -0.012542551661312748,
     "denominator_effect": 0.01563218285070032,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 4
    },
    {
     "path": {
@@ -334,7 +338,8 @@
     "numerator_effect": -0.0015869971712135014,
     "denominator_effect": 0.0037902239851282825,
     "rung": "R0",
-    "method": "exact ratio-of-sums decomposition"
+    "method": "exact ratio-of-sums decomposition",
+    "rank": 5
    }
   ]
  },
@@ -1181,7 +1186,7 @@
    "label": "Category or channel mix shifted",
    "evidence_class": "statistical",
    "fired": false,
-   "strength": 0.034554372285755044,
+   "strength": 0.03455437228575518,
    "detail": "total variation of mix 0.35pp",
    "source": "commerce.orders",
    "derived_from": [],
@@ -1195,7 +1200,7 @@
    },
    "method": "pre-registered SQL against the semantic layer",
    "contribution": null,
-   "confidence": 0.034554372285755044,
+   "confidence": 0.03455437228575518,
    "region": "WEST",
    "t_window": [
     "2026-07-22",
@@ -2421,9 +2426,9 @@
   }
  },
  "telemetry": {
-  "run_id": "20260902T051525-358a9f",
+  "run_id": "20260902T145848-65ce13",
   "spans": 18,
-  "wall_ms_total": 15423.3,
+  "wall_ms_total": 15124.2,
   "llm_calls": 0,
   "tokens_in": 0,
   "tokens_out": 0,
@@ -2434,37 +2439,37 @@
   "by_method_class": {
    "LLM": {
     "spans": 4,
-    "wall_ms": 12.3,
+    "wall_ms": 12.9,
     "cost_usd": 0.0
    },
    "SQL": {
     "spans": 1,
-    "wall_ms": 87.7,
+    "wall_ms": 95.1,
     "cost_usd": 0.0
    },
    "business rules": {
     "spans": 6,
-    "wall_ms": 19.2,
+    "wall_ms": 20.2,
     "cost_usd": 0.0
    },
    "causal inference": {
     "spans": 1,
-    "wall_ms": 6399.0,
+    "wall_ms": 6063.9,
     "cost_usd": 0.0
    },
    "deterministic logic": {
     "spans": 2,
-    "wall_ms": 32.6,
+    "wall_ms": 29.6,
     "cost_usd": 0.0
    },
    "retrieval": {
     "spans": 1,
-    "wall_ms": 10.5,
+    "wall_ms": 11.4,
     "cost_usd": 0.0
    },
    "statistics": {
     "spans": 3,
-    "wall_ms": 8862.0,
+    "wall_ms": 8891.1,
     "cost_usd": 0.0
    }
   },

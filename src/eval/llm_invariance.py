@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""
-Proves the central architectural claim: the LLM is not the source of quantitative truth.
-
-Runs the SAME incident with the model off and with the model on, then compares every
-computed field. If a single number moves, the claim is false and this script says so.
-"""
+"""Prove the LLM is not the source of quantitative truth: same incident, model off vs on."""
 import json, sys, subprocess, time
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]

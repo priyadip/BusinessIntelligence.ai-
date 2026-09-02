@@ -1,23 +1,4 @@
-"""
-Reconciling heterogeneous sources, which is where most of the real work in a BI stack is.
-
-Three problems this module refuses to paper over:
-
-  1. DIFFERENT DEFINITIONS. Commerce books net revenue at order time; the finance ledger
-     books it at ship date and nets supplier rebates. Both are correct. The contract names
-     one CANONICAL and declares a tolerance; when the delta breaches it, the engine reports
-     the number, attributes what it can, and DEGRADES the confidence of any claim that
-     depends on the disputed figure rather than silently picking a side.
-
-  2. DIFFERENT GRAINS AND CADENCES. Finance is weekly and lands three days late. Joining
-     it to a daily series on a date key manufactures a phantom collapse at the ragged right
-     edge, because the last bucket is not missing, it is INCOMPLETE. We join AS OF the
-     watermark and mark incomplete buckets so the detector excludes them.
-
-  3. UNRESOLVED ENTITIES. A claim about "the new courier" is worthless until it resolves to
-     a carrier_id. Unmatched claims are surfaced as a quality metric that widens intervals,
-     never dropped quietly.
-"""
+"""Reconciling heterogeneous sources: definition conflicts, ragged edges, entity crosswalks."""
 from __future__ import annotations
 import numpy as np, pandas as pd
 from dataclasses import dataclass, field

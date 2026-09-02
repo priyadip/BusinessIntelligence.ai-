@@ -1,15 +1,5 @@
 #!/usr/bin/env python3
-"""
-Score the prototype against the Round 2 brief, mechanically.
-
-Every requirement in the Round 2 brief becomes a check that inspects real artifacts
-(the contract, the warehouse, emitted case files, telemetry) and returns PASS / PARTIAL /
-FAIL with the evidence it found. Nothing here is self-reported: a check that cannot find
-its artifact fails, which is the point. Run after every build step.
-
-    python3 verify_rubric.py            # scoreboard
-    python3 verify_rubric.py --json     # machine readable
-"""
+"""Score the prototype against the Round 2 brief by inspecting real artifacts."""
 from __future__ import annotations
 import json, os, sys, glob, re
 from pathlib import Path
@@ -200,7 +190,7 @@ OBJ = [
  ("OBJ-2","Reconciles data and business context across heterogeneous sources",
   lambda: _obj_files(["casefile/engine/reconcile.py"], "reconciliation")),
  ("OBJ-3","Identifies and ranks explanatory drivers using appropriate analytical methods",
-  lambda: _obj_files(["casefile/engine/contribution.py","casefile/engine/causal.py"], "rank")),
+  lambda: _obj_ranked_drivers()),
  ("OBJ-4","Generates persona-specific narratives supported by traceable evidence",
   lambda: _obj_files(["casefile/engine/narrative.py"], "persona")),
  ("OBJ-5","Communicates uncertainty and abstains when evidence is insufficient or contradictory",
@@ -212,6 +202,21 @@ OBJ = [
  ("OBJ-8","Operates within realistic security, cost, latency and scalability constraints",
   lambda: _obj_files(["casefile/security/policy.py","casefile/telemetry/spans.py"], "budget")),
 ]
+def _obj_ranked_drivers():
+    """Drivers must actually come back ranked, not merely be described as ranked."""
+    have = [p for p in ("casefile/engine/contribution.py", "casefile/engine/causal.py")
+            if (ROOT / p).exists()]
+    if len(have) < 2: return FAIL, f"not built: {have}"
+    cs = _cases()
+    drills = [d for c in cs for d in (c.get("contribution", {}) or {}).get("top", [])]
+    ranked = [d for d in drills if "rank" in d]
+    est = [e for c in cs for e in (c.get("causal") or {}).values() if e.get("rung")]
+    if not drills: return PART, "modules built; no drilled drivers in any case file yet"
+    return (PASS if ranked and est else PART,
+            f"{len(ranked)}/{len(drills)} drilled drivers carry an explicit rank; "
+            f"{len(est)} causal estimates carry a proof rung")
+
+
 def _obj_files(paths, token):
     have = [p for p in paths if (ROOT / p).exists()]
     if not have: return FAIL, f"not built: {paths}"

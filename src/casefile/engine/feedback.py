@@ -1,23 +1,4 @@
-"""
-Learning from analyst and business-user feedback, and measuring what actions actually did.
-
-Two loops, both append-only and both auditable.
-
-  FEEDBACK LOOP. A user accepts, rejects or corrects a verdict, a driver or a threshold.
-  Rejections raise the prior on H_NULL for that KPI family, because a rejected verdict is
-  evidence the modelled library was incomplete. Corrections that name a driver raise that
-  hypothesis's prior for the same region and season. Repeated overrides of the same lever
-  become a PROPOSED business rule for a human to approve, never an automatic one.
-
-  OUTCOME LEDGER. Every recommended action that is taken is measured weeks later by the
-  same synthetic-control machinery used to diagnose it. The measured effect is written back
-  and the corresponding KPI-graph edge is upgraded ASSERTED -> MEASURED. That is the third
-  arrow of the closed loop, and it is what makes the next incident's expected-impact figure
-  an estimate rather than an assumption.
-
-Calibration is tracked throughout: of the verdicts issued at 70% confidence, how many held.
-That reliability curve is published rather than asserted.
-"""
+"""Learning from user feedback, and measuring what recommended actions actually did."""
 from __future__ import annotations
 import json, math
 from pathlib import Path
@@ -88,20 +69,47 @@ def record_outcome(incident_id: str, action_id: str, lever: str, kpi: str,
 
 def upgrade_contract_edge(contract_path: Path, driver: str, target: str,
                           effect: float, ci: tuple, n: int, measured_on: str) -> bool:
-    """Write the measured effect back into the contract. The graph appreciates with use."""
-    import yaml
-    c = yaml.safe_load(open(contract_path))
-    hit = False
-    for e in c["kpi_graph"]["edges"]:
-        if e["from"] == driver and e["to"] == target:
-            e["provenance"] = "MEASURED"; e["effect"] = round(float(effect), 5)
-            e["ci"] = [round(float(ci[0]), 5), round(float(ci[1]), 5)]
-            e["n"] = int(n); e["measured_on"] = measured_on
-            e["measured_on_basis"] = "simulated-world date; world clock is 2026-08-31" 
-            hit = True
-    if hit:
-        yaml.safe_dump(c, open(contract_path, "w"), sort_keys=False, width=110)
-    return hit
+    """Write a measured effect back into the contract, editing only that edge.
+
+    A full yaml load-and-dump would reformat the file and delete every comment in it. The
+    contract is a human-governed artifact, so a machine writing to it must touch nothing it
+    was not asked to touch."""
+    import re
+    text = contract_path.read_text()
+    lines = text.splitlines(keepends=True)
+
+    start = end = None
+    for i, ln in enumerate(lines):
+        if re.match(rf"\s*-\s+from:\s*{re.escape(driver)}\s*$", ln):
+            for j in range(i + 1, min(i + 12, len(lines))):
+                if re.match(rf"\s*to:\s*{re.escape(target)}\s*$", lines[j]):
+                    start = i
+                    for k in range(j + 1, len(lines) + 1):
+                        if k == len(lines) or re.match(r"\s*-\s+from:", lines[k]) \
+                           or (lines[k].strip() and not lines[k].startswith("    ")):
+                            end = k
+                            break
+                    break
+            if start is not None:
+                break
+    if start is None or end is None:
+        return False
+
+    block = lines[start:end]
+    keep = [ln for ln in block
+            if not re.match(r"\s*(provenance|effect|ci|n|measured_on|measured_on_basis):", ln)
+            and not re.match(r"\s*-\s+-?\d", ln)]
+    indent = " " * (len(keep[1]) - len(keep[1].lstrip())) if len(keep) > 1 else "    "
+    keep.append(f"{indent}provenance: MEASURED\n")
+    keep.append(f"{indent}effect: {round(float(effect), 5)}\n")
+    keep.append(f"{indent}ci: [{round(float(ci[0]), 5)}, {round(float(ci[1]), 5)}]\n")
+    keep.append(f"{indent}n: {int(n)}\n")
+    keep.append(f"{indent}measured_on: '{measured_on}'\n")
+    keep.append(f"{indent}measured_on_basis: simulated-world date; world clock is 2026-08-31\n")
+
+    lines[start:end] = keep
+    contract_path.write_text("".join(lines))
+    return True
 
 
 def calibration_curve(cases: list[dict]) -> dict:

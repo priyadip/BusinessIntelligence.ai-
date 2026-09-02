@@ -1,17 +1,4 @@
-"""
-One Span context manager is the ONLY way work gets recorded. Every stage opens one.
-
-The brief asks for "runtime telemetry covering latency, model calls, token usage and
-estimated cost" and "a clear breakdown of LLM versus non-LLM processing". Two rules make
-that honest rather than self-reported:
-
-  1. every span declares its method_class using the brief's OWN eight words, and declares
-     whether it sits on the quantitative path. A span on the quantitative path that used a
-     model is a contract violation and is flagged, not hidden.
-  2. token counts carry a `token_source`. Numbers from a real API are `exact_api`; numbers
-     counted here with the model's own tokenizer are `local_tokenizer`. Nothing is ever
-     unlabelled, so "estimated cost" can be audited rather than believed.
-"""
+"""One Span context manager records every stage: latency, method class, tokens, cost."""
 from __future__ import annotations
 import json, os, time, uuid, threading
 from contextlib import contextmanager

@@ -1,11 +1,4 @@
-"""
-Seeded random incidents. The answer to "of course it works, you wrote the world".
-
-`casefile run --seed N` draws the incident TYPE, magnitude, timing, scope and confounding
-structure from the seed. Nothing about which cause is real, or whether it is identifiable
-at all, is fixed in advance. A judge can call out a number and watch the engine meet a world
-it has not seen, including worlds deliberately constructed so that no honest answer exists.
-"""
+"""Seeded random incidents: type, magnitude, timing and identifiability all drawn from the seed."""
 from __future__ import annotations
 import numpy as np
 from datetime import date, timedelta

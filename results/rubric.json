@@ -67,7 +67,7 @@
     "section": "Minimum Prototype Expectations",
     "requirement": "Runtime telemetry covering latency, model calls, token usage and estimated cost",
     "status": "PASS",
-    "evidence": "192 telemetry spans; missing=none; token provenance labelled=True"
+    "evidence": "270 telemetry spans; missing=none; token provenance labelled=True"
   },
   {
     "id": "OBJ-1",
@@ -88,7 +88,7 @@
     "section": "Round 2 Objectives",
     "requirement": "Identifies and ranks explanatory drivers using appropriate analytical methods",
     "status": "PASS",
-    "evidence": "built ['casefile/engine/contribution.py', 'casefile/engine/causal.py']; key concept 'rank' present"
+    "evidence": "17/17 drilled drivers carry an explicit rank; 12 causal estimates carry a proof rung"
   },
   {
     "id": "OBJ-4",
