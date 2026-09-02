@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT))
 from casefile.sim.model import World
 from casefile.sim.random_incident import draw
 from casefile.engine import baseline as B, verdict as VD, likelihood as LK
+from casefile.engine import causal as CA, signal_gate as SG
 from baselines.contribution_ranker import diagnose as naive_diagnose
 
 from casefile.paths import contract as _contract, out as _out
@@ -52,6 +53,76 @@ def _driver_deltas(panel, win):
     return out
 
 
+DRIVER_MOVED_THRESHOLD = 0.15      # same firing threshold the evidence layer uses
+MAX_DONORS = 28                    # placebo floor 1/29 = 0.034, below the 0.10 bar
+
+
+def _units_where_driver_moved(p, col, win, pre_lo, pre_hi):
+    """Which units did this driver actually move in?
+
+    This is an observation, not a lookup. Every driver column here is a measured series
+    that the evidence layer already reads: price index, promo depth, checkout error rate,
+    on-time rate. A real deployment can see where a change landed without being told which
+    change caused anything.
+    """
+    pre = p[(p.d >= pre_lo) & (p.d <= pre_hi)].groupby("unit")[col].mean()
+    post = p[(p.d >= win[0]) & (p.d <= win[1])].groupby("unit")[col].mean()
+    common = pre.index.intersection(post.index)
+    if len(common) == 0:
+        return set()
+    pre, post = pre.loc[common], post.loc[common]
+    # scale by the driver's own cross-unit spread so a driver with a zero baseline
+    # (competitor gap) is still comparable
+    denom = np.maximum(pre.abs(), max(float(pre.std(ddof=0)), 1e-9))
+    d = (post - pre) / denom.replace(0, np.nan)
+    return set(d[d.abs() >= DRIVER_MOVED_THRESHOLD].index)
+
+
+def _estimated_rungs(panel, kpi, win, onset, seed):
+    """Estimate a proof rung per hypothesis by running synthetic control on the data.
+
+    Nothing here consults inc["identifiable_by_construction"]. A hypothesis reaches R3
+    only if a donor pool of units untouched by ANY moving driver actually exists and the
+    placebo test clears. When every unit moved, no counterfactual exists and the rung is
+    capped at R2 by the estimator itself, which is the outcome the flag used to be told.
+    """
+    p = panel.copy()
+    p["unit"] = p.region + "|" + p.channel + "|" + p.category
+    p["v"] = (p.orders / p.sessions.replace(0, np.nan)) if kpi == "conversion_rate" else p.net_revenue
+    pre_hi = win[0] - timedelta(days=3); pre_lo = pre_hi - timedelta(days=21)
+    p = p[(p.d >= win[0] - timedelta(days=75)) & (p.d <= win[1])]
+    p = p[p.v.notna() & (p.v > 0)]
+    if p.empty:
+        return {}
+    units = sorted(p.unit.unique())
+
+    moved = {k: _units_where_driver_moved(p, col, win, pre_lo, pre_hi)
+             for k, col in DRIVER_COLS.items()}
+    any_moved = set().union(*moved.values()) if moved else set()
+
+    rng = np.random.default_rng(seed)
+    out = {}
+    for k, treated in moved.items():
+        h = D2H[k]
+        donors = [u for u in units if u not in any_moved]
+        if not treated:
+            continue                       # this driver did not move: nothing to estimate
+        if not donors:
+            out[h] = CA.estimate(pd.DataFrame(), h, "", win[0], win[1],
+                                 control_available=False)
+            continue
+        keep = set(rng.choice(donors, size=min(MAX_DONORS, len(donors)), replace=False))
+        treated_unit = sorted(treated)[len(treated) // 2]
+        sub = p[p.unit.isin(keep | {treated_unit})][["d", "unit", "v"]]
+        try:
+            out[h] = CA.estimate(sub, h, treated_unit, win[0], win[1],
+                                 unit_col="unit", time_col="d", value_col="v",
+                                 treated_pool=treated, onset=onset)
+        except Exception:
+            continue
+    return out
+
+
 def _metric(panel, kpi, win):
     lo, hi = win
     m = (panel.d >= lo) & (panel.d <= hi)
@@ -60,7 +131,7 @@ def _metric(panel, kpi, win):
     return float(s.net_revenue.sum())
 
 
-def one(seed: int) -> dict | None:
+def one(seed: int, rung_mode: str = "estimated") -> dict | None:
     inc = draw(seed)
     kpi, win = inc["kpi"], inc["window"]
     try:
@@ -104,7 +175,7 @@ def one(seed: int) -> dict | None:
                                  "H_STOCKOUT": "inventory_replenish",
                                  "H_COMPETITOR": "promo_depth",
                                  "H_MARKETING_CUT": "paid_media_spend"}[h],
-                          control_available=not (not inc["identifiable_by_construction"]))
+                          control_available=True)
             for h in D2H.values()]
     hyps.append(VD.Hypothesis("H_NULL", "outside library", 0.06))
     ev = []
@@ -118,14 +189,40 @@ def one(seed: int) -> dict | None:
                        "lr": LK.lr_vector(tid, strength * (1.0 - 0.15 * j), LR_TABLE),
                        "source_group": f"{'sql' if j == 0 else 'corroboration'}:{k}:{tid}"})
     VD.build_posterior(hyps, ev, CONTRACT, temperature=LR_T)
-    for h in hyps:
-        h.rung = "R3" if inc["identifiable_by_construction"] else "R2"
+
+    if rung_mode == "oracle":
+        # The original harness. Retained only so the two can be compared; it feeds the
+        # simulator's answer into the decision and cannot be read as a measurement.
+        for h in hyps:
+            h.rung = "R3" if inc["identifiable_by_construction"] else "R2"
+        est = {}
+    else:
+        cp = None
+        if bl.deseasonalised.size > 30:
+            d = bl.deseasonalised[-150:]
+            cp, _, _ = SG.change_point(d, bl.dates[-150:])
+        est = _estimated_rungs(panel, kpi, win, cp or win[0], seed)
+        for h in hyps:
+            e = est.get(h.id)
+            if e is None:
+                h.rung = "R1"              # driver never moved: no scope, no counterfactual
+                h.control_available = False
+            else:
+                h.rung = e.rung
+                h.control_available = bool(np.isfinite(e.effect))
+                if np.isfinite(e.effect_pct):
+                    h.effect_pct = float(e.effect_pct)
+
     vd = VD.decide(f"S{seed}", kpi, hyps, CONTRACT, 250_000.0)
 
     top = max(hyps, key=lambda h: h.posterior)
     cf_named = vd.decision == "ACT"
     cf_cause = (vd.acted_on or vd.leading) if cf_named else None
     return {"seed": seed, "identifiable": inc["identifiable_by_construction"],
+            "rung_mode": rung_mode,
+            "max_rung": max((h.rung for h in hyps if h.id != "H_NULL"),
+                            key=lambda r: VD.RUNG_ORDER[r], default="R1"),
+            "n_hyps_estimated": len(est),
             "dominant_cause": dominant, "dominant_share": dom_share,
             "naive_hit_dominant": nb["cause"] == dominant,
             "cf_hit_dominant": (cf_cause == dominant) if cf_named else None,
@@ -139,12 +236,16 @@ def one(seed: int) -> dict | None:
             "cf_named": cf_named}
 
 
-def main(n=300, workers=32, out=None):
+def _one_star(a):
+    return one(*a)
+
+
+def main(n=300, workers=32, out=None, rung_mode="estimated"):
     out = out or str(_out() / "eval")
     Path(out).mkdir(parents=True, exist_ok=True)
     seeds = list(range(9000, 9000 + n))   # held out from calibration (30000..30499)
     with Pool(workers) as p:
-        rows = [r for r in p.map(one, seeds) if r]
+        rows = [r for r in p.map(_one_star, [(s, rung_mode) for s in seeds]) if r]
     df = pd.DataFrame(rows)
     df.to_parquet(Path(out) / "batch.parquet")
 
@@ -154,6 +255,13 @@ def main(n=300, workers=32, out=None):
     summary = {
         "n_incidents": len(df), "n_identifiable": len(ident), "n_unidentifiable": len(unid),
         "likelihood_source": LR_SRC,
+        "rung_mode": rung_mode,
+        "rung_basis": ("proof rung ESTIMATED from the data by synthetic control over units "
+                       "where each driver was observed to move; the simulator's "
+                       "identifiability flag is used only to score, never as an input"
+                       if rung_mode == "estimated" else
+                       "ORACLE: the rung is read from the simulator's identifiability flag. "
+                       "Retained for comparison only; not a measurement"),
         "identifiable": {
             "naive_top1_accuracy": float(ident.naive_correct.mean()),
             "casefile_top1_accuracy": float(ident[ident.cf_named].cf_correct.mean()) if ident.cf_named.any() else None,
@@ -225,4 +333,6 @@ if __name__ == "__main__":
     import argparse
     ap = argparse.ArgumentParser(); ap.add_argument("-n", type=int, default=300)
     ap.add_argument("--workers", type=int, default=32)
-    a = ap.parse_args(); main(a.n, a.workers)
+    ap.add_argument("--rung-mode", choices=["estimated", "oracle"], default="estimated")
+    ap.add_argument("--out", default=None)
+    a = ap.parse_args(); main(a.n, a.workers, a.out, a.rung_mode)

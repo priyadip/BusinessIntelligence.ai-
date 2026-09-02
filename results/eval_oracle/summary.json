@@ -3,18 +3,18 @@
   "n_identifiable": 198,
   "n_unidentifiable": 102,
   "likelihood_source": "CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed",
-  "rung_mode": "estimated",
-  "rung_basis": "proof rung ESTIMATED from the data by synthetic control over units where each driver was observed to move; the simulator's identifiability flag is used only to score, never as an input",
+  "rung_mode": "oracle",
+  "rung_basis": "ORACLE: the rung is read from the simulator's identifiability flag. Retained for comparison only; not a measurement",
   "identifiable": {
     "naive_top1_accuracy": 0.9949494949494949,
     "casefile_top1_accuracy": 1.0,
-    "casefile_answer_rate": 0.20202020202020202
+    "casefile_answer_rate": 0.6666666666666666
   },
   "unidentifiable": {
     "naive_false_certainty_rate": 0.00980392156862745,
     "naive_abstention_rate": 0.0,
     "casefile_false_certainty_rate": 0.0,
-    "casefile_abstention_rate": 0.9901960784313726
+    "casefile_abstention_rate": 1.0
   },
   "wrong_lever_rate_unidentifiable": {
     "naive": 0.38235294117647056,
@@ -22,30 +22,30 @@
     "note": "fraction of unidentifiable incidents where the system committed to a lever that was not the dominant true cause"
   },
   "answer_rate_by_cause_count": {
-    "single_cause": 0.109375,
-    "multi_cause": 0.1440677966101695
+    "single_cause": 0.296875,
+    "multi_cause": 0.4788135593220339
   },
   "brier": {
     "naive": 0.026962452901709066,
-    "casefile": 0.020750661676795713
+    "casefile": 0.022575068734994867
   },
   "calibration": {
     "bins": [
       {
         "bin": "60%-80%",
-        "n": 10,
-        "stated": 0.77,
-        "actual": 0.3
+        "n": 37,
+        "stated": 0.755,
+        "actual": 0.568
       },
       {
         "bin": "80%-101%",
-        "n": 31,
-        "stated": 0.911,
-        "actual": 0.839
+        "n": 95,
+        "stated": 0.927,
+        "actual": 0.758
       }
     ],
-    "brier_score": 0.2025,
-    "n": 41
+    "brier_score": 0.23,
+    "n": 132
   },
   "cost_of_being_wrong": {
     "basis": "lever cost from the contract, 30-day horizon, exposure 250,000/day, 1000 units",

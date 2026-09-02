@@ -265,3 +265,38 @@ def test_every_abstain_type_in_code_is_declared_in_the_contract():
                if t not in ("budget_exceeded_latency", "entitlement_limited")}
     missing = emitted - declared
     assert not missing, f"code can emit {sorted(missing)} but the contract does not declare it"
+
+
+def test_the_batch_evaluation_never_reads_the_ground_truth_flag_to_decide():
+    """The circularity guard.
+
+    The harness used to set the proof rung from inc["identifiable_by_construction"], which
+    is the simulator's own answer. With R3 required to name a cause, that made abstention
+    on unidentifiable incidents a property of the harness rather than a measurement. The
+    rung must now come from the estimator.
+    """
+    import inspect, sys
+    sys.path.insert(0, str(ROOT / "src"))
+    from eval import run_batch as RB
+
+    import ast, textwrap
+
+    def body_without_docstring(fn):
+        """The docstrings here discuss the flag by name, so compare code, not prose."""
+        tree = ast.parse(textwrap.dedent(inspect.getsource(fn)))
+        node = tree.body[0]
+        if (node.body and isinstance(node.body[0], ast.Expr)
+                and isinstance(node.body[0].value, ast.Constant)
+                and isinstance(node.body[0].value.value, str)):
+            node.body = node.body[1:]
+        return ast.unparse(node)
+
+    est = body_without_docstring(RB._estimated_rungs)
+    obs = body_without_docstring(RB._units_where_driver_moved)
+    assert "identifiable" not in est, "the estimator consults the ground-truth flag"
+    assert "identifiable" not in obs, "the scope observer consults the ground-truth flag"
+    assert "CA.estimate" in est, "the estimator does not actually run synthetic control"
+
+    sig = inspect.signature(RB.one)
+    assert sig.parameters["rung_mode"].default == "estimated", (
+        "the oracle path must not be the default")

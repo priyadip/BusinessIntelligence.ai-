@@ -1,7 +1,7 @@
 # CaseFile
 
 [![CI](https://github.com/priyadip/BusinessIntelligence.ai-/actions/workflows/ci.yml/badge.svg)](https://github.com/priyadip/BusinessIntelligence.ai-/actions/workflows/ci.yml)
-[![tests](https://img.shields.io/badge/tests-25%20passed-brightgreen.svg)](tests/)
+[![tests](https://img.shields.io/badge/tests-34%20passed-brightgreen.svg)](tests/)
 [![brief coverage](https://img.shields.io/badge/brief%20coverage-21%2F21-brightgreen.svg)](results/rubric.json)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![build](https://img.shields.io/badge/build-deterministic-informational.svg)](RUNBOOK.md)
@@ -112,15 +112,23 @@ unidentifiable *by construction*:
 | Measure | Contribution-ranking baseline | CaseFile |
 |---|---|---|
 | Top-1 cause accuracy, identifiable | 99.5% | **100.0%** |
-| Answer rate, identifiable | 100% | 66.7% |
+| Answer rate, identifiable | 100% | 20.2% |
 | **Wrong lever pulled, unidentifiable** | **38.2%** | **0.0%** |
-| Abstention rate, unidentifiable | 0% | 100.0% |
+| Abstention rate, unidentifiable | 0% | 99.0% |
 <!--/NUMBERS:table-->
 
 Both systems see identical evidence. The baseline is the standard industry pattern
 implemented faithfully, not a strawman: decompose, take the largest contributor, report it as
 the cause, never abstain. Its top-1 accuracy is excellent *when a cause is identifiable*. The
 difference is entirely in what happens when one is not.
+
+**The proof rung is estimated, not assumed.** An earlier version of this harness set the
+rung from the simulator's own `identifiable_by_construction` flag. Since the contract
+requires R3 to name a cause, that made abstention on unidentifiable incidents a property of
+the harness rather than a measurement. The rung now comes from running synthetic control
+over units where each driver was *observed* to move, and the flag is used only to score.
+The headline survived the change; the answer rate did not. See
+[`docs/BENCHMARK_HONESTY.md`](docs/BENCHMARK_HONESTY.md).
 
 Ground truth is exact Shapley values computed over counterfactual re-simulations of the
 world, so "the true cause" is a computed quantity rather than a label.
@@ -182,7 +190,7 @@ cd src
 python3 run_case.py INC-002                  # one incident
 python3 run_case.py all --llm-mode off       # all four, deterministic
 python3 run_seeded.py 4271                   # a world drawn from a seed you pick
-python3 -m pytest ../tests -q                # 25 tests
+python3 -m pytest ../tests -q                # 34 tests
 python3 verify_rubric.py                     # score against the Round 2 brief
 python3 eval/run_batch.py -n 300 --workers 8 # held-out evaluation
 python3 eval/tier2_real.py                   # the same statistics on real public data
@@ -254,7 +262,7 @@ results/
   rubric.json             brief coverage
   llm_invariance.json     the model-off versus model-on comparison
   loop_INC-002.json       the closed loop, pre-registration through measured outcome
-tests/                    25 tests, including the two architectural invariants
+tests/                    34 tests, including the two architectural invariants
 docs/                     architecture, capability provenance
 ```
 
@@ -291,6 +299,7 @@ which cycle it is missing. Full write-up, including what that fix costs, in
 |---|---|
 | [`RUNBOOK.md`](RUNBOOK.md) | every command, a ten-minute demo script, troubleshooting |
 | [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | the thirteen layers, and why each exists |
+| [`docs/BENCHMARK_HONESTY.md`](docs/BENCHMARK_HONESTY.md) | why the benchmark measures the system rather than the test harness |
 | [`docs/TIER2_REAL_DATA.md`](docs/TIER2_REAL_DATA.md) | the engine measured on real public data, including two negative controls |
 | [`docs/CAPABILITY_PROVENANCE.md`](docs/CAPABILITY_PROVENANCE.md) | what is native, configured, custom or externally integrated |
 | [`FINAL_REPORT.md`](FINAL_REPORT.md) | what was built, what was measured, the twelve bugs found, and the limitations |
@@ -302,7 +311,7 @@ which cycle it is missing. Full write-up, including what that fix costs, in
 cd src && python3 -m pytest ../tests -q
 ```
 
-25 tests. Two of them are architectural invariants rather than unit tests, and are the two
+34 tests. Two of them are architectural invariants rather than unit tests, and are the two
 worth reading:
 
 - **`test_llm_boundary.py`** asserts that no quantitative stage can reach a language model.

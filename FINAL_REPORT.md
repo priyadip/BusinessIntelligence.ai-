@@ -58,7 +58,7 @@ and a written justification; six are `backend: none` and the gateway raises if t
 
 | Test | Result |
 |---|---|
-| Unit and invariant suite (`pytest tests`) | **25 passed** |
+| Unit and invariant suite (`pytest tests`) | **34 passed** |
 | Semantic-gateway choke point (AST walk over every module) | **pass**, nothing bypasses it |
 | LLM boundary (no model on the quantitative path, in emitted telemetry) | **pass** |
 | LLM invariance: same incident, model off vs local, <!--NUMBERS:fields-->258<!--/NUMBERS:fields--> computed fields | **identical** to 1e-12 relative; worst observed <!--NUMBERS:worst-->9.5e-14<!--/NUMBERS:worst--> |
@@ -81,13 +81,21 @@ and a written justification; six are `backend: none` and the gateway raises if t
 
 ### Batch evaluation, <!--NUMBERS:n-->300<!--/NUMBERS:n--> seeded incidents
 
+The proof rung in this table is estimated by running synthetic control over units where each
+driver was observed to move. An earlier version of the harness read it from the simulator's
+`identifiable_by_construction` flag, which made abstention on unidentifiable incidents a
+property of the harness rather than a measurement. Replacing that left the wrong-lever rate
+at 0.0% and cut the answer rate on identifiable incidents from 66.7% to 20.2%. The old path
+is still runnable with `--rung-mode oracle` so the two can be compared. See
+`docs/BENCHMARK_HONESTY.md`.
+
 <!--NUMBERS:table-->
 | Measure | Contribution-ranking baseline | CaseFile |
 |---|---|---|
 | Top-1 cause accuracy, identifiable | 99.5% | **100.0%** |
-| Answer rate, identifiable | 100% | 66.7% |
+| Answer rate, identifiable | 100% | 20.2% |
 | **Wrong lever pulled, unidentifiable** | **38.2%** | **0.0%** |
-| Abstention rate, unidentifiable | 0% | 100.0% |
+| Abstention rate, unidentifiable | 0% | 99.0% |
 <!--/NUMBERS:table-->
 
 ## Notable bugs found and fixed during the build
@@ -146,10 +154,10 @@ These are listed because each was a real defect that would have been fatal on st
 <!--NUMBERS:calibration-->
 | Stated confidence | Observed accuracy | n |
 |---|---|---|
-| 75.5% | 56.8% | 37 |
-| 92.7% | 75.8% | 95 |
+| 77.0% | 30.0% | 10 |
+| 91.1% | 83.9% | 31 |
 
-Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.
+Brier score **0.2025** on 41 answered incidents, measured on seeds the calibration never saw.
 <!--/NUMBERS:calibration-->
 
 The system is overconfident. At a stated 92.7% it is right 75.8% of the time, and at a stated

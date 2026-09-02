@@ -19,7 +19,7 @@ cost of that is not a slow report, it is an expensive intervention aimed at a co
 seeded incidents built to be unidentifiable, a faithful implementation of the standard
 contribution-ranking approach pulls the wrong lever **<!--NUMBERS:wrong-->38.2%<!--/NUMBERS:wrong-->** of the time. CaseFile pulls it
 **0%** of the time, because it abstains and returns an experiment, while still answering
-**<!--NUMBERS:answer-->66.7%<!--/NUMBERS:answer-->** of identifiable incidents at **100%** top-1 accuracy.
+**<!--NUMBERS:answer-->20.2%<!--/NUMBERS:answer-->** of identifiable incidents at **100%** top-1 accuracy.
 
 ## Quick start
 
@@ -28,7 +28,7 @@ pip install duckdb pandas numpy scipy statsmodels scikit-learn lightgbm networkx
 python3 -m casefile.sim.build_all          # generate the world (~90s)
 python3 run_case.py all --llm-mode off     # run all incidents, no model at all
 python3 run_case.py all --llm-mode local   # same numbers, prose from local Qwen models
-python3 -m pytest tests -q                 # 25 tests
+python3 -m pytest tests -q                 # 34 tests
 python3 verify_rubric.py                   # score against the brief
 open out/workspace.html                    # the Decision Workspace
 ```
@@ -103,7 +103,7 @@ casefile/telemetry/spans.py            method-class spans, token provenance
 casefile/render/workspace.py           the self-contained HTML workspace
 baselines/                             the industry-standard comparator
 eval/                                  batch evaluation, LLM invariance
-tests/                                 25 tests including the two invariants
+tests/                                 34 tests including the two invariants
 verify_rubric.py                       mechanical scoring against the brief
 ```
 
@@ -112,10 +112,10 @@ verify_rubric.py                       mechanical scoring against the brief
 <!--NUMBERS:calibration-->
 | Stated confidence | Observed accuracy | n |
 |---|---|---|
-| 75.5% | 56.8% | 37 |
-| 92.7% | 75.8% | 95 |
+| 77.0% | 30.0% | 10 |
+| 91.1% | 83.9% | 31 |
 
-Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.
+Brier score **0.2025** on 41 answered incidents, measured on seeds the calibration never saw.
 <!--/NUMBERS:calibration-->
 
 Likelihood ratios are <!--NUMBERS:likelihood-->CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed<!--/NUMBERS:likelihood-->.
