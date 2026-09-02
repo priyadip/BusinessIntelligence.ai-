@@ -121,7 +121,7 @@ results/
   rubric.json             brief coverage
   llm_invariance.json     196 computed fields, model off vs on
   loop_INC-002.json       the closed loop, pre-registration through measured outcome
-tests/                    22 tests, including the two architectural invariants
+tests/                    25 tests, including the two architectural invariants
 docs/                     architecture, capability provenance, the brief
 ```
 
@@ -137,9 +137,9 @@ at +8.02%, and written back into the contract.
 
 ## Licence
 
-**No licence file is included.** Add one before making this repository public: without it the
-legal default is all rights reserved, so nobody may reuse the code. That choice is yours to
-make, so this repository does not make it for you.
+MIT, see `LICENSE`. Chosen as the conventional default for a portfolio and competition
+submission: it lets a judge clone, run and quote the work without friction. Swap it if you
+want stronger patent language (Apache-2.0) or something more restrictive.
 
 ## Data provenance
 

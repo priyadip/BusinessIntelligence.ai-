@@ -28,7 +28,7 @@ pip install duckdb pandas numpy scipy statsmodels scikit-learn lightgbm networkx
 python3 -m casefile.sim.build_all          # generate the world (~90s)
 python3 run_case.py all --llm-mode off     # run all incidents, no model at all
 python3 run_case.py all --llm-mode local   # same numbers, prose from local Qwen models
-python3 -m pytest tests -q                 # 22 tests
+python3 -m pytest tests -q                 # 25 tests
 python3 verify_rubric.py                   # score against the brief
 open out/workspace.html                    # the Decision Workspace
 ```
@@ -103,7 +103,7 @@ casefile/telemetry/spans.py            method-class spans, token provenance
 casefile/render/workspace.py           the self-contained HTML workspace
 baselines/                             the industry-standard comparator
 eval/                                  batch evaluation, LLM invariance
-tests/                                 22 tests including the two invariants
+tests/                                 25 tests including the two invariants
 verify_rubric.py                       mechanical scoring against the brief
 ```
 

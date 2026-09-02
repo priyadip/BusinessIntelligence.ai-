@@ -67,5 +67,27 @@ def main():
     print(f"  likelihoods: {s.get('likelihood_source','')[:70]}")
 
 
+def sync_test_count() -> int:
+    """The test count appears in three documents and drifted once. Own it here."""
+    import re, subprocess
+    root = Path(__file__).resolve().parents[1]
+    r = subprocess.run([__import__("sys").executable, "-m", "pytest", str(root / "tests"), "-q"],
+                       capture_output=True, text=True, cwd=str(root / "src"))
+    m = re.search(r"(\d+) passed", r.stdout)
+    if not m:
+        return 0
+    n = m.group(1)
+    for f in ("README.md", "FINAL_REPORT.md", "RUNBOOK.md", "docs/README.md"):
+        fp = root / f
+        if not fp.exists():
+            continue
+        s = fp.read_text()
+        s2 = re.sub(r"\b\d+ tests\b", f"{n} tests", s)
+        s2 = re.sub(r"\b\d+ passed\b", f"{n} passed", s2)
+        if s2 != s:
+            fp.write_text(s2)
+    return int(n)
+
+
 if __name__ == "__main__":
     main()

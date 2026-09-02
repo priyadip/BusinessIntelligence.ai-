@@ -58,7 +58,7 @@ and a written justification; six are `backend: none` and the gateway raises if t
 
 | Test | Result |
 |---|---|
-| Unit and invariant suite (`pytest tests`) | **22 passed** |
+| Unit and invariant suite (`pytest tests`) | **25 passed** |
 | Semantic-gateway choke point (AST walk over every module) | **pass** — nothing bypasses it |
 | LLM boundary (no model on the quantitative path, in emitted telemetry) | **pass** |
 | LLM invariance: same incident, model off vs local, 196 computed fields | **identical** to 1e-12 relative; worst observed 1.0e-14 |

@@ -73,7 +73,7 @@ cd src && python3 -m casefile.sim.build_all 20260901     # ~90s, deterministic g
 | 6:30 | The loop section | The test was pre-registered with a hashed assignment, executed, measured at +8.02%, and the contract edge is now MEASURED. |
 | 7:30 | Persona panels | The Regional Ops Manager's verdict is capped at R2 because the control regions a causal estimate needs are outside their row scope. The system says so and names the escalation. |
 | 8:30 | `python3 run_seeded.py <judge picks a number>` | A world nobody has seen. Roughly a third are unidentifiable by construction. |
-| 9:30 | The evaluation table | On unidentifiable incidents the standard approach pulls the wrong lever 39.2% of the time. This one pulls it 0%, while still answering 56% of identifiable incidents at 100% accuracy. |
+| 9:30 | The evaluation table | On unidentifiable incidents the standard approach pulls the wrong lever 38.2% of the time. This one pulls it 0%, while still answering 67% of identifiable incidents at 100% accuracy. |
 
 ## Troubleshooting
 
