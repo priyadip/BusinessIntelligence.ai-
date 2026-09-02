@@ -1,9 +1,0 @@
-A dashboard reports that revenue in a region fell 8%. Turning that number into a defensible reason still takes an analyst days, and what arrives is an opinion that cannot be audited. Three technical problems sit underneath.
-
-Significance. A raw drop means nothing without a baseline carrying seasonality, calendar, weather and promotion effects. Detection across thousands of concurrent metric-by-segment monitors is a multiple-comparisons problem, not a thresholding problem: uncorrected, a 1% threshold manufactures dozens of false anomalies every morning.
-
-Attribution. Multidimensional decomposition identifies the segment where the shortfall accumulated. That is an accounting identity, true by construction, and it carries no information about mechanism. Business dimensions co-vary heavily, so the concentrating segment is routinely a coincidence rather than a cause.
-
-Identifiability. Operational changes arrive bundled. A price revision and a software release deployed days apart, to overlapping populations, leave no valid control group. The effect is not weakly estimated, it is not identified, and no further analysis of the existing data recovers it. Only new data can.
-
-Current tools answer anyway, ranking drivers and naming the most plausible cause with a confidence score that measures contribution, not causation. Acting on that score is how expensive interventions get aimed at coincidences.

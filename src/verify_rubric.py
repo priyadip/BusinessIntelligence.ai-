@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Score the prototype against afterround1statement.txt, mechanically.
+Score the prototype against the Round 2 brief, mechanically.
 
 Every requirement in the Round 2 brief becomes a check that inspects real artifacts
 (the contract, the warehouse, emitted case files, telemetry) and returns PASS / PARTIAL /
