@@ -67,7 +67,7 @@
     "section": "Minimum Prototype Expectations",
     "requirement": "Runtime telemetry covering latency, model calls, token usage and estimated cost",
     "status": "PASS",
-    "evidence": "270 telemetry spans; missing=none; token provenance labelled=True"
+    "evidence": "354 telemetry spans; missing=none; token provenance labelled=True"
   },
   {
     "id": "OBJ-1",

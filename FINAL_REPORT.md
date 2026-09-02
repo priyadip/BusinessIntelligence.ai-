@@ -144,6 +144,13 @@ These are listed because each was a real defect that would have been fatal on st
 
 Brier score **0.23** on 132 answered incidents, measured on seeds the calibration never saw.<!--/NUMBERS:calibration-->
 
+The system is overconfident. At a stated 92.7% it is right 75.8% of the time, and at a stated
+75.5% it is right 56.8%, so both bins are off by roughly seventeen points in the same
+direction. The ranking of causes is trustworthy; the absolute probability attached to it is
+not yet. Two things would move it: more measured outcomes flowing back through the loop to
+replace assumed effects, and a post-hoc recalibration of the posterior against these bins,
+which is deliberately not applied here because it would fit the evaluation set.
+
 Likelihood ratios are <!--NUMBERS:likelihood-->CALIBRATED from 500 simulated incidents on held-out seeds, Jeffreys-smoothed<!--/NUMBERS:likelihood-->.
 
 ## What being wrong costs
